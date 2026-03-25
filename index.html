@@ -41,7 +41,6 @@
       --flow-circle-filled: #2a2a30;
       --tree-line: #444;
       --tree-sub-line: #333;
-      --shadow-glow: 0.1;
       --tip-color: #c8a860;
       --tip-close: #886830;
       --ai-bg: #1a2030;
@@ -58,8 +57,9 @@
       --btn-del-border: #5a3a3a;
       --btn-del-color: #c66;
       --btn-del-hover: #4a3a3a;
+      --sp-card-bg: #1a1a1e;
+      --sp-card-border: #333;
     }
-
     [data-theme="light"] {
       --bg-primary: #F2F2F2;
       --bg-secondary: #FFFFFF;
@@ -94,7 +94,6 @@
       --flow-circle-filled: #F5F5F5;
       --tree-line: #D4D4D4;
       --tree-sub-line: #E0E0E0;
-      --shadow-glow: 0.08;
       --tip-color: #92400E;
       --tip-close: #B45309;
       --ai-bg: #EFF6FF;
@@ -111,19 +110,15 @@
       --btn-del-border: #FECACA;
       --btn-del-color: #EF4444;
       --btn-del-hover: #FEE2E2;
+      --sp-card-bg: #F8F8FA;
+      --sp-card-border: #E0E0E0;
     }
 
     * { margin: 0; padding: 0; box-sizing: border-box; }
     body { background: var(--bg-primary); color: var(--text-primary); font-family: 'Noto Sans JP', 'Helvetica Neue', sans-serif; transition: background 0.3s, color 0.3s; }
     .mono { font-family: 'IBM Plex Mono', monospace; }
 
-    /* Header */
-    .header {
-      background: var(--bg-header);
-      border-bottom: 1px solid var(--border-primary);
-      padding: 20px 24px 16px;
-      position: sticky; top: 0; z-index: 10;
-    }
+    .header { background: var(--bg-header); border-bottom: 1px solid var(--border-primary); padding: 20px 24px 16px; position: sticky; top: 0; z-index: 10; }
     .header-top { display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; }
     .header-subtitle { font-size: 13px; font-weight: 400; color: var(--text-muted); letter-spacing: 2px; text-transform: uppercase; }
     .header-title { font-size: 28px; font-weight: 900; margin-top: 4px; letter-spacing: 6px; display: flex; gap: 2px; }
@@ -136,66 +131,25 @@
     .btn-delete:hover { background: var(--btn-del-hover); }
     .btn-theme { background: var(--bg-btn); border: 1px solid var(--border-secondary); color: var(--text-muted); padding: 6px 10px; border-radius: 6px; font-size: 14px; cursor: pointer; transition: background 0.2s; line-height: 1; }
     .btn-theme:hover { background: var(--bg-btn-hover); }
-    .project-input {
-      width: 100%; background: var(--bg-input); border: 1px solid var(--border-input); border-radius: 6px;
-      padding: 8px 12px; color: var(--text-primary); font-size: 14px; font-family: 'Noto Sans JP', sans-serif;
-      outline: none; box-sizing: border-box; margin-bottom: 10px; transition: background 0.3s, color 0.3s, border-color 0.3s;
-    }
+    .project-input { width: 100%; background: var(--bg-input); border: 1px solid var(--border-input); border-radius: 6px; padding: 8px 12px; color: var(--text-primary); font-size: 14px; font-family: 'Noto Sans JP', sans-serif; outline: none; box-sizing: border-box; margin-bottom: 10px; transition: background 0.3s, color 0.3s; }
     .progress-bar { flex: 1; height: 3px; background: var(--progress-bg); border-radius: 2px; overflow: hidden; }
-    .progress-fill { height: 100%; border-radius: 2px; transition: width 0.4s ease;
-      background: linear-gradient(90deg, #E8443A, #E07B2E, #D4A72C, #3BA55D, #4A90D9, #7B68EE);
-    }
-
-    /* Project bar */
+    .progress-fill { height: 100%; border-radius: 2px; transition: width 0.4s ease; background: linear-gradient(90deg, #E8443A, #E07B2E, #D4A72C, #3BA55D, #4A90D9, #7B68EE); }
     .project-bar { display: flex; align-items: center; gap: 8px; margin-bottom: 8px; }
-    .project-select {
-      flex: 1; background: var(--bg-input); border: 1px solid var(--border-input); border-radius: 6px;
-      padding: 6px 10px; color: var(--text-primary); font-size: 13px;
-      font-family: 'Noto Sans JP', sans-serif; outline: none; transition: background 0.3s, color 0.3s;
-    }
-
-    /* Tip */
-    .tip-banner {
-      margin: 16px 16px 0; padding: 12px 16px; background: var(--bg-tip); border: 1px solid var(--border-tip);
-      border-radius: 8px; font-size: 12px; color: var(--tip-color); display: flex;
-      justify-content: space-between; align-items: flex-start; line-height: 1.6;
-    }
+    .project-select { flex: 1; background: var(--bg-input); border: 1px solid var(--border-input); border-radius: 6px; padding: 6px 10px; color: var(--text-primary); font-size: 13px; font-family: 'Noto Sans JP', sans-serif; outline: none; transition: background 0.3s, color 0.3s; }
+    .tip-banner { margin: 16px 16px 0; padding: 12px 16px; background: var(--bg-tip); border: 1px solid var(--border-tip); border-radius: 8px; font-size: 12px; color: var(--tip-color); display: flex; justify-content: space-between; align-items: flex-start; line-height: 1.6; }
     .tip-close { background: none; border: none; color: var(--tip-close); cursor: pointer; font-size: 16px; padding: 0 0 0 12px; line-height: 1; }
-
-    /* Flow */
     .flow-row { display: flex; justify-content: center; align-items: center; padding: 20px 16px 8px; gap: 4px; flex-wrap: wrap; }
-    .flow-circle {
-      width: 40px; height: 40px; border-radius: 50%; font-size: 16px; font-weight: 700;
-      display: flex; align-items: center; justify-content: center; cursor: pointer;
-      transition: all 0.2s ease; position: relative; border: 2px solid var(--border-secondary); background: var(--flow-circle-bg); color: var(--text-faint);
-      font-family: 'Noto Sans JP', sans-serif;
-    }
-    .flow-circle .dot {
-      position: absolute; top: -2px; right: -2px; width: 10px; height: 10px; border-radius: 50%;
-    }
-    .flow-d {
-      width: 40px; height: 40px; border-radius: 50%; border: 2px dashed var(--border-tertiary); background: var(--flow-circle-bg);
-      color: var(--text-faint); font-size: 16px; font-weight: 700; display: flex; align-items: center;
-      justify-content: center; font-family: 'Noto Sans JP', sans-serif;
-    }
+    .flow-circle { width: 40px; height: 40px; border-radius: 50%; font-size: 16px; font-weight: 700; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: all 0.2s ease; position: relative; border: 2px solid var(--border-secondary); background: var(--flow-circle-bg); color: var(--text-faint); font-family: 'Noto Sans JP', sans-serif; }
+    .flow-circle .dot { position: absolute; top: -2px; right: -2px; width: 10px; height: 10px; border-radius: 50%; }
+    .flow-d { width: 40px; height: 40px; border-radius: 50%; border: 2px dashed var(--border-tertiary); background: var(--flow-circle-bg); color: var(--text-faint); font-size: 16px; font-weight: 700; display: flex; align-items: center; justify-content: center; font-family: 'Noto Sans JP', sans-serif; }
     .flow-hint { text-align: center; font-size: 10px; color: var(--text-very-faint); margin-bottom: 8px; }
-
-    /* View mode toggle */
     .view-toggle-bar { display: flex; justify-content: center; gap: 4px; margin-bottom: 12px; }
-    .view-btn {
-      background: var(--bg-secondary); border: 1px solid var(--border-secondary); color: var(--text-muted); padding: 4px 12px;
-      border-radius: 6px; font-size: 11px; cursor: pointer; font-family: 'IBM Plex Mono', monospace; transition: background 0.2s;
-    }
+    .view-btn { background: var(--bg-secondary); border: 1px solid var(--border-secondary); color: var(--text-muted); padding: 4px 12px; border-radius: 6px; font-size: 11px; cursor: pointer; font-family: 'IBM Plex Mono', monospace; transition: background 0.2s; }
     .view-btn.active { background: var(--bg-btn); border-color: var(--border-tertiary); color: var(--text-primary); }
-
-    /* Cards */
     .cards { padding: 8px 16px 100px; }
     .card { margin-bottom: 8px; border-radius: 10px; border: 1px solid var(--border-primary); background: var(--bg-card); overflow: hidden; transition: all 0.3s ease; }
     .card.active { background: var(--bg-card-active); }
-    .card-header {
-      width: 100%; display: flex; align-items: center; gap: 12px; padding: 14px 16px;
-      background: none; border: none; cursor: pointer; text-align: left; color: var(--text-primary);
-    }
+    .card-header { width: 100%; display: flex; align-items: center; gap: 12px; padding: 14px 16px; background: none; border: none; cursor: pointer; text-align: left; color: var(--text-primary); }
     .card-key { font-size: 20px; font-weight: 900; min-width: 28px; font-family: 'Noto Sans JP', sans-serif; }
     .card-label { font-size: 14px; font-weight: 500; color: var(--text-primary); }
     .card-question { font-size: 11px; color: var(--text-hint); margin-top: 2px; }
@@ -205,123 +159,75 @@
     .card-hint { padding: 10px 12px; border-radius: 6px; margin-bottom: 10px; }
     .card-hint-text { font-size: 12px; color: var(--text-hint); white-space: pre-line; line-height: 1.6; }
     .card-hint-example { font-size: 11px; margin-top: 6px; opacity: 0.7; }
-    .card-textarea {
-      width: 100%; min-height: 100px; background: var(--bg-primary); border-radius: 6px;
-      padding: 12px; color: var(--text-primary); font-size: 13px; font-family: 'Noto Sans JP', sans-serif;
-      line-height: 1.8; outline: none; resize: vertical; box-sizing: border-box; transition: background 0.3s, color 0.3s;
-    }
+    .card-textarea { width: 100%; min-height: 80px; background: var(--bg-primary); border-radius: 6px; padding: 10px 12px; color: var(--text-primary); font-size: 13px; font-family: 'Noto Sans JP', sans-serif; line-height: 1.8; outline: none; resize: vertical; box-sizing: border-box; transition: background 0.3s, color 0.3s; }
     .card-nav { display: flex; justify-content: space-between; margin-top: 8px; }
-    .nav-btn {
-      background: none; padding: 6px 14px; border-radius: 6px; font-size: 11px; cursor: pointer;
-      font-family: 'IBM Plex Mono', monospace;
-    }
+    .nav-btn { background: none; padding: 6px 14px; border-radius: 6px; font-size: 11px; cursor: pointer; font-family: 'IBM Plex Mono', monospace; }
     .nav-btn-prev { border: 1px solid var(--border-secondary); color: var(--text-muted); }
     .filled-dot { width: 6px; height: 6px; border-radius: 50%; }
 
-    /* AI button */
-    .ai-btn {
-      background: var(--ai-bg); border: 1px solid var(--ai-border); color: var(--ai-color); padding: 8px 14px;
-      border-radius: 6px; font-size: 12px; cursor: pointer; margin-top: 8px; width: 100%;
-      font-family: 'Noto Sans JP', sans-serif; transition: all 0.2s;
-    }
+    /* Sub-point card */
+    .sp-card { background: var(--sp-card-bg); border: 1px solid var(--sp-card-border); border-radius: 8px; padding: 14px; margin-bottom: 10px; position: relative; }
+    .sp-card-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px; }
+    .sp-card-num { font-size: 13px; font-weight: 700; }
+    .sp-remove { background: none; border: none; color: var(--text-very-faint); cursor: pointer; font-size: 16px; padding: 2px 6px; border-radius: 4px; line-height: 1; }
+    .sp-remove:hover { color: var(--btn-del-color); }
+    .sp-field-label { font-size: 11px; font-weight: 600; margin: 8px 0 4px; display: flex; align-items: center; gap: 6px; }
+    .sp-field-dot { width: 8px; height: 8px; border-radius: 50%; display: inline-block; }
+    .sp-input { width: 100%; background: var(--bg-primary); border-radius: 6px; padding: 8px 10px; color: var(--text-primary); font-size: 13px; font-family: 'Noto Sans JP', sans-serif; line-height: 1.6; outline: none; resize: vertical; box-sizing: border-box; transition: background 0.3s, color 0.3s; }
+    .sp-add-btn { width: 100%; padding: 10px; background: var(--bg-card); border: 2px dashed var(--border-secondary); border-radius: 8px; color: var(--text-muted); font-size: 13px; cursor: pointer; font-family: 'Noto Sans JP', sans-serif; transition: border-color 0.2s, color 0.2s; }
+    .sp-add-btn:hover { border-color: #E07B2E; color: #E07B2E; }
+
+    .ai-btn { background: var(--ai-bg); border: 1px solid var(--ai-border); color: var(--ai-color); padding: 8px 14px; border-radius: 6px; font-size: 12px; cursor: pointer; margin-top: 8px; width: 100%; font-family: 'Noto Sans JP', sans-serif; transition: all 0.2s; }
     .ai-btn:hover { background: var(--ai-bg-hover); }
     .ai-btn.copied { background: var(--ai-copied-bg); border-color: var(--ai-copied-border); color: var(--btn-new-color); }
 
-    /* Overview grid */
-    .overview-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; padding: 8px 16px 100px; }
-    @media (max-width: 640px) { .overview-grid { grid-template-columns: 1fr; } }
-    .overview-card {
-      background: var(--bg-card); border: 1px solid var(--border-primary); border-radius: 8px;
-      padding: 12px; display: flex; flex-direction: column; gap: 8px;
-    }
-    .overview-header { display: flex; align-items: center; gap: 8px; font-size: 14px; font-weight: 500; }
+    /* Overview */
+    .overview-container { padding: 8px 16px 100px; }
+    .overview-section { margin-bottom: 16px; }
+    .overview-section-title { font-size: 13px; font-weight: 700; margin-bottom: 8px; display: flex; align-items: center; gap: 8px; }
+    .overview-sp-row { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 6px; margin-bottom: 6px; }
+    @media (max-width: 640px) { .overview-sp-row { grid-template-columns: 1fr; } }
+    .overview-sp-cell { background: var(--bg-card); border: 1px solid var(--border-primary); border-radius: 6px; padding: 8px; }
+    .overview-sp-label { font-size: 10px; font-weight: 600; margin-bottom: 4px; }
 
-    /* Tree view */
+    /* Tree */
     .tree-container { padding: 16px 24px 100px; }
-    .tree-root-label {
-      font-size: 15px; font-weight: 700; padding: 8px 12px; border-radius: 6px;
-      margin-bottom: 12px; cursor: pointer;
-    }
+    .tree-root-label { font-size: 15px; font-weight: 700; padding: 8px 12px; border-radius: 6px; margin-bottom: 12px; cursor: pointer; }
     .tree-branch { padding-left: 24px; position: relative; }
-    .tree-branch::before {
-      content: ""; position: absolute; left: 10px; top: 0; bottom: 12px;
-      border-left: 1px dashed var(--tree-line);
-    }
+    .tree-branch::before { content: ""; position: absolute; left: 10px; top: 0; bottom: 12px; border-left: 1px dashed var(--tree-line); }
     .tree-node { position: relative; padding: 6px 0 6px 20px; }
-    .tree-node::before {
-      content: ""; position: absolute; left: -14px; top: 18px;
-      width: 14px; border-top: 1px dashed var(--tree-line);
-    }
-    .tree-node-label {
-      font-size: 13px; padding: 4px 10px; border-radius: 4px; cursor: pointer;
-      display: inline-block; transition: background 0.2s;
-    }
+    .tree-node::before { content: ""; position: absolute; left: -14px; top: 18px; width: 14px; border-top: 1px dashed var(--tree-line); }
+    .tree-node-label { font-size: 13px; padding: 4px 10px; border-radius: 4px; cursor: pointer; display: inline-block; transition: background 0.2s; }
     .tree-node-label:hover { filter: brightness(1.1); }
     .tree-sub-branch { padding-left: 24px; position: relative; }
-    .tree-sub-branch::before {
-      content: ""; position: absolute; left: 10px; top: 0; bottom: 12px;
-      border-left: 1px dashed var(--tree-sub-line);
-    }
+    .tree-sub-branch::before { content: ""; position: absolute; left: 10px; top: 0; bottom: 12px; border-left: 1px dashed var(--tree-sub-line); }
     .tree-empty { color: var(--text-very-faint); font-size: 12px; font-style: italic; padding: 8px 0 8px 24px; }
 
-    /* Warning */
     .warning-card { margin-top: 16px; padding: 16px; background: var(--bg-warning); border: 1px solid var(--border-warning); border-radius: 10px; }
     .warning-title { font-size: 13px; font-weight: 700; color: #E8443A; margin-bottom: 8px; }
     .warning-body { font-size: 12px; color: var(--text-hint); line-height: 1.8; }
-
-    /* Checklist */
     .checklist-card { margin-top: 12px; padding: 16px; background: var(--bg-checklist); border: 1px solid var(--border-checklist); border-radius: 10px; }
     .checklist-title { font-size: 13px; font-weight: 700; color: #7B68EE; margin-bottom: 10px; }
-    .checklist-item {
-      font-size: 12px; color: var(--text-muted); padding: 6px 0; line-height: 1.6;
-      cursor: pointer; user-select: none; transition: opacity 0.2s;
-    }
+    .checklist-item { font-size: 12px; color: var(--text-muted); padding: 6px 0; line-height: 1.6; cursor: pointer; user-select: none; transition: opacity 0.2s; }
     .checklist-item:hover { opacity: 0.8; }
     .checklist-item:not(:last-child) { border-bottom: 1px solid var(--border-checklist); }
     .checklist-box { margin-right: 8px; }
-
-    /* Export menu */
     .export-menu-wrapper { position: relative; display: inline-block; }
-    .export-menu {
-      position: absolute; top: 100%; left: 0; margin-top: 4px;
-      background: var(--bg-export-menu); border: 1px solid var(--border-secondary); border-radius: 6px;
-      overflow: hidden; z-index: 20; min-width: 160px;
-    }
-    .export-menu button {
-      display: block; width: 100%; background: none; border: none; color: var(--text-secondary);
-      padding: 8px 12px; font-size: 12px; cursor: pointer; text-align: left;
-      font-family: 'Noto Sans JP', sans-serif;
-    }
+    .export-menu { position: absolute; top: 100%; left: 0; margin-top: 4px; background: var(--bg-export-menu); border: 1px solid var(--border-secondary); border-radius: 6px; overflow: hidden; z-index: 20; min-width: 160px; }
+    .export-menu button { display: block; width: 100%; background: none; border: none; color: var(--text-secondary); padding: 8px 12px; font-size: 12px; cursor: pointer; text-align: left; font-family: 'Noto Sans JP', sans-serif; }
     .export-menu button:hover { background: var(--bg-btn); }
-
-    /* Template modal */
-    .modal-overlay {
-      position: fixed; top: 0; left: 0; right: 0; bottom: 0;
-      background: var(--bg-overlay); z-index: 100; display: flex;
-      align-items: center; justify-content: center; padding: 16px;
-    }
-    .modal {
-      background: var(--bg-modal); border: 1px solid var(--border-secondary); border-radius: 12px;
-      padding: 24px; max-width: 400px; width: 100%;
-    }
+    .modal-overlay { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: var(--bg-overlay); z-index: 100; display: flex; align-items: center; justify-content: center; padding: 16px; }
+    .modal { background: var(--bg-modal); border: 1px solid var(--border-secondary); border-radius: 12px; padding: 24px; max-width: 400px; width: 100%; }
     .modal-title { font-size: 16px; font-weight: 700; margin-bottom: 16px; }
-    .template-btn {
-      display: block; width: 100%; background: var(--bg-card); border: 1px solid var(--border-primary);
-      color: var(--text-primary); padding: 12px 16px; border-radius: 8px; margin-bottom: 8px;
-      cursor: pointer; text-align: left; font-family: 'Noto Sans JP', sans-serif;
-      transition: border-color 0.2s;
-    }
+    .template-btn { display: block; width: 100%; background: var(--bg-card); border: 1px solid var(--border-primary); color: var(--text-primary); padding: 12px 16px; border-radius: 8px; margin-bottom: 8px; cursor: pointer; text-align: left; font-family: 'Noto Sans JP', sans-serif; transition: border-color 0.2s; }
     .template-btn:hover { border-color: var(--border-tertiary); }
     .template-btn-name { font-size: 14px; font-weight: 500; }
     .template-btn-desc { font-size: 11px; color: var(--text-muted); margin-top: 4px; }
-
-    /* Timestamp */
     .timestamp { font-size: 10px; color: var(--text-very-faint); text-align: right; margin-top: 4px; font-family: 'IBM Plex Mono', monospace; }
   </style>
 </head>
 <body>
   <div id="root"></div>
-
   <script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
   <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
   <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
@@ -329,31 +235,22 @@
   <script type="text/babel">
     const { useState, useEffect } = React;
 
-    const STEPS = [
-      { key: "ロ", label: "論点", color: "#E8443A",
-        hint: "そもそも何を答えるべき？\n「〜すべきか？」の形で書く",
-        example: "例：新規事業Xに参入すべきか？",
-        question: "この仕事のBIG QUESTIONは？" },
-      { key: "サ", label: "サブ論点", color: "#E07B2E",
-        hint: "論点を解くための「問い」に分解\n3〜5個がベスト",
-        example: "例：市場規模は？/勝てるか？/儲かるか？",
-        question: "論点の答えを出すには、何を検討すべき？" },
-      { key: "T", label: "TASK", color: "#D4A72C",
-        hint: "各サブ論点に答えるための\n具体的な作業を設計",
-        example: "例：市場規模→業界レポート分析＋ヒアリング3件",
-        question: "サブ論点に答えるために、何をやる？" },
-      { key: "ス", label: "スケジュール", color: "#3BA55D",
-        hint: "TASKの優先度・順番・期限を\n決めてWBSに落とす",
-        example: "例：Day1-3 リサーチ → Day4-5 分析 → Day6 資料化",
-        question: "いつまでに、誰が、どの順で？" },
-      { key: "作", label: "作業", color: "#4A90D9",
-        hint: "手を動かすフェーズ\nでも常に論点に立ち返る",
-        example: "例：Excelで数値分析 → Wordで示唆まとめ",
-        question: "ちゃんと論点に答える作業してる？" },
-      { key: "ア", label: "アウトプット", color: "#7B68EE",
-        hint: "最終成果物\n→ そのあと必ずD（議論）へ",
-        example: "例：提案スライド10枚 → 上司とディスカッション",
-        question: "論点にストレートに答えてる？" },
+    // Step colors & metadata
+    const C = {
+      "ロ": { label: "論点", color: "#E8443A", hint: "そもそも何を答えるべき？\n「〜すべきか？」の形で書く", example: "例：新規事業Xに参入すべきか？", question: "この仕事のBIG QUESTIONは？" },
+      "サ": { label: "サブ論点", color: "#E07B2E" },
+      "T": { label: "TASK", color: "#D4A72C" },
+      "ス": { label: "スケジュール", color: "#3BA55D" },
+      "作": { label: "作業", color: "#4A90D9", hint: "手を動かすフェーズ\nでも常に論点に立ち返る", example: "例：Excelで数値分析 → Wordで示唆まとめ", question: "ちゃんと論点に答える作業してる？" },
+      "ア": { label: "アウトプット", color: "#7B68EE", hint: "最終成果物\n→ そのあと必ずD（議論）へ", example: "例：提案スライド10枚 → 上司とディスカッション", question: "論点にストレートに答えてる？" },
+    };
+    const FLOW_KEYS = ["ロ", "サ", "T", "ス", "作", "ア"];
+    // Main navigable steps: サ/T/ス are combined into "サ"
+    const MAIN_STEPS = [
+      { key: "ロ", label: "論点", question: "この仕事のBIG QUESTIONは？" },
+      { key: "サ", label: "サブ論点 → TASK → スケジュール", question: "論点を分解し、各サブ論点に作業と期限を紐づける" },
+      { key: "作", label: "作業", question: "ちゃんと論点に答える作業してる？" },
+      { key: "ア", label: "アウトプット", question: "論点にストレートに答えてる？" },
     ];
 
     const CHECKLIST = [
@@ -365,48 +262,38 @@
     ];
 
     const TEMPLATES = [
-      {
-        name: "新規事業検討",
-        desc: "参入判断のための論点・サブ論点・TASKをセット",
-        notes: {
-          "ロ": "新規事業Xに参入すべきか？",
-          "サ": "市場規模は十分か？\n自社の強みを活かせるか？\n収益性は確保できるか？\nリスクは許容範囲か？",
-          "T": "業界レポート分析\n競合3社のベンチマーク\n事業計画シミュレーション\nリスク洗い出しと対策案",
-          "ス": "", "作": "", "ア": "",
-        },
+      { name: "新規事業検討", desc: "参入判断のための論点・サブ論点・TASKをセット",
+        notes: { "ロ": "新規事業Xに参入すべきか？", "作": "", "ア": "" },
+        subPoints: [
+          { content: "市場規模は十分か？", task: "業界レポート分析", schedule: "Day1-2" },
+          { content: "自社の強みを活かせるか？", task: "競合3社のベンチマーク", schedule: "Day2-3" },
+          { content: "収益性は確保できるか？", task: "事業計画シミュレーション", schedule: "Day3-4" },
+          { content: "リスクは許容範囲か？", task: "リスク洗い出しと対策案", schedule: "Day4-5" },
+        ],
       },
-      {
-        name: "業務改善提案",
-        desc: "現状の問題を分析し改善策を提案する",
-        notes: {
-          "ロ": "○○プロセスを改善すべきか？",
-          "サ": "現状の問題点は何か？\n改善によるインパクトはどの程度か？\n実現可能性は？\nコストは見合うか？",
-          "T": "現状フローの可視化\n関係者ヒアリング3名\n改善案の設計\nコスト試算",
-          "ス": "", "作": "", "ア": "",
-        },
+      { name: "業務改善提案", desc: "現状の問題を分析し改善策を提案する",
+        notes: { "ロ": "○○プロセスを改善すべきか？", "作": "", "ア": "" },
+        subPoints: [
+          { content: "現状の問題点は何か？", task: "現状フローの可視化", schedule: "" },
+          { content: "改善によるインパクトはどの程度か？", task: "関係者ヒアリング3名", schedule: "" },
+          { content: "実現可能性は？", task: "改善案の設計", schedule: "" },
+          { content: "コストは見合うか？", task: "コスト試算", schedule: "" },
+        ],
       },
-      {
-        name: "問題解決",
-        desc: "発生した問題の原因特定と解決策を検討",
-        notes: {
-          "ロ": "○○問題をどう解決すべきか？",
-          "サ": "根本原因は何か？\n影響範囲はどこまでか？\nどの解決策が最も効果的か？",
-          "T": "事象の時系列整理\n関係者からの情報収集\n原因の仮説立て→検証\n解決策の比較検討",
-          "ス": "", "作": "", "ア": "",
-        },
+      { name: "問題解決", desc: "発生した問題の原因特定と解決策を検討",
+        notes: { "ロ": "○○問題をどう解決すべきか？", "作": "", "ア": "" },
+        subPoints: [
+          { content: "根本原因は何か？", task: "事象の時系列整理", schedule: "" },
+          { content: "影響範囲はどこまでか？", task: "関係者からの情報収集", schedule: "" },
+          { content: "どの解決策が最も効果的か？", task: "解決策の比較検討", schedule: "" },
+        ],
       },
-      {
-        name: "白紙（空のプロジェクト）",
-        desc: "何も入っていない状態から始める",
-        notes: {},
-      },
+      { name: "白紙（空のプロジェクト）", desc: "何も入っていない状態から始める", notes: {}, subPoints: [] },
     ];
 
     const AI_PROMPTS = {
       "ロ": "現在「論点」のステップにいます。\nこの論点が適切か、もっと鋭くできないか、一緒に考えてください。\n論点は「〜すべきか？」の形にするのが基本です。",
-      "サ": "現在「サブ論点」のステップにいます。\nこの論点を解くためのサブ論点が適切か、漏れがないか確認してください。\nMECEを意識して3〜5個に分解したいです。",
-      "T": "現在「TASK」のステップにいます。\n各サブ論点に答えるためのTASKが適切か、もっと効率的な方法がないか提案してください。",
-      "ス": "現在「スケジュール」のステップにいます。\nTASKの優先順位とスケジュールの組み方について相談したいです。",
+      "サ": "現在「サブ論点」のステップにいます。\n各サブ論点が適切か、漏れがないか確認してください。\nMECEを意識して3〜5個に分解したいです。\nまた、各サブ論点に紐づくTASKとスケジュールも見てください。",
       "作": "現在「作業」のステップにいます。\n作業が論点にちゃんと答えるものになっているか、ズレていないかチェックしてください。",
       "ア": "現在「アウトプット」のステップにいます。\nこのアウトプットが論点にストレートに答えているか確認してください。\nディスカッション（D）の準備として何を意識すべきかも教えてください。",
     };
@@ -416,55 +303,56 @@
       return Date.now().toString(36) + Math.random().toString(36).slice(2);
     };
 
-    const parseLines = (text) => {
-      if (!text) return [];
-      return text.split("\n").map(l => l.replace(/^[\s・\-\*・●◯◆■□▪▸▹►▻→]+/, "").trim()).filter(Boolean);
+    // Migrate old format → new format
+    const migrateProject = (p) => {
+      if (p.subPoints) return p;
+      const n = p.notes || {};
+      if (!n["サ"] && !n["T"] && !n["ス"]) { p.subPoints = []; return p; }
+      const parse = (t) => (t || "").split("\n").map(l => l.replace(/^[\s・\-\*●◯◆■□→]+/, "").trim()).filter(Boolean);
+      const subs = parse(n["サ"]);
+      const tasks = parse(n["T"]);
+      const scheds = parse(n["ス"]);
+      p.subPoints = subs.length > 0
+        ? subs.map((s, i) => ({ id: generateId(), content: s, task: tasks[i] || "", schedule: scheds[i] || "" }))
+        : [];
+      delete n["サ"]; delete n["T"]; delete n["ス"];
+      return p;
     };
 
     const parseImportText = (text) => {
       const lines = text.split("\n");
-      let name = "";
-      const notes = {};
-      let currentKey = null;
-      let currentLines = [];
+      let name = ""; const notes = {}; let currentKey = null; let currentLines = [];
       for (const line of lines) {
         if (line.startsWith("# ") && !line.includes("ロ→サ") && !name) { name = line.slice(2).trim(); continue; }
-        const match = line.match(/^## \[(.)\] /);
-        if (match) {
+        const m = line.match(/^## \[(.)\] /) || line.match(/^## (.) /);
+        if (m && "ロサTス作ア".includes(m[1])) {
           if (currentKey) notes[currentKey] = currentLines.join("\n").trim();
-          currentKey = match[1]; currentLines = []; continue;
+          currentKey = m[1]; currentLines = []; continue;
         }
         if (line === "---" || line.startsWith("# ロ→サ") || line.startsWith("> ロ→サ")) continue;
-        const mdMatch = line.match(/^## (.) /);
-        if (mdMatch && STEPS.some(s => s.key === mdMatch[1])) {
-          if (currentKey) notes[currentKey] = currentLines.join("\n").trim();
-          currentKey = mdMatch[1]; currentLines = []; continue;
-        }
         if (currentKey) currentLines.push(line);
       }
       if (currentKey) notes[currentKey] = currentLines.join("\n").trim();
-      for (const k of Object.keys(notes)) {
-        if (notes[k] === "（未記入）" || notes[k] === "*未記入*") notes[k] = "";
-      }
+      for (const k of Object.keys(notes)) { if (notes[k] === "（未記入）" || notes[k] === "*未記入*") notes[k] = ""; }
       return { name, notes };
     };
 
     function App() {
-      // --- Data state (persisted) ---
       const [projects, setProjects] = useState(() => {
-        try { const s = localStorage.getItem("rosatsusakua-projects"); return s ? JSON.parse(s) : {}; }
-        catch { return {}; }
+        try {
+          const s = localStorage.getItem("rosatsusakua-projects");
+          if (!s) return {};
+          const ps = JSON.parse(s);
+          Object.values(ps).forEach(migrateProject);
+          return ps;
+        } catch { return {}; }
       });
       const [currentProjectId, setCurrentProjectId] = useState(() => {
-        try { return localStorage.getItem("rosatsusakua-current") || null; }
-        catch { return null; }
+        try { return localStorage.getItem("rosatsusakua-current") || null; } catch { return null; }
       });
       const [theme, setTheme] = useState(() => {
-        try { return localStorage.getItem("rosatsusakua-theme") || "dark"; }
-        catch { return "dark"; }
+        try { return localStorage.getItem("rosatsusakua-theme") || "dark"; } catch { return "dark"; }
       });
-
-      // --- UI state ---
       const [activeStep, setActiveStep] = useState(null);
       const [showTip, setShowTip] = useState(true);
       const [viewMode, setViewMode] = useState("single");
@@ -472,197 +360,295 @@
       const [showTemplateModal, setShowTemplateModal] = useState(false);
       const [copiedStep, setCopiedStep] = useState(null);
 
-      // --- Persist ---
-      useEffect(() => {
-        try { localStorage.setItem("rosatsusakua-projects", JSON.stringify(projects)); } catch {}
-      }, [projects]);
-      useEffect(() => {
-        try {
-          if (currentProjectId) localStorage.setItem("rosatsusakua-current", currentProjectId);
-          else localStorage.removeItem("rosatsusakua-current");
-        } catch {}
-      }, [currentProjectId]);
-      useEffect(() => {
-        document.documentElement.setAttribute("data-theme", theme);
-        try { localStorage.setItem("rosatsusakua-theme", theme); } catch {}
-      }, [theme]);
-
-      // --- Init: create first project if empty ---
+      useEffect(() => { try { localStorage.setItem("rosatsusakua-projects", JSON.stringify(projects)); } catch {} }, [projects]);
+      useEffect(() => { try { if (currentProjectId) localStorage.setItem("rosatsusakua-current", currentProjectId); else localStorage.removeItem("rosatsusakua-current"); } catch {} }, [currentProjectId]);
+      useEffect(() => { document.documentElement.setAttribute("data-theme", theme); try { localStorage.setItem("rosatsusakua-theme", theme); } catch {} }, [theme]);
       useEffect(() => {
         if (Object.keys(projects).length === 0) {
-          const id = generateId();
-          const now = new Date().toISOString();
-          setProjects({ [id]: { id, name: "", notes: {}, checklist: {}, createdAt: now, updatedAt: now } });
+          const id = generateId(); const now = new Date().toISOString();
+          setProjects({ [id]: { id, name: "", notes: {}, subPoints: [], checklist: {}, createdAt: now, updatedAt: now } });
           setCurrentProjectId(id);
         } else if (!currentProjectId || !projects[currentProjectId]) {
           setCurrentProjectId(Object.keys(projects)[0]);
         }
       }, []);
 
-      // --- Derived values ---
-      const currentProject = currentProjectId ? projects[currentProjectId] : null;
-      const notes = currentProject?.notes || {};
-      const projectName = currentProject?.name || "";
-      const checklist = currentProject?.checklist || {};
-      const filledCount = Object.values(notes).filter(v => v && v.trim()).length;
+      const cur = currentProjectId ? projects[currentProjectId] : null;
+      const notes = cur?.notes || {};
+      const projectName = cur?.name || "";
+      const subPoints = cur?.subPoints || [];
+      const checklist = cur?.checklist || {};
+
+      // Progress: ロ filled, any サ filled, any T filled, any ス filled, 作 filled, ア filled → /6
+      const hasSub = subPoints.some(sp => sp.content?.trim());
+      const hasTask = subPoints.some(sp => sp.task?.trim());
+      const hasSched = subPoints.some(sp => sp.schedule?.trim());
+      const filledCount = [notes["ロ"]?.trim(), hasSub, hasTask, hasSched, notes["作"]?.trim(), notes["ア"]?.trim()].filter(Boolean).length;
       const progress = (filledCount / 6) * 100;
       const projectList = Object.values(projects).sort((a, b) => (b.updatedAt || "").localeCompare(a.updatedAt || ""));
 
-      // --- Theme ---
-      const toggleTheme = () => setTheme(prev => prev === "dark" ? "light" : "dark");
-
-      // --- Project management ---
-      const createProjectFromTemplate = (template) => {
-        const id = generateId();
-        const now = new Date().toISOString();
-        setProjects(prev => ({
-          ...prev,
-          [id]: { id, name: template.name === "白紙（空のプロジェクト）" ? "" : template.name, notes: { ...template.notes }, checklist: {}, createdAt: now, updatedAt: now },
-        }));
-        setCurrentProjectId(id);
-        setActiveStep(null);
-        setShowTemplateModal(false);
+      // Check which flow keys have data
+      const flowFilled = {
+        "ロ": !!notes["ロ"]?.trim(), "サ": hasSub, "T": hasTask, "ス": hasSched,
+        "作": !!notes["作"]?.trim(), "ア": !!notes["ア"]?.trim(),
       };
 
+      const toggleTheme = () => setTheme(p => p === "dark" ? "light" : "dark");
+      const now = () => new Date().toISOString();
+      const touch = (proj) => ({ ...proj, updatedAt: now() });
+
+      const createProjectFromTemplate = (t) => {
+        const id = generateId(); const n = now();
+        const sps = (t.subPoints || []).map(sp => ({ ...sp, id: generateId() }));
+        setProjects(prev => ({ ...prev, [id]: { id, name: t.name === "白紙（空のプロジェクト）" ? "" : t.name, notes: { ...(t.notes || {}) }, subPoints: sps, checklist: {}, createdAt: n, updatedAt: n } }));
+        setCurrentProjectId(id); setActiveStep(null); setShowTemplateModal(false);
+      };
       const switchProject = (id) => { setCurrentProjectId(id); setActiveStep(null); };
-
       const deleteProject = () => {
-        if (!currentProjectId) return;
-        if (!confirm("このプロジェクトを削除しますか？")) return;
-        const next = { ...projects };
-        delete next[currentProjectId];
-        setProjects(next);
-        const remaining = Object.keys(next);
-        if (remaining.length > 0) { setCurrentProjectId(remaining[0]); }
-        else { setCurrentProjectId(null); }
-        setActiveStep(null);
+        if (!currentProjectId || !confirm("このプロジェクトを削除しますか？")) return;
+        const next = { ...projects }; delete next[currentProjectId]; setProjects(next);
+        const rem = Object.keys(next); setCurrentProjectId(rem.length > 0 ? rem[0] : null); setActiveStep(null);
       };
 
-      // --- Data updaters ---
-      const updateNotes = (key, value) => {
+      const updateNote = (key, value) => {
         if (!currentProjectId) return;
-        setProjects(prev => ({
-          ...prev,
-          [currentProjectId]: { ...prev[currentProjectId], notes: { ...prev[currentProjectId].notes, [key]: value }, updatedAt: new Date().toISOString() },
-        }));
+        setProjects(prev => ({ ...prev, [currentProjectId]: touch({ ...prev[currentProjectId], notes: { ...prev[currentProjectId].notes, [key]: value } }) }));
       };
       const updateProjectName = (name) => {
         if (!currentProjectId) return;
-        setProjects(prev => ({
-          ...prev,
-          [currentProjectId]: { ...prev[currentProjectId], name, updatedAt: new Date().toISOString() },
-        }));
+        setProjects(prev => ({ ...prev, [currentProjectId]: touch({ ...prev[currentProjectId], name }) }));
       };
-      const toggleChecklist = (index) => {
+      const toggleChecklist = (i) => {
         if (!currentProjectId) return;
-        setProjects(prev => ({
-          ...prev,
-          [currentProjectId]: {
-            ...prev[currentProjectId],
-            checklist: { ...prev[currentProjectId].checklist, [index]: !prev[currentProjectId].checklist?.[index] },
-            updatedAt: new Date().toISOString(),
-          },
-        }));
+        setProjects(prev => ({ ...prev, [currentProjectId]: touch({ ...prev[currentProjectId], checklist: { ...prev[currentProjectId].checklist, [i]: !prev[currentProjectId].checklist?.[i] } }) }));
       };
 
-      // --- Export ---
+      // Sub-point operations
+      const addSubPoint = () => {
+        if (!currentProjectId) return;
+        setProjects(prev => ({ ...prev, [currentProjectId]: touch({ ...prev[currentProjectId], subPoints: [...(prev[currentProjectId].subPoints || []), { id: generateId(), content: "", task: "", schedule: "" }] }) }));
+      };
+      const removeSubPoint = (spId) => {
+        if (!currentProjectId) return;
+        setProjects(prev => ({ ...prev, [currentProjectId]: touch({ ...prev[currentProjectId], subPoints: prev[currentProjectId].subPoints.filter(sp => sp.id !== spId) }) }));
+      };
+      const updateSubPoint = (spId, field, value) => {
+        if (!currentProjectId) return;
+        setProjects(prev => ({ ...prev, [currentProjectId]: touch({ ...prev[currentProjectId], subPoints: prev[currentProjectId].subPoints.map(sp => sp.id === spId ? { ...sp, [field]: value } : sp) }) }));
+      };
+
+      // Export
       const handleExport = (format) => {
         setShowExportMenu(false);
         const pName = projectName || "無題のプロジェクト";
         let text, filename;
         if (format === "md") {
           text = `# ${pName}\n\n> ロ→サ→T→ス→作→ア フレームワーク\n\n---\n\n`;
-          STEPS.forEach(s => {
-            text += `## ${s.key} ${s.label}\n\n`;
-            const c = notes[s.key]?.trim();
-            text += c ? `${c}\n\n` : `*未記入*\n\n`;
-          });
+          text += `## ロ 論点\n\n${notes["ロ"]?.trim() || "*未記入*"}\n\n`;
+          text += `## サ サブ論点 → TASK → スケジュール\n\n`;
+          if (subPoints.length === 0) { text += `*未記入*\n\n`; }
+          else { subPoints.forEach((sp, i) => {
+            text += `### ${i + 1}. ${sp.content || "（未記入）"}\n`;
+            text += `- **TASK**: ${sp.task || "（未記入）"}\n`;
+            text += `- **スケジュール**: ${sp.schedule || "（未記入）"}\n\n`;
+          }); }
+          text += `## 作 作業\n\n${notes["作"]?.trim() || "*未記入*"}\n\n`;
+          text += `## ア アウトプット\n\n${notes["ア"]?.trim() || "*未記入*"}\n\n`;
           text += `---\n\n## セルフチェック\n\n`;
           CHECKLIST.forEach((q, i) => { text += `- [${checklist[i] ? "x" : " "}] ${q}\n`; });
           text += `\n---\n*最終更新: ${new Date().toLocaleString("ja-JP")}*\n`;
           filename = `${pName}-memo.md`;
         } else {
           text = `# ${pName}\n# ロ→サ→T→ス→作→ア メモ\n---\n\n`;
-          STEPS.forEach(s => { text += `## [${s.key}] ${s.label}\n${notes[s.key] || "（未記入）"}\n\n`; });
+          text += `## [ロ] 論点\n${notes["ロ"] || "（未記入）"}\n\n`;
+          text += `## [サ] サブ論点\n`;
+          if (subPoints.length === 0) { text += `（未記入）\n\n`; }
+          else { subPoints.forEach((sp, i) => { text += `${i + 1}. ${sp.content || "（未記入）"}\n`; }); text += `\n`; }
+          text += `## [T] TASK\n`;
+          if (subPoints.length === 0) { text += `（未記入）\n\n`; }
+          else { subPoints.forEach((sp, i) => { text += `${i + 1}. ${sp.task || "（未記入）"}\n`; }); text += `\n`; }
+          text += `## [ス] スケジュール\n`;
+          if (subPoints.length === 0) { text += `（未記入）\n\n`; }
+          else { subPoints.forEach((sp, i) => { text += `${i + 1}. ${sp.schedule || "（未記入）"}\n`; }); text += `\n`; }
+          text += `## [作] 作業\n${notes["作"] || "（未記入）"}\n\n`;
+          text += `## [ア] アウトプット\n${notes["ア"] || "（未記入）"}\n\n`;
           filename = `${pName}-memo.txt`;
         }
         const blob = new Blob([text], { type: "text/plain;charset=utf-8" });
-        const url = URL.createObjectURL(blob);
-        const a = document.createElement("a"); a.href = url; a.download = filename; a.click();
-        URL.revokeObjectURL(url);
+        const url = URL.createObjectURL(blob); const a = document.createElement("a"); a.href = url; a.download = filename; a.click(); URL.revokeObjectURL(url);
       };
 
-      // --- Import ---
       const handleImport = () => {
-        const input = document.createElement("input");
-        input.type = "file"; input.accept = ".txt,.md";
+        const input = document.createElement("input"); input.type = "file"; input.accept = ".txt,.md";
         input.onchange = (e) => {
-          const file = e.target.files[0];
-          if (!file) return;
+          const file = e.target.files[0]; if (!file) return;
           const reader = new FileReader();
           reader.onload = (ev) => {
             const parsed = parseImportText(ev.target.result);
-            const id = generateId();
-            const now = new Date().toISOString();
-            setProjects(prev => ({
-              ...prev,
-              [id]: { id, name: parsed.name || file.name.replace(/\.[^.]+$/, ""), notes: parsed.notes, checklist: {}, createdAt: now, updatedAt: now },
-            }));
-            setCurrentProjectId(id);
-            setActiveStep(null);
+            const id = generateId(); const n = now();
+            const proj = { id, name: parsed.name || file.name.replace(/\.[^.]+$/, ""), notes: parsed.notes, checklist: {}, createdAt: n, updatedAt: n };
+            migrateProject(proj);
+            if (!proj.subPoints) proj.subPoints = [];
+            setProjects(prev => ({ ...prev, [id]: proj }));
+            setCurrentProjectId(id); setActiveStep(null);
           };
           reader.readAsText(file, "UTF-8");
         };
         input.click();
       };
 
-      // --- Reset ---
       const handleReset = () => {
-        if (!currentProjectId) return;
-        if (!confirm("このプロジェクトのメモを全てクリアしますか？")) return;
-        setProjects(prev => ({
-          ...prev,
-          [currentProjectId]: { ...prev[currentProjectId], notes: {}, checklist: {}, updatedAt: new Date().toISOString() },
-        }));
+        if (!currentProjectId || !confirm("このプロジェクトのメモを全てクリアしますか？")) return;
+        setProjects(prev => ({ ...prev, [currentProjectId]: touch({ ...prev[currentProjectId], notes: {}, subPoints: [], checklist: {} }) }));
         setActiveStep(null);
       };
 
-      // --- AI prompt ---
+      // AI prompt
       const generateAIPrompt = (stepKey) => {
         const pName = projectName || "無題のプロジェクト";
         let prompt = `あなたは高松智史氏の仕事術「ロサTス作ア」フレームワークの専門家です。\n\n`;
-        prompt += `【プロジェクト】${pName}\n\n`;
-        prompt += `【現在のメモ内容】\n`;
-        STEPS.forEach(s => { prompt += `[${s.key}] ${s.label}: ${notes[s.key]?.trim() || "（未記入）"}\n`; });
+        prompt += `【プロジェクト】${pName}\n\n【現在のメモ内容】\n`;
+        prompt += `[ロ] 論点: ${notes["ロ"]?.trim() || "（未記入）"}\n\n`;
+        if (subPoints.length > 0) {
+          subPoints.forEach((sp, i) => {
+            prompt += `[サブ論点${i + 1}] ${sp.content || "（未記入）"}\n`;
+            prompt += `  [TASK] ${sp.task || "（未記入）"}\n`;
+            prompt += `  [スケジュール] ${sp.schedule || "（未記入）"}\n`;
+          });
+        } else { prompt += `[サブ論点] （未記入）\n`; }
+        prompt += `\n[作] 作業: ${notes["作"]?.trim() || "（未記入）"}\n`;
+        prompt += `[ア] アウトプット: ${notes["ア"]?.trim() || "（未記入）"}\n`;
         prompt += `\n【相談したいこと】\n${AI_PROMPTS[stepKey]}`;
         return prompt;
       };
-
       const handleAICopy = async (stepKey) => {
         const prompt = generateAIPrompt(stepKey);
-        try {
-          await navigator.clipboard.writeText(prompt);
-          setCopiedStep(stepKey);
-          setTimeout(() => setCopiedStep(null), 2500);
-        } catch {
-          const ta = document.createElement("textarea");
-          ta.value = prompt; document.body.appendChild(ta); ta.select(); document.execCommand("copy");
-          document.body.removeChild(ta);
-          setCopiedStep(stepKey);
-          setTimeout(() => setCopiedStep(null), 2500);
-        }
+        try { await navigator.clipboard.writeText(prompt); } catch { const ta = document.createElement("textarea"); ta.value = prompt; document.body.appendChild(ta); ta.select(); document.execCommand("copy"); document.body.removeChild(ta); }
+        setCopiedStep(stepKey); setTimeout(() => setCopiedStep(null), 2500);
       };
 
-      // --- Tree view helpers ---
-      const buildTree = () => {
-        const ronten = notes["ロ"]?.trim() || "";
-        const subLines = parseLines(notes["サ"]);
-        const taskLines = parseLines(notes["T"]);
-        const schedLines = parseLines(notes["ス"]);
-        return { ronten, subLines, taskLines, schedLines };
+      // Map flow circle clicks: サ, T, ス → "サ"
+      const handleFlowClick = (key) => {
+        const target = (key === "T" || key === "ス") ? "サ" : key;
+        setActiveStep(activeStep === target ? null : target);
+        setViewMode("single");
       };
 
-      // ===== RENDER =====
+      // Render simple note card (ロ, 作, ア)
+      const renderNoteCard = (step, prevKey, nextKey) => {
+        const isActive = activeStep === step.key;
+        const meta = C[step.key];
+        const hasContent = notes[step.key]?.trim();
+        return (
+          <div key={step.key} className={`card${isActive ? " active" : ""}`}
+            style={{ borderColor: isActive ? meta.color + "66" : undefined, boxShadow: isActive ? `0 4px 24px ${meta.color}11` : "none" }}>
+            <button className="card-header" onClick={() => setActiveStep(isActive ? null : step.key)}>
+              <div className="card-key" style={{ color: meta.color, textShadow: isActive ? `0 0 12px ${meta.color}44` : "none" }}>{step.key}</div>
+              <div style={{ flex: 1 }}><div className="card-label">{step.label}</div><div className="card-question">{step.question}</div></div>
+              <div style={{ display: "flex", alignItems: "center", gap: "6px" }}>
+                {hasContent && <div className="filled-dot" style={{ background: meta.color }} />}
+                <span className={`card-chevron${isActive ? " open" : ""}`}>▾</span>
+              </div>
+            </button>
+            {isActive && (
+              <div className="card-body">
+                {meta.hint && (
+                  <div className="card-hint" style={{ background: `${meta.color}0a`, border: `1px solid ${meta.color}22` }}>
+                    <div className="card-hint-text">{meta.hint}</div>
+                    <div className="card-hint-example mono" style={{ color: meta.color }}>{meta.example}</div>
+                  </div>
+                )}
+                <textarea className="card-textarea" style={{ border: `1px solid ${meta.color}33` }}
+                  value={notes[step.key] || ""} onChange={e => updateNote(step.key, e.target.value)}
+                  placeholder={`${meta.label}をメモ...`} autoFocus />
+                <button className={`ai-btn${copiedStep === step.key ? " copied" : ""}`} onClick={() => handleAICopy(step.key)}>
+                  {copiedStep === step.key ? "✓ コピーしました！claude.ai に貼り付けてください" : "🤖 AIに相談（プロンプトをコピー）"}
+                </button>
+                <div className="card-nav">
+                  {prevKey ? <button className="nav-btn nav-btn-prev" onClick={() => setActiveStep(prevKey)}>← {prevKey}</button> : <div />}
+                  {nextKey && <button className="nav-btn" onClick={() => setActiveStep(nextKey)} style={{ background: `${C[nextKey].color}22`, border: `1px solid ${C[nextKey].color}44`, color: C[nextKey].color }}>{nextKey} →</button>}
+                </div>
+              </div>
+            )}
+          </div>
+        );
+      };
+
+      // Render サブ論点 combined card
+      const renderSubPointCard = () => {
+        const isActive = activeStep === "サ";
+        const anyFilled = subPoints.some(sp => sp.content?.trim() || sp.task?.trim() || sp.schedule?.trim());
+        return (
+          <div className={`card${isActive ? " active" : ""}`}
+            style={{ borderColor: isActive ? C["サ"].color + "66" : undefined, boxShadow: isActive ? `0 4px 24px ${C["サ"].color}11` : "none" }}>
+            <button className="card-header" onClick={() => setActiveStep(isActive ? null : "サ")}>
+              <div style={{ display: "flex", gap: "2px" }}>
+                {["サ", "T", "ス"].map(k => (
+                  <span key={k} className="card-key" style={{ color: C[k].color, fontSize: "18px", minWidth: "auto" }}>{k}</span>
+                ))}
+              </div>
+              <div style={{ flex: 1 }}>
+                <div className="card-label">サブ論点 → TASK → スケジュール</div>
+                <div className="card-question">論点を分解し、各サブ論点に作業と期限を紐づける</div>
+              </div>
+              <div style={{ display: "flex", alignItems: "center", gap: "6px" }}>
+                {anyFilled && <div className="filled-dot" style={{ background: C["サ"].color }} />}
+                <span className={`card-chevron${isActive ? " open" : ""}`}>▾</span>
+              </div>
+            </button>
+            {isActive && (
+              <div className="card-body">
+                <div className="card-hint" style={{ background: `${C["サ"].color}0a`, border: `1px solid ${C["サ"].color}22` }}>
+                  <div className="card-hint-text">論点を解くための「問い」に分解し、それぞれにTASKとスケジュールを紐づける{"\n"}3〜5個がベスト</div>
+                  <div className="card-hint-example mono" style={{ color: C["サ"].color }}>例：市場規模は？→ 業界レポート分析 → Day1-2</div>
+                </div>
+
+                {subPoints.map((sp, i) => (
+                  <div key={sp.id} className="sp-card">
+                    <div className="sp-card-header">
+                      <span className="sp-card-num" style={{ color: C["サ"].color }}>サブ論点 {i + 1}</span>
+                      {subPoints.length > 1 && (
+                        <button className="sp-remove" onClick={() => removeSubPoint(sp.id)} title="削除">✕</button>
+                      )}
+                    </div>
+                    <div className="sp-field-label" style={{ color: C["サ"].color, marginTop: 0 }}>
+                      <span className="sp-field-dot" style={{ background: C["サ"].color }} />サブ論点
+                    </div>
+                    <textarea className="sp-input" style={{ border: `1px solid ${C["サ"].color}33`, minHeight: "50px" }}
+                      value={sp.content} onChange={e => updateSubPoint(sp.id, "content", e.target.value)}
+                      placeholder="サブ論点を入力..." />
+
+                    <div className="sp-field-label" style={{ color: C["T"].color }}>
+                      <span className="sp-field-dot" style={{ background: C["T"].color }} />TASK
+                    </div>
+                    <textarea className="sp-input" style={{ border: `1px solid ${C["T"].color}33`, minHeight: "40px" }}
+                      value={sp.task} onChange={e => updateSubPoint(sp.id, "task", e.target.value)}
+                      placeholder="このサブ論点に答えるためのTASK..." />
+
+                    <div className="sp-field-label" style={{ color: C["ス"].color }}>
+                      <span className="sp-field-dot" style={{ background: C["ス"].color }} />スケジュール
+                    </div>
+                    <input className="sp-input" style={{ border: `1px solid ${C["ス"].color}33` }}
+                      value={sp.schedule} onChange={e => updateSubPoint(sp.id, "schedule", e.target.value)}
+                      placeholder="期限・タイミング..." />
+                  </div>
+                ))}
+
+                <button className="sp-add-btn" onClick={addSubPoint}>+ サブ論点を追加</button>
+
+                <button className={`ai-btn${copiedStep === "サ" ? " copied" : ""}`} onClick={() => handleAICopy("サ")}>
+                  {copiedStep === "サ" ? "✓ コピーしました！claude.ai に貼り付けてください" : "🤖 AIに相談（プロンプトをコピー）"}
+                </button>
+                <div className="card-nav">
+                  <button className="nav-btn nav-btn-prev" onClick={() => setActiveStep("ロ")}>← ロ</button>
+                  <button className="nav-btn" onClick={() => setActiveStep("作")} style={{ background: `${C["作"].color}22`, border: `1px solid ${C["作"].color}44`, color: C["作"].color }}>作 →</button>
+                </div>
+              </div>
+            )}
+          </div>
+        );
+      };
+
       return (
         <div>
           {/* Header */}
@@ -671,84 +657,57 @@
               <div>
                 <div className="header-subtitle mono">高松智史式</div>
                 <div className="header-title">
-                  {STEPS.map(s => (
-                    <span key={s.key} style={{ color: s.color, textShadow: `0 0 20px ${s.color}33` }}>{s.key}</span>
-                  ))}
+                  {FLOW_KEYS.map(k => <span key={k} style={{ color: C[k].color, textShadow: `0 0 20px ${C[k].color}33` }}>{k}</span>)}
                 </div>
               </div>
               <div style={{ display: "flex", gap: "6px", flexWrap: "wrap", alignItems: "center" }}>
-                <button className="btn-theme" onClick={toggleTheme} title={theme === "dark" ? "ライトモードに切替" : "ダークモードに切替"}>
-                  {theme === "dark" ? "☀️" : "🌙"}
-                </button>
+                <button className="btn-theme" onClick={toggleTheme} title={theme === "dark" ? "ライトモードに切替" : "ダークモードに切替"}>{theme === "dark" ? "☀️" : "🌙"}</button>
                 <button className="btn" onClick={handleImport}>📥 Import</button>
                 <div className="export-menu-wrapper">
                   <button className="btn" onClick={() => setShowExportMenu(!showExportMenu)}>📋 Export ▾</button>
-                  {showExportMenu && (
-                    <div className="export-menu">
-                      <button onClick={() => handleExport("txt")}>📄 テキスト (.txt)</button>
-                      <button onClick={() => handleExport("md")}>📝 Markdown (.md)</button>
-                    </div>
-                  )}
+                  {showExportMenu && <div className="export-menu"><button onClick={() => handleExport("txt")}>📄 テキスト (.txt)</button><button onClick={() => handleExport("md")}>📝 Markdown (.md)</button></div>}
                 </div>
                 <button className="btn btn-muted" onClick={handleReset}>↺ Reset</button>
               </div>
             </div>
-
-            {/* Project bar */}
             <div className="project-bar">
               <button className="btn btn-new" onClick={() => setShowTemplateModal(true)}>+ 新規</button>
-              <select className="project-select" value={currentProjectId || ""}
-                onChange={e => switchProject(e.target.value)}>
-                {projectList.map(p => (
-                  <option key={p.id} value={p.id}>{p.name || "無題のプロジェクト"}</option>
-                ))}
+              <select className="project-select" value={currentProjectId || ""} onChange={e => switchProject(e.target.value)}>
+                {projectList.map(p => <option key={p.id} value={p.id}>{p.name || "無題のプロジェクト"}</option>)}
               </select>
               <button className="btn btn-delete" onClick={deleteProject}>🗑</button>
             </div>
-
-            <input className="project-input" value={projectName}
-              onChange={e => updateProjectName(e.target.value)} placeholder="プロジェクト名をメモ..." />
-
+            <input className="project-input" value={projectName} onChange={e => updateProjectName(e.target.value)} placeholder="プロジェクト名をメモ..." />
             <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
-              <div className="progress-bar">
-                <div className="progress-fill" style={{ width: `${progress}%` }} />
-              </div>
+              <div className="progress-bar"><div className="progress-fill" style={{ width: `${progress}%` }} /></div>
               <span className="mono" style={{ fontSize: "11px", color: "var(--text-faint)", whiteSpace: "nowrap" }}>{filledCount}/6</span>
             </div>
-
-            {currentProject?.updatedAt && (
-              <div className="timestamp">最終更新: {new Date(currentProject.updatedAt).toLocaleString("ja-JP")}</div>
-            )}
+            {cur?.updatedAt && <div className="timestamp">最終更新: {new Date(cur.updatedAt).toLocaleString("ja-JP")}</div>}
           </div>
 
           {/* Tip */}
           {showTip && (
             <div className="tip-banner">
-              <div>
-                <strong>💡 核心：</strong>いきなりTASKに飛ばない。
-                <br />「ロ→サ」= 論点とサブ論点を先に立てるだけで、仕事の質が激変する。
-                <br />最後は必ず<strong> →D（ディスカッション）</strong>で上司と議論してプロセスを閉じる。
-              </div>
+              <div><strong>💡 核心：</strong>いきなりTASKに飛ばない。<br />「ロ→サ」= 論点とサブ論点を先に立てるだけで、仕事の質が激変する。<br />最後は必ず<strong> →D（ディスカッション）</strong>で上司と議論してプロセスを閉じる。</div>
               <button className="tip-close" onClick={() => setShowTip(false)}>✕</button>
             </div>
           )}
 
-          {/* Flow */}
+          {/* Flow circles */}
           <div className="flow-row">
-            {STEPS.map((s, i) => (
-              <div key={s.key} style={{ display: "flex", alignItems: "center", gap: "4px" }}>
-                <button className="flow-circle"
-                  onClick={() => { setActiveStep(activeStep === s.key ? null : s.key); setViewMode("single"); }}
+            {FLOW_KEYS.map((k, i) => (
+              <div key={k} style={{ display: "flex", alignItems: "center", gap: "4px" }}>
+                <button className="flow-circle" onClick={() => handleFlowClick(k)}
                   style={{
-                    borderColor: activeStep === s.key ? s.color : (notes[s.key]?.trim() ? s.color + "88" : undefined),
-                    background: activeStep === s.key ? `${s.color}22` : (notes[s.key]?.trim() ? "var(--flow-circle-filled)" : undefined),
-                    color: notes[s.key]?.trim() ? s.color : (activeStep === s.key ? s.color : undefined),
-                    boxShadow: activeStep === s.key ? `0 0 16px ${s.color}33` : "none",
+                    borderColor: (activeStep === k || (activeStep === "サ" && (k === "サ" || k === "T" || k === "ス"))) ? C[k].color : (flowFilled[k] ? C[k].color + "88" : undefined),
+                    background: (activeStep === k || (activeStep === "サ" && (k === "サ" || k === "T" || k === "ス"))) ? `${C[k].color}22` : (flowFilled[k] ? "var(--flow-circle-filled)" : undefined),
+                    color: flowFilled[k] ? C[k].color : ((activeStep === k || (activeStep === "サ" && (k === "サ" || k === "T" || k === "ス"))) ? C[k].color : undefined),
+                    boxShadow: (activeStep === k || (activeStep === "サ" && (k === "サ" || k === "T" || k === "ス"))) ? `0 0 16px ${C[k].color}33` : "none",
                   }}>
-                  {s.key}
-                  {notes[s.key]?.trim() && <span className="dot" style={{ background: s.color }} />}
+                  {k}
+                  {flowFilled[k] && <span className="dot" style={{ background: C[k].color }} />}
                 </button>
-                {i < STEPS.length - 1 && <span className="mono" style={{ color: "var(--flow-arrow)", fontSize: "14px" }}>→</span>}
+                {i < FLOW_KEYS.length - 1 && <span className="mono" style={{ color: "var(--flow-arrow)", fontSize: "14px" }}>→</span>}
               </div>
             ))}
             <span className="mono" style={{ color: "var(--flow-arrow)", fontSize: "14px", marginLeft: "4px" }}>→</span>
@@ -756,96 +715,32 @@
           </div>
           <div className="flow-hint mono">タップして展開 → メモを記入</div>
 
-          {/* View mode toggle */}
           <div className="view-toggle-bar">
-            {[["single", "個別"], ["overview", "一覧"], ["tree", "ツリー"]].map(([mode, label]) => (
-              <button key={mode} className={`view-btn${viewMode === mode ? " active" : ""}`}
-                onClick={() => setViewMode(mode)}>{label}</button>
+            {[["single", "個別"], ["overview", "一覧"], ["tree", "ツリー"]].map(([m, l]) => (
+              <button key={m} className={`view-btn${viewMode === m ? " active" : ""}`} onClick={() => setViewMode(m)}>{l}</button>
             ))}
           </div>
 
           {/* ===== SINGLE MODE ===== */}
           {viewMode === "single" && (
             <div className="cards">
-              {STEPS.map((s, i) => {
-                const isActive = activeStep === s.key;
-                const hasContent = notes[s.key]?.trim();
-                return (
-                  <div key={s.key} className={`card${isActive ? " active" : ""}`}
-                    style={{ borderColor: isActive ? s.color + "66" : undefined,
-                      boxShadow: isActive ? `0 4px 24px ${s.color}11` : "none" }}>
-                    <button className="card-header" onClick={() => setActiveStep(isActive ? null : s.key)}>
-                      <div className="card-key" style={{ color: s.color,
-                        textShadow: isActive ? `0 0 12px ${s.color}44` : "none" }}>{s.key}</div>
-                      <div style={{ flex: 1 }}>
-                        <div className="card-label">{s.label}</div>
-                        <div className="card-question">{s.question}</div>
-                      </div>
-                      <div style={{ display: "flex", alignItems: "center", gap: "6px" }}>
-                        {hasContent && <div className="filled-dot" style={{ background: s.color }} />}
-                        <span className={`card-chevron${isActive ? " open" : ""}`}>▾</span>
-                      </div>
-                    </button>
+              {renderNoteCard(MAIN_STEPS[0], null, "サ")}
+              {renderSubPointCard()}
+              {renderNoteCard(MAIN_STEPS[2], "サ", "ア")}
+              {renderNoteCard(MAIN_STEPS[3], "作", null)}
 
-                    {isActive && (
-                      <div className="card-body">
-                        <div className="card-hint" style={{ background: `${s.color}0a`, border: `1px solid ${s.color}22` }}>
-                          <div className="card-hint-text">{s.hint}</div>
-                          <div className="card-hint-example mono" style={{ color: s.color }}>{s.example}</div>
-                        </div>
-                        <textarea className="card-textarea" style={{ border: `1px solid ${s.color}33` }}
-                          value={notes[s.key] || ""} onChange={e => updateNotes(s.key, e.target.value)}
-                          placeholder={`${s.label}をメモ...`} autoFocus />
-
-                        {/* AI consult button */}
-                        <button className={`ai-btn${copiedStep === s.key ? " copied" : ""}`}
-                          onClick={() => handleAICopy(s.key)}>
-                          {copiedStep === s.key
-                            ? "✓ コピーしました！claude.ai に貼り付けてください"
-                            : "🤖 AIに相談（プロンプトをコピー）"}
-                        </button>
-
-                        <div className="card-nav">
-                          {i > 0 ? (
-                            <button className="nav-btn nav-btn-prev" onClick={() => setActiveStep(STEPS[i-1].key)}>
-                              ← {STEPS[i-1].key}
-                            </button>
-                          ) : <div />}
-                          {i < STEPS.length - 1 && (
-                            <button className="nav-btn" onClick={() => setActiveStep(STEPS[i+1].key)}
-                              style={{ background: `${STEPS[i+1].color}22`, border: `1px solid ${STEPS[i+1].color}44`, color: STEPS[i+1].color }}>
-                              {STEPS[i+1].key} →
-                            </button>
-                          )}
-                        </div>
-                      </div>
-                    )}
-                  </div>
-                );
-              })}
-
-              {/* Warning */}
               <div className="warning-card">
                 <div className="warning-title">⚠ TASKバカ注意報</div>
                 <div className="warning-body">
-                  いきなり「T（TASK）」から始めていないか？
-                  <br /><span style={{ color: "#E8443A" }}>ロ→サ</span> を飛ばすと、
-                  論点がズレた作業を大量にこなす「TASKバカ」になる。
-                  <br /><strong style={{ color: "#c8a860" }}>まず論点。常に論点に立ち返る。</strong>
+                  いきなり「T（TASK）」から始めていないか？<br /><span style={{ color: "#E8443A" }}>ロ→サ</span> を飛ばすと、論点がズレた作業を大量にこなす「TASKバカ」になる。<br /><strong style={{ color: "#c8a860" }}>まず論点。常に論点に立ち返る。</strong>
                 </div>
               </div>
-
-              {/* Checklist */}
               <div className="checklist-card">
                 <div className="checklist-title">🔍 セルフチェック</div>
                 {CHECKLIST.map((q, i) => (
                   <div key={i} className="checklist-item" onClick={() => toggleChecklist(i)}>
-                    <span className="checklist-box" style={{ color: checklist[i] ? "#7B68EE" : "var(--text-very-faint)" }}>
-                      {checklist[i] ? "☑" : "☐"}
-                    </span>
-                    <span style={{ textDecoration: checklist[i] ? "line-through" : "none", color: checklist[i] ? "var(--text-very-faint)" : "var(--text-muted)" }}>
-                      {q}
-                    </span>
+                    <span className="checklist-box" style={{ color: checklist[i] ? "#7B68EE" : "var(--text-very-faint)" }}>{checklist[i] ? "☑" : "☐"}</span>
+                    <span style={{ textDecoration: checklist[i] ? "line-through" : "none", color: checklist[i] ? "var(--text-very-faint)" : "var(--text-muted)" }}>{q}</span>
                   </div>
                 ))}
               </div>
@@ -854,16 +749,47 @@
 
           {/* ===== OVERVIEW MODE ===== */}
           {viewMode === "overview" && (
-            <div className="overview-grid">
-              {STEPS.map(s => (
-                <div key={s.key} className="overview-card" style={{ borderLeft: `3px solid ${s.color}` }}>
-                  <div className="overview-header">
-                    <span style={{ color: s.color, fontWeight: 900, fontSize: "18px" }}>{s.key}</span>
-                    <span>{s.label}</span>
+            <div className="overview-container">
+              <div className="overview-section">
+                <div className="overview-section-title"><span style={{ color: C["ロ"].color, fontWeight: 900, fontSize: 18 }}>ロ</span> 論点</div>
+                <textarea className="card-textarea" style={{ border: `1px solid ${C["ロ"].color}33`, minHeight: "60px" }}
+                  value={notes["ロ"] || ""} onChange={e => updateNote("ロ", e.target.value)} placeholder="論点をメモ..." />
+              </div>
+
+              <div className="overview-section">
+                <div className="overview-section-title">
+                  <span style={{ color: C["サ"].color, fontWeight: 900, fontSize: 18 }}>サ</span>
+                  <span style={{ color: C["T"].color, fontWeight: 900, fontSize: 18 }}>T</span>
+                  <span style={{ color: C["ス"].color, fontWeight: 900, fontSize: 18 }}>ス</span>
+                  サブ論点 → TASK → スケジュール
+                </div>
+                {subPoints.map((sp, i) => (
+                  <div key={sp.id} className="overview-sp-row">
+                    <div className="overview-sp-cell" style={{ borderLeft: `3px solid ${C["サ"].color}` }}>
+                      <div className="overview-sp-label" style={{ color: C["サ"].color }}>サブ論点 {i + 1}</div>
+                      <textarea className="sp-input" style={{ border: `1px solid ${C["サ"].color}22`, minHeight: "50px" }}
+                        value={sp.content} onChange={e => updateSubPoint(sp.id, "content", e.target.value)} placeholder="サブ論点..." />
+                    </div>
+                    <div className="overview-sp-cell" style={{ borderLeft: `3px solid ${C["T"].color}` }}>
+                      <div className="overview-sp-label" style={{ color: C["T"].color }}>TASK</div>
+                      <textarea className="sp-input" style={{ border: `1px solid ${C["T"].color}22`, minHeight: "50px" }}
+                        value={sp.task} onChange={e => updateSubPoint(sp.id, "task", e.target.value)} placeholder="TASK..." />
+                    </div>
+                    <div className="overview-sp-cell" style={{ borderLeft: `3px solid ${C["ス"].color}` }}>
+                      <div className="overview-sp-label" style={{ color: C["ス"].color }}>スケジュール</div>
+                      <input className="sp-input" style={{ border: `1px solid ${C["ス"].color}22` }}
+                        value={sp.schedule} onChange={e => updateSubPoint(sp.id, "schedule", e.target.value)} placeholder="期限..." />
+                    </div>
                   </div>
-                  <textarea className="card-textarea" style={{ border: `1px solid ${s.color}33`, minHeight: "80px" }}
-                    value={notes[s.key] || ""} onChange={e => updateNotes(s.key, e.target.value)}
-                    placeholder={`${s.label}をメモ...`} />
+                ))}
+                <button className="sp-add-btn" onClick={addSubPoint} style={{ marginTop: 4 }}>+ サブ論点を追加</button>
+              </div>
+
+              {["作", "ア"].map(k => (
+                <div key={k} className="overview-section">
+                  <div className="overview-section-title"><span style={{ color: C[k].color, fontWeight: 900, fontSize: 18 }}>{k}</span> {C[k].label}</div>
+                  <textarea className="card-textarea" style={{ border: `1px solid ${C[k].color}33`, minHeight: "60px" }}
+                    value={notes[k] || ""} onChange={e => updateNote(k, e.target.value)} placeholder={`${C[k].label}をメモ...`} />
                 </div>
               ))}
             </div>
@@ -871,70 +797,54 @@
 
           {/* ===== TREE MODE ===== */}
           {viewMode === "tree" && (() => {
-            const tree = buildTree();
-            const hasData = tree.ronten || tree.subLines.length > 0;
+            const ronten = notes["ロ"]?.trim() || "";
+            const hasData = ronten || subPoints.length > 0;
             return (
               <div className="tree-container">
-                {!hasData && (
-                  <div className="tree-empty">
-                    ロ（論点）とサ（サブ論点）にメモを入力すると、ここにツリーが表示されます。
-                  </div>
-                )}
+                {!hasData && <div className="tree-empty">ロ（論点）とサ（サブ論点）にメモを入力すると、ここにツリーが表示されます。</div>}
                 {hasData && (
                   <div>
                     <div className="tree-root-label"
-                      style={{ background: `${STEPS[0].color}18`, color: STEPS[0].color, border: `1px solid ${STEPS[0].color}33` }}
+                      style={{ background: `${C["ロ"].color}18`, color: C["ロ"].color, border: `1px solid ${C["ロ"].color}33` }}
                       onClick={() => { setViewMode("single"); setActiveStep("ロ"); }}>
-                      🎯 {tree.ronten || "（論点を入力してください）"}
+                      🎯 {ronten || "（論点を入力してください）"}
                     </div>
-
-                    {tree.subLines.length > 0 ? (
+                    {subPoints.length > 0 ? (
                       <div className="tree-branch">
-                        {tree.subLines.map((sub, i) => (
-                          <div key={i} className="tree-node">
+                        {subPoints.map((sp, i) => (
+                          <div key={sp.id} className="tree-node">
                             <div className="tree-node-label"
-                              style={{ background: `${STEPS[1].color}15`, color: STEPS[1].color, border: `1px solid ${STEPS[1].color}22` }}
+                              style={{ background: `${C["サ"].color}15`, color: C["サ"].color, border: `1px solid ${C["サ"].color}22` }}
                               onClick={() => { setViewMode("single"); setActiveStep("サ"); }}>
-                              {sub}
+                              {sp.content || `（サブ論点 ${i + 1}）`}
                             </div>
-                            {tree.taskLines[i] && (
+                            {(sp.task?.trim() || sp.schedule?.trim()) && (
                               <div className="tree-sub-branch">
-                                <div className="tree-node">
-                                  <div className="tree-node-label"
-                                    style={{ background: `${STEPS[2].color}12`, color: STEPS[2].color, border: `1px solid ${STEPS[2].color}22`, fontSize: "12px" }}
-                                    onClick={() => { setViewMode("single"); setActiveStep("T"); }}>
-                                    📋 {tree.taskLines[i]}
+                                {sp.task?.trim() && (
+                                  <div className="tree-node">
+                                    <div className="tree-node-label" style={{ background: `${C["T"].color}12`, color: C["T"].color, border: `1px solid ${C["T"].color}22`, fontSize: "12px" }}>
+                                      📋 {sp.task}
+                                    </div>
                                   </div>
-                                </div>
-                              </div>
-                            )}
-                            {tree.schedLines[i] && (
-                              <div className="tree-sub-branch">
-                                <div className="tree-node">
-                                  <div className="tree-node-label"
-                                    style={{ background: `${STEPS[3].color}12`, color: STEPS[3].color, border: `1px solid ${STEPS[3].color}22`, fontSize: "11px" }}
-                                    onClick={() => { setViewMode("single"); setActiveStep("ス"); }}>
-                                    📅 {tree.schedLines[i]}
+                                )}
+                                {sp.schedule?.trim() && (
+                                  <div className="tree-node">
+                                    <div className="tree-node-label" style={{ background: `${C["ス"].color}12`, color: C["ス"].color, border: `1px solid ${C["ス"].color}22`, fontSize: "11px" }}>
+                                      📅 {sp.schedule}
+                                    </div>
                                   </div>
-                                </div>
+                                )}
                               </div>
                             )}
                           </div>
                         ))}
                       </div>
-                    ) : (
-                      <div className="tree-empty">サブ論点を入力するとここに分岐が表示されます</div>
-                    )}
+                    ) : <div className="tree-empty">サブ論点を追加するとここに分岐が表示されます</div>}
                   </div>
                 )}
-
-                <div className="warning-card" style={{ marginTop: "24px" }}>
+                <div className="warning-card" style={{ marginTop: 24 }}>
                   <div className="warning-title">⚠ TASKバカ注意報</div>
-                  <div className="warning-body">
-                    いきなり「T（TASK）」から始めていないか？
-                    <br /><span style={{ color: "#E8443A" }}>ロ→サ</span> を飛ばすと、TASKバカになる。
-                    <br /><strong style={{ color: "#c8a860" }}>まず論点。常に論点に立ち返る。</strong>
-                  </div>
+                  <div className="warning-body">いきなり「T（TASK）」から始めていないか？<br /><span style={{ color: "#E8443A" }}>ロ→サ</span> を飛ばすと、TASKバカになる。<br /><strong style={{ color: "#c8a860" }}>まず論点。常に論点に立ち返る。</strong></div>
                 </div>
               </div>
             );
@@ -945,24 +855,19 @@
             <div className="modal-overlay" onClick={() => setShowTemplateModal(false)}>
               <div className="modal" onClick={e => e.stopPropagation()}>
                 <div className="modal-title">新規プロジェクト</div>
-                <div style={{ fontSize: "12px", color: "var(--text-muted)", marginBottom: "16px" }}>
-                  テンプレートを選んでください
-                </div>
+                <div style={{ fontSize: "12px", color: "var(--text-muted)", marginBottom: "16px" }}>テンプレートを選んでください</div>
                 {TEMPLATES.map((t, i) => (
                   <button key={i} className="template-btn" onClick={() => createProjectFromTemplate(t)}>
-                    <div className="template-btn-name">{t.name}</div>
-                    <div className="template-btn-desc">{t.desc}</div>
+                    <div className="template-btn-name">{t.name}</div><div className="template-btn-desc">{t.desc}</div>
                   </button>
                 ))}
-                <button className="btn btn-muted" style={{ width: "100%", marginTop: "8px" }}
-                  onClick={() => setShowTemplateModal(false)}>キャンセル</button>
+                <button className="btn btn-muted" style={{ width: "100%", marginTop: "8px" }} onClick={() => setShowTemplateModal(false)}>キャンセル</button>
               </div>
             </div>
           )}
         </div>
       );
     }
-
     ReactDOM.createRoot(document.getElementById("root")).render(<App />);
   </script>
 </body>
