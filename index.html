@@ -1,38 +1,147 @@
 <!DOCTYPE html>
-<html lang="ja">
+<html lang="ja" data-theme="dark">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>ロサTス作ア メモ</title>
   <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;500;700;900&family=IBM+Plex+Mono:wght@400;600&display=swap" rel="stylesheet" />
   <style>
+    /* ===== Theme Variables ===== */
+    :root {
+      --bg-primary: #1a1a1e;
+      --bg-secondary: #222;
+      --bg-card: #1e1e22;
+      --bg-card-active: #222228;
+      --bg-header: linear-gradient(135deg, #1a1a1e 0%, #2a2a30 100%);
+      --bg-input: #222;
+      --bg-btn: #333;
+      --bg-btn-hover: #444;
+      --bg-overlay: rgba(0,0,0,0.6);
+      --bg-modal: #222228;
+      --bg-tip: #2a2520;
+      --bg-warning: #1c1416;
+      --bg-checklist: #161820;
+      --bg-export-menu: #2a2a30;
+      --text-primary: #e8e6e3;
+      --text-secondary: #ccc;
+      --text-muted: #888;
+      --text-faint: #666;
+      --text-very-faint: #555;
+      --text-hint: #999;
+      --border-primary: #333;
+      --border-secondary: #444;
+      --border-tertiary: #555;
+      --border-input: #3a3a3a;
+      --border-tip: #4a3a20;
+      --border-warning: #3a2028;
+      --border-checklist: #252840;
+      --progress-bg: #333;
+      --flow-arrow: #444;
+      --flow-circle-bg: #222;
+      --flow-circle-filled: #2a2a30;
+      --tree-line: #444;
+      --tree-sub-line: #333;
+      --shadow-glow: 0.1;
+      --tip-color: #c8a860;
+      --tip-close: #886830;
+      --ai-bg: #1a2030;
+      --ai-border: #2a3a5a;
+      --ai-color: #7B9ED9;
+      --ai-bg-hover: #2a3040;
+      --ai-copied-bg: #1a3020;
+      --ai-copied-border: #2a5a3a;
+      --btn-new-bg: #2a3a2a;
+      --btn-new-border: #3a5a3a;
+      --btn-new-color: #6c6;
+      --btn-new-hover: #3a4a3a;
+      --btn-del-bg: #3a2a2a;
+      --btn-del-border: #5a3a3a;
+      --btn-del-color: #c66;
+      --btn-del-hover: #4a3a3a;
+    }
+
+    [data-theme="light"] {
+      --bg-primary: #f5f5f7;
+      --bg-secondary: #fff;
+      --bg-card: #fff;
+      --bg-card-active: #fafafa;
+      --bg-header: linear-gradient(135deg, #f5f5f7 0%, #eaeaee 100%);
+      --bg-input: #fff;
+      --bg-btn: #e8e8ec;
+      --bg-btn-hover: #dddde2;
+      --bg-overlay: rgba(0,0,0,0.3);
+      --bg-modal: #fff;
+      --bg-tip: #fff8e8;
+      --bg-warning: #fff5f5;
+      --bg-checklist: #f5f5ff;
+      --bg-export-menu: #fff;
+      --text-primary: #1a1a2e;
+      --text-secondary: #333;
+      --text-muted: #666;
+      --text-faint: #888;
+      --text-very-faint: #aaa;
+      --text-hint: #777;
+      --border-primary: #ddd;
+      --border-secondary: #ccc;
+      --border-tertiary: #bbb;
+      --border-input: #ccc;
+      --border-tip: #e0c880;
+      --border-warning: #e8a0a0;
+      --border-checklist: #d0d0e8;
+      --progress-bg: #ddd;
+      --flow-arrow: #aaa;
+      --flow-circle-bg: #fff;
+      --flow-circle-filled: #f0f0f4;
+      --tree-line: #bbb;
+      --tree-sub-line: #ccc;
+      --shadow-glow: 0.15;
+      --tip-color: #8a6a20;
+      --tip-close: #a08040;
+      --ai-bg: #eef3ff;
+      --ai-border: #b0c4e8;
+      --ai-color: #4a70b0;
+      --ai-bg-hover: #dde8ff;
+      --ai-copied-bg: #e8f5e8;
+      --ai-copied-border: #80c080;
+      --btn-new-bg: #e8f5e8;
+      --btn-new-border: #a0d0a0;
+      --btn-new-color: #2a7a2a;
+      --btn-new-hover: #d8ecd8;
+      --btn-del-bg: #fde8e8;
+      --btn-del-border: #e0a0a0;
+      --btn-del-color: #c44;
+      --btn-del-hover: #f5d8d8;
+    }
+
     * { margin: 0; padding: 0; box-sizing: border-box; }
-    body { background: #1a1a1e; color: #e8e6e3; font-family: 'Noto Sans JP', 'Helvetica Neue', sans-serif; }
+    body { background: var(--bg-primary); color: var(--text-primary); font-family: 'Noto Sans JP', 'Helvetica Neue', sans-serif; transition: background 0.3s, color 0.3s; }
     .mono { font-family: 'IBM Plex Mono', monospace; }
 
     /* Header */
     .header {
-      background: linear-gradient(135deg, #1a1a1e 0%, #2a2a30 100%);
-      border-bottom: 1px solid #333;
+      background: var(--bg-header);
+      border-bottom: 1px solid var(--border-primary);
       padding: 20px 24px 16px;
       position: sticky; top: 0; z-index: 10;
     }
     .header-top { display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; }
-    .header-subtitle { font-size: 13px; font-weight: 400; color: #888; letter-spacing: 2px; text-transform: uppercase; }
+    .header-subtitle { font-size: 13px; font-weight: 400; color: var(--text-muted); letter-spacing: 2px; text-transform: uppercase; }
     .header-title { font-size: 28px; font-weight: 900; margin-top: 4px; letter-spacing: 6px; display: flex; gap: 2px; }
-    .btn { background: #333; border: 1px solid #555; color: #ccc; padding: 6px 12px; border-radius: 6px; font-size: 11px; cursor: pointer; font-family: 'IBM Plex Mono', monospace; }
-    .btn:hover { background: #444; }
-    .btn-muted { color: #888; }
-    .btn-new { background: #2a3a2a; border: 1px solid #3a5a3a; color: #6c6; }
-    .btn-new:hover { background: #3a4a3a; }
-    .btn-delete { background: #3a2a2a; border: 1px solid #5a3a3a; color: #c66; }
-    .btn-delete:hover { background: #4a3a3a; }
+    .btn { background: var(--bg-btn); border: 1px solid var(--border-tertiary); color: var(--text-secondary); padding: 6px 12px; border-radius: 6px; font-size: 11px; cursor: pointer; font-family: 'IBM Plex Mono', monospace; transition: background 0.2s; }
+    .btn:hover { background: var(--bg-btn-hover); }
+    .btn-muted { color: var(--text-muted); }
+    .btn-new { background: var(--btn-new-bg); border: 1px solid var(--btn-new-border); color: var(--btn-new-color); }
+    .btn-new:hover { background: var(--btn-new-hover); }
+    .btn-delete { background: var(--btn-del-bg); border: 1px solid var(--btn-del-border); color: var(--btn-del-color); }
+    .btn-delete:hover { background: var(--btn-del-hover); }
+    .btn-theme { background: var(--bg-btn); border: 1px solid var(--border-secondary); color: var(--text-muted); padding: 6px 10px; border-radius: 6px; font-size: 14px; cursor: pointer; transition: background 0.2s; line-height: 1; }
+    .btn-theme:hover { background: var(--bg-btn-hover); }
     .project-input {
-      width: 100%; background: #222; border: 1px solid #3a3a3a; border-radius: 6px;
-      padding: 8px 12px; color: #e8e6e3; font-size: 14px; font-family: 'Noto Sans JP', sans-serif;
-      outline: none; box-sizing: border-box; margin-bottom: 10px;
+      width: 100%; background: var(--bg-input); border: 1px solid var(--border-input); border-radius: 6px;
+      padding: 8px 12px; color: var(--text-primary); font-size: 14px; font-family: 'Noto Sans JP', sans-serif;
+      outline: none; box-sizing: border-box; margin-bottom: 10px; transition: background 0.3s, color 0.3s, border-color 0.3s;
     }
-    .progress-bar { flex: 1; height: 3px; background: #333; border-radius: 2px; overflow: hidden; }
+    .progress-bar { flex: 1; height: 3px; background: var(--progress-bg); border-radius: 2px; overflow: hidden; }
     .progress-fill { height: 100%; border-radius: 2px; transition: width 0.4s ease;
       background: linear-gradient(90deg, #E8443A, #E07B2E, #D4A72C, #3BA55D, #4A90D9, #7B68EE);
     }
@@ -40,90 +149,89 @@
     /* Project bar */
     .project-bar { display: flex; align-items: center; gap: 8px; margin-bottom: 8px; }
     .project-select {
-      flex: 1; background: #222; border: 1px solid #3a3a3a; border-radius: 6px;
-      padding: 6px 10px; color: #e8e6e3; font-size: 13px;
-      font-family: 'Noto Sans JP', sans-serif; outline: none;
+      flex: 1; background: var(--bg-input); border: 1px solid var(--border-input); border-radius: 6px;
+      padding: 6px 10px; color: var(--text-primary); font-size: 13px;
+      font-family: 'Noto Sans JP', sans-serif; outline: none; transition: background 0.3s, color 0.3s;
     }
 
     /* Tip */
     .tip-banner {
-      margin: 16px 16px 0; padding: 12px 16px; background: #2a2520; border: 1px solid #4a3a20;
-      border-radius: 8px; font-size: 12px; color: #c8a860; display: flex;
+      margin: 16px 16px 0; padding: 12px 16px; background: var(--bg-tip); border: 1px solid var(--border-tip);
+      border-radius: 8px; font-size: 12px; color: var(--tip-color); display: flex;
       justify-content: space-between; align-items: flex-start; line-height: 1.6;
     }
-    .tip-close { background: none; border: none; color: #886830; cursor: pointer; font-size: 16px; padding: 0 0 0 12px; line-height: 1; }
+    .tip-close { background: none; border: none; color: var(--tip-close); cursor: pointer; font-size: 16px; padding: 0 0 0 12px; line-height: 1; }
 
     /* Flow */
     .flow-row { display: flex; justify-content: center; align-items: center; padding: 20px 16px 8px; gap: 4px; flex-wrap: wrap; }
     .flow-circle {
       width: 40px; height: 40px; border-radius: 50%; font-size: 16px; font-weight: 700;
       display: flex; align-items: center; justify-content: center; cursor: pointer;
-      transition: all 0.2s ease; position: relative; border: 2px solid #444; background: #222; color: #666;
+      transition: all 0.2s ease; position: relative; border: 2px solid var(--border-secondary); background: var(--flow-circle-bg); color: var(--text-faint);
       font-family: 'Noto Sans JP', sans-serif;
     }
-    .flow-circle.active { box-shadow: 0 0 16px rgba(255,255,255,0.1); }
     .flow-circle .dot {
       position: absolute; top: -2px; right: -2px; width: 10px; height: 10px; border-radius: 50%;
     }
     .flow-d {
-      width: 40px; height: 40px; border-radius: 50%; border: 2px dashed #555; background: #222;
-      color: #666; font-size: 16px; font-weight: 700; display: flex; align-items: center;
+      width: 40px; height: 40px; border-radius: 50%; border: 2px dashed var(--border-tertiary); background: var(--flow-circle-bg);
+      color: var(--text-faint); font-size: 16px; font-weight: 700; display: flex; align-items: center;
       justify-content: center; font-family: 'Noto Sans JP', sans-serif;
     }
-    .flow-hint { text-align: center; font-size: 10px; color: #555; margin-bottom: 8px; }
+    .flow-hint { text-align: center; font-size: 10px; color: var(--text-very-faint); margin-bottom: 8px; }
 
     /* View mode toggle */
     .view-toggle-bar { display: flex; justify-content: center; gap: 4px; margin-bottom: 12px; }
     .view-btn {
-      background: #222; border: 1px solid #444; color: #888; padding: 4px 12px;
-      border-radius: 6px; font-size: 11px; cursor: pointer; font-family: 'IBM Plex Mono', monospace;
+      background: var(--bg-secondary); border: 1px solid var(--border-secondary); color: var(--text-muted); padding: 4px 12px;
+      border-radius: 6px; font-size: 11px; cursor: pointer; font-family: 'IBM Plex Mono', monospace; transition: background 0.2s;
     }
-    .view-btn.active { background: #333; border-color: #666; color: #e8e6e3; }
+    .view-btn.active { background: var(--bg-btn); border-color: var(--border-tertiary); color: var(--text-primary); }
 
     /* Cards */
     .cards { padding: 8px 16px 100px; }
-    .card { margin-bottom: 8px; border-radius: 10px; border: 1px solid #333; background: #1e1e22; overflow: hidden; transition: all 0.3s ease; }
-    .card.active { background: #222228; }
+    .card { margin-bottom: 8px; border-radius: 10px; border: 1px solid var(--border-primary); background: var(--bg-card); overflow: hidden; transition: all 0.3s ease; }
+    .card.active { background: var(--bg-card-active); }
     .card-header {
       width: 100%; display: flex; align-items: center; gap: 12px; padding: 14px 16px;
-      background: none; border: none; cursor: pointer; text-align: left;
+      background: none; border: none; cursor: pointer; text-align: left; color: var(--text-primary);
     }
     .card-key { font-size: 20px; font-weight: 900; min-width: 28px; font-family: 'Noto Sans JP', sans-serif; }
-    .card-label { font-size: 14px; font-weight: 500; color: #e8e6e3; }
-    .card-question { font-size: 11px; color: #777; margin-top: 2px; }
-    .card-chevron { color: #555; font-size: 16px; transition: transform 0.2s ease; }
+    .card-label { font-size: 14px; font-weight: 500; color: var(--text-primary); }
+    .card-question { font-size: 11px; color: var(--text-hint); margin-top: 2px; }
+    .card-chevron { color: var(--text-very-faint); font-size: 16px; transition: transform 0.2s ease; }
     .card-chevron.open { transform: rotate(180deg); }
     .card-body { padding: 0 16px 16px; }
     .card-hint { padding: 10px 12px; border-radius: 6px; margin-bottom: 10px; }
-    .card-hint-text { font-size: 12px; color: #999; white-space: pre-line; line-height: 1.6; }
+    .card-hint-text { font-size: 12px; color: var(--text-hint); white-space: pre-line; line-height: 1.6; }
     .card-hint-example { font-size: 11px; margin-top: 6px; opacity: 0.7; }
     .card-textarea {
-      width: 100%; min-height: 100px; background: #1a1a1e; border-radius: 6px;
-      padding: 12px; color: #e8e6e3; font-size: 13px; font-family: 'Noto Sans JP', sans-serif;
-      line-height: 1.8; outline: none; resize: vertical; box-sizing: border-box;
+      width: 100%; min-height: 100px; background: var(--bg-primary); border-radius: 6px;
+      padding: 12px; color: var(--text-primary); font-size: 13px; font-family: 'Noto Sans JP', sans-serif;
+      line-height: 1.8; outline: none; resize: vertical; box-sizing: border-box; transition: background 0.3s, color 0.3s;
     }
     .card-nav { display: flex; justify-content: space-between; margin-top: 8px; }
     .nav-btn {
       background: none; padding: 6px 14px; border-radius: 6px; font-size: 11px; cursor: pointer;
       font-family: 'IBM Plex Mono', monospace;
     }
-    .nav-btn-prev { border: 1px solid #444; color: #888; }
+    .nav-btn-prev { border: 1px solid var(--border-secondary); color: var(--text-muted); }
     .filled-dot { width: 6px; height: 6px; border-radius: 50%; }
 
     /* AI button */
     .ai-btn {
-      background: #1a2030; border: 1px solid #2a3a5a; color: #7B9ED9; padding: 8px 14px;
+      background: var(--ai-bg); border: 1px solid var(--ai-border); color: var(--ai-color); padding: 8px 14px;
       border-radius: 6px; font-size: 12px; cursor: pointer; margin-top: 8px; width: 100%;
       font-family: 'Noto Sans JP', sans-serif; transition: all 0.2s;
     }
-    .ai-btn:hover { background: #2a3040; border-color: #3a4a6a; }
-    .ai-btn.copied { background: #1a3020; border-color: #2a5a3a; color: #6c6; }
+    .ai-btn:hover { background: var(--ai-bg-hover); }
+    .ai-btn.copied { background: var(--ai-copied-bg); border-color: var(--ai-copied-border); color: var(--btn-new-color); }
 
     /* Overview grid */
     .overview-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; padding: 8px 16px 100px; }
     @media (max-width: 640px) { .overview-grid { grid-template-columns: 1fr; } }
     .overview-card {
-      background: #1e1e22; border: 1px solid #333; border-radius: 8px;
+      background: var(--bg-card); border: 1px solid var(--border-primary); border-radius: 8px;
       padding: 12px; display: flex; flex-direction: column; gap: 8px;
     }
     .overview-header { display: flex; align-items: center; gap: 8px; font-size: 14px; font-weight: 500; }
@@ -137,78 +245,78 @@
     .tree-branch { padding-left: 24px; position: relative; }
     .tree-branch::before {
       content: ""; position: absolute; left: 10px; top: 0; bottom: 12px;
-      border-left: 1px dashed #444;
+      border-left: 1px dashed var(--tree-line);
     }
     .tree-node { position: relative; padding: 6px 0 6px 20px; }
     .tree-node::before {
       content: ""; position: absolute; left: -14px; top: 18px;
-      width: 14px; border-top: 1px dashed #444;
+      width: 14px; border-top: 1px dashed var(--tree-line);
     }
     .tree-node-label {
       font-size: 13px; padding: 4px 10px; border-radius: 4px; cursor: pointer;
       display: inline-block; transition: background 0.2s;
     }
-    .tree-node-label:hover { filter: brightness(1.3); }
+    .tree-node-label:hover { filter: brightness(1.1); }
     .tree-sub-branch { padding-left: 24px; position: relative; }
     .tree-sub-branch::before {
       content: ""; position: absolute; left: 10px; top: 0; bottom: 12px;
-      border-left: 1px dashed #333;
+      border-left: 1px dashed var(--tree-sub-line);
     }
-    .tree-empty { color: #555; font-size: 12px; font-style: italic; padding: 8px 0 8px 24px; }
+    .tree-empty { color: var(--text-very-faint); font-size: 12px; font-style: italic; padding: 8px 0 8px 24px; }
 
     /* Warning */
-    .warning-card { margin-top: 16px; padding: 16px; background: #1c1416; border: 1px solid #3a2028; border-radius: 10px; }
+    .warning-card { margin-top: 16px; padding: 16px; background: var(--bg-warning); border: 1px solid var(--border-warning); border-radius: 10px; }
     .warning-title { font-size: 13px; font-weight: 700; color: #E8443A; margin-bottom: 8px; }
-    .warning-body { font-size: 12px; color: #999; line-height: 1.8; }
+    .warning-body { font-size: 12px; color: var(--text-hint); line-height: 1.8; }
 
     /* Checklist */
-    .checklist-card { margin-top: 12px; padding: 16px; background: #161820; border: 1px solid #252840; border-radius: 10px; }
+    .checklist-card { margin-top: 12px; padding: 16px; background: var(--bg-checklist); border: 1px solid var(--border-checklist); border-radius: 10px; }
     .checklist-title { font-size: 13px; font-weight: 700; color: #7B68EE; margin-bottom: 10px; }
     .checklist-item {
-      font-size: 12px; color: #888; padding: 6px 0; line-height: 1.6;
+      font-size: 12px; color: var(--text-muted); padding: 6px 0; line-height: 1.6;
       cursor: pointer; user-select: none; transition: opacity 0.2s;
     }
     .checklist-item:hover { opacity: 0.8; }
-    .checklist-item:not(:last-child) { border-bottom: 1px solid #252840; }
+    .checklist-item:not(:last-child) { border-bottom: 1px solid var(--border-checklist); }
     .checklist-box { margin-right: 8px; }
 
     /* Export menu */
     .export-menu-wrapper { position: relative; display: inline-block; }
     .export-menu {
       position: absolute; top: 100%; left: 0; margin-top: 4px;
-      background: #2a2a30; border: 1px solid #444; border-radius: 6px;
+      background: var(--bg-export-menu); border: 1px solid var(--border-secondary); border-radius: 6px;
       overflow: hidden; z-index: 20; min-width: 160px;
     }
     .export-menu button {
-      display: block; width: 100%; background: none; border: none; color: #ccc;
+      display: block; width: 100%; background: none; border: none; color: var(--text-secondary);
       padding: 8px 12px; font-size: 12px; cursor: pointer; text-align: left;
       font-family: 'Noto Sans JP', sans-serif;
     }
-    .export-menu button:hover { background: #333; }
+    .export-menu button:hover { background: var(--bg-btn); }
 
     /* Template modal */
     .modal-overlay {
       position: fixed; top: 0; left: 0; right: 0; bottom: 0;
-      background: rgba(0,0,0,0.6); z-index: 100; display: flex;
+      background: var(--bg-overlay); z-index: 100; display: flex;
       align-items: center; justify-content: center; padding: 16px;
     }
     .modal {
-      background: #222228; border: 1px solid #444; border-radius: 12px;
+      background: var(--bg-modal); border: 1px solid var(--border-secondary); border-radius: 12px;
       padding: 24px; max-width: 400px; width: 100%;
     }
     .modal-title { font-size: 16px; font-weight: 700; margin-bottom: 16px; }
     .template-btn {
-      display: block; width: 100%; background: #1e1e22; border: 1px solid #333;
-      color: #e8e6e3; padding: 12px 16px; border-radius: 8px; margin-bottom: 8px;
+      display: block; width: 100%; background: var(--bg-card); border: 1px solid var(--border-primary);
+      color: var(--text-primary); padding: 12px 16px; border-radius: 8px; margin-bottom: 8px;
       cursor: pointer; text-align: left; font-family: 'Noto Sans JP', sans-serif;
       transition: border-color 0.2s;
     }
-    .template-btn:hover { border-color: #666; }
+    .template-btn:hover { border-color: var(--border-tertiary); }
     .template-btn-name { font-size: 14px; font-weight: 500; }
-    .template-btn-desc { font-size: 11px; color: #888; margin-top: 4px; }
+    .template-btn-desc { font-size: 11px; color: var(--text-muted); margin-top: 4px; }
 
     /* Timestamp */
-    .timestamp { font-size: 10px; color: #555; text-align: right; margin-top: 4px; font-family: 'IBM Plex Mono', monospace; }
+    .timestamp { font-size: 10px; color: var(--text-very-faint); text-align: right; margin-top: 4px; font-family: 'IBM Plex Mono', monospace; }
   </style>
 </head>
 <body>
@@ -351,6 +459,10 @@
         try { return localStorage.getItem("rosatsusakua-current") || null; }
         catch { return null; }
       });
+      const [theme, setTheme] = useState(() => {
+        try { return localStorage.getItem("rosatsusakua-theme") || "dark"; }
+        catch { return "dark"; }
+      });
 
       // --- UI state ---
       const [activeStep, setActiveStep] = useState(null);
@@ -370,6 +482,10 @@
           else localStorage.removeItem("rosatsusakua-current");
         } catch {}
       }, [currentProjectId]);
+      useEffect(() => {
+        document.documentElement.setAttribute("data-theme", theme);
+        try { localStorage.setItem("rosatsusakua-theme", theme); } catch {}
+      }, [theme]);
 
       // --- Init: create first project if empty ---
       useEffect(() => {
@@ -391,6 +507,9 @@
       const filledCount = Object.values(notes).filter(v => v && v.trim()).length;
       const progress = (filledCount / 6) * 100;
       const projectList = Object.values(projects).sort((a, b) => (b.updatedAt || "").localeCompare(a.updatedAt || ""));
+
+      // --- Theme ---
+      const toggleTheme = () => setTheme(prev => prev === "dark" ? "light" : "dark");
 
       // --- Project management ---
       const createProjectFromTemplate = (template) => {
@@ -511,7 +630,6 @@
       // --- AI prompt ---
       const generateAIPrompt = (stepKey) => {
         const pName = projectName || "無題のプロジェクト";
-        const step = STEPS.find(s => s.key === stepKey);
         let prompt = `あなたは高松智史氏の仕事術「ロサTス作ア」フレームワークの専門家です。\n\n`;
         prompt += `【プロジェクト】${pName}\n\n`;
         prompt += `【現在のメモ内容】\n`;
@@ -527,7 +645,6 @@
           setCopiedStep(stepKey);
           setTimeout(() => setCopiedStep(null), 2500);
         } catch {
-          // Fallback
           const ta = document.createElement("textarea");
           ta.value = prompt; document.body.appendChild(ta); ta.select(); document.execCommand("copy");
           document.body.removeChild(ta);
@@ -559,7 +676,10 @@
                   ))}
                 </div>
               </div>
-              <div style={{ display: "flex", gap: "6px", flexWrap: "wrap" }}>
+              <div style={{ display: "flex", gap: "6px", flexWrap: "wrap", alignItems: "center" }}>
+                <button className="btn-theme" onClick={toggleTheme} title={theme === "dark" ? "ライトモードに切替" : "ダークモードに切替"}>
+                  {theme === "dark" ? "☀️" : "🌙"}
+                </button>
                 <button className="btn" onClick={handleImport}>📥 Import</button>
                 <div className="export-menu-wrapper">
                   <button className="btn" onClick={() => setShowExportMenu(!showExportMenu)}>📋 Export ▾</button>
@@ -593,7 +713,7 @@
               <div className="progress-bar">
                 <div className="progress-fill" style={{ width: `${progress}%` }} />
               </div>
-              <span className="mono" style={{ fontSize: "11px", color: "#666", whiteSpace: "nowrap" }}>{filledCount}/6</span>
+              <span className="mono" style={{ fontSize: "11px", color: "var(--text-faint)", whiteSpace: "nowrap" }}>{filledCount}/6</span>
             </div>
 
             {currentProject?.updatedAt && (
@@ -617,21 +737,21 @@
           <div className="flow-row">
             {STEPS.map((s, i) => (
               <div key={s.key} style={{ display: "flex", alignItems: "center", gap: "4px" }}>
-                <button className={`flow-circle${activeStep === s.key ? " active" : ""}`}
+                <button className="flow-circle"
                   onClick={() => { setActiveStep(activeStep === s.key ? null : s.key); setViewMode("single"); }}
                   style={{
-                    borderColor: activeStep === s.key ? s.color : (notes[s.key]?.trim() ? s.color + "88" : "#444"),
-                    background: activeStep === s.key ? `${s.color}22` : (notes[s.key]?.trim() ? "#2a2a30" : "#222"),
-                    color: notes[s.key]?.trim() ? s.color : (activeStep === s.key ? s.color : "#666"),
+                    borderColor: activeStep === s.key ? s.color : (notes[s.key]?.trim() ? s.color + "88" : undefined),
+                    background: activeStep === s.key ? `${s.color}22` : (notes[s.key]?.trim() ? "var(--flow-circle-filled)" : undefined),
+                    color: notes[s.key]?.trim() ? s.color : (activeStep === s.key ? s.color : undefined),
                     boxShadow: activeStep === s.key ? `0 0 16px ${s.color}33` : "none",
                   }}>
                   {s.key}
                   {notes[s.key]?.trim() && <span className="dot" style={{ background: s.color }} />}
                 </button>
-                {i < STEPS.length - 1 && <span className="mono" style={{ color: "#444", fontSize: "14px" }}>→</span>}
+                {i < STEPS.length - 1 && <span className="mono" style={{ color: "var(--flow-arrow)", fontSize: "14px" }}>→</span>}
               </div>
             ))}
-            <span className="mono" style={{ color: "#444", fontSize: "14px", marginLeft: "4px" }}>→</span>
+            <span className="mono" style={{ color: "var(--flow-arrow)", fontSize: "14px", marginLeft: "4px" }}>→</span>
             <div className="flow-d">D</div>
           </div>
           <div className="flow-hint mono">タップして展開 → メモを記入</div>
@@ -652,7 +772,7 @@
                 const hasContent = notes[s.key]?.trim();
                 return (
                   <div key={s.key} className={`card${isActive ? " active" : ""}`}
-                    style={{ borderColor: isActive ? s.color + "66" : "#333",
+                    style={{ borderColor: isActive ? s.color + "66" : undefined,
                       boxShadow: isActive ? `0 4px 24px ${s.color}11` : "none" }}>
                     <button className="card-header" onClick={() => setActiveStep(isActive ? null : s.key)}>
                       <div className="card-key" style={{ color: s.color,
@@ -682,7 +802,7 @@
                           onClick={() => handleAICopy(s.key)}>
                           {copiedStep === s.key
                             ? "✓ コピーしました！claude.ai に貼り付けてください"
-                            : `🤖 AIに相談（プロンプトをコピー）`}
+                            : "🤖 AIに相談（プロンプトをコピー）"}
                         </button>
 
                         <div className="card-nav">
@@ -720,10 +840,10 @@
                 <div className="checklist-title">🔍 セルフチェック</div>
                 {CHECKLIST.map((q, i) => (
                   <div key={i} className="checklist-item" onClick={() => toggleChecklist(i)}>
-                    <span className="checklist-box" style={{ color: checklist[i] ? "#7B68EE" : "#555" }}>
+                    <span className="checklist-box" style={{ color: checklist[i] ? "#7B68EE" : "var(--text-very-faint)" }}>
                       {checklist[i] ? "☑" : "☐"}
                     </span>
-                    <span style={{ textDecoration: checklist[i] ? "line-through" : "none", color: checklist[i] ? "#555" : "#888" }}>
+                    <span style={{ textDecoration: checklist[i] ? "line-through" : "none", color: checklist[i] ? "var(--text-very-faint)" : "var(--text-muted)" }}>
                       {q}
                     </span>
                   </div>
@@ -762,14 +882,12 @@
                 )}
                 {hasData && (
                   <div>
-                    {/* Root: ロ */}
                     <div className="tree-root-label"
                       style={{ background: `${STEPS[0].color}18`, color: STEPS[0].color, border: `1px solid ${STEPS[0].color}33` }}
                       onClick={() => { setViewMode("single"); setActiveStep("ロ"); }}>
                       🎯 {tree.ronten || "（論点を入力してください）"}
                     </div>
 
-                    {/* Branch: サ → T */}
                     {tree.subLines.length > 0 ? (
                       <div className="tree-branch">
                         {tree.subLines.map((sub, i) => (
@@ -779,7 +897,6 @@
                               onClick={() => { setViewMode("single"); setActiveStep("サ"); }}>
                               {sub}
                             </div>
-                            {/* TASK for this sub */}
                             {tree.taskLines[i] && (
                               <div className="tree-sub-branch">
                                 <div className="tree-node">
@@ -791,7 +908,6 @@
                                 </div>
                               </div>
                             )}
-                            {/* Schedule for this sub */}
                             {tree.schedLines[i] && (
                               <div className="tree-sub-branch">
                                 <div className="tree-node">
@@ -812,7 +928,6 @@
                   </div>
                 )}
 
-                {/* Warning & Checklist also in tree mode */}
                 <div className="warning-card" style={{ marginTop: "24px" }}>
                   <div className="warning-title">⚠ TASKバカ注意報</div>
                   <div className="warning-body">
@@ -830,7 +945,7 @@
             <div className="modal-overlay" onClick={() => setShowTemplateModal(false)}>
               <div className="modal" onClick={e => e.stopPropagation()}>
                 <div className="modal-title">新規プロジェクト</div>
-                <div style={{ fontSize: "12px", color: "#888", marginBottom: "16px" }}>
+                <div style={{ fontSize: "12px", color: "var(--text-muted)", marginBottom: "16px" }}>
                   テンプレートを選んでください
                 </div>
                 {TEMPLATES.map((t, i) => (
