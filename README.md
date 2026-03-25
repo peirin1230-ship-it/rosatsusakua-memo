@@ -1,6 +1,8 @@
 # ロサTス作ア メモ
 
-高松智史氏の著書で紹介されている仕事術フレームワーク **「ロ→サ→T→ス→作→ア」** を、日常業務でサッと使えるメモツールとして実装した React コンポーネントです。
+高松智史氏の著書で紹介されている仕事術フレームワーク **「ロ→サ→T→ス→作→ア」** を、日常業務でサッと使えるメモツールとして実装した Web アプリです。
+
+**今すぐ使う → [https://peirin1230-ship-it.github.io/rosatsusakua-memo/](https://peirin1230-ship-it.github.io/rosatsusakua-memo/)**
 
 ## フレームワークとは？
 
@@ -26,23 +28,29 @@
 - セルフチェックリスト付き
 - 「TASKバカ注意報」で論点を飛ばしていないかリマインド
 - ダークテーマUI
+- スマホ・PC両対応
 
 ## 使い方
 
-### 前提条件
+### ブラウザでそのまま使う（推奨）
 
-- Node.js (v18以上推奨)
-- React プロジェクト環境
+以下のURLにアクセスするだけで使えます：
 
-### インストール
+**https://peirin1230-ship-it.github.io/rosatsusakua-memo/**
 
-1. このリポジトリをクローンします：
+インストール不要。スマホのホーム画面に追加すればアプリのように使えます。
+
+### ローカルで使う
+
+`index.html` をダウンロードしてブラウザで開くだけで動作します。
 
 ```bash
 git clone https://github.com/peirin1230-ship-it/rosatsusakua-memo.git
 ```
 
-2. お使いの React プロジェクトに `rosatsusakua-memo.jsx` をコピーし、コンポーネントとしてインポートします：
+### React プロジェクトに組み込む
+
+`rosatsusakua-memo.jsx` を React コンポーネントとしてインポートできます。
 
 ```jsx
 import RoSaTSuSaA from "./rosatsusakua-memo";
@@ -51,6 +59,13 @@ function App() {
   return <RoSaTSuSaA />;
 }
 ```
+
+## ファイル構成
+
+| ファイル | 説明 |
+|----------|------|
+| `index.html` | スタンドアロン版（GitHub Pages で公開中） |
+| `rosatsusakua-memo.jsx` | React コンポーネント版 |
 
 ## 参考
 
