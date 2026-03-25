@@ -224,6 +224,15 @@
     .template-btn-name { font-size: 14px; font-weight: 500; }
     .template-btn-desc { font-size: 11px; color: var(--text-muted); margin-top: 4px; }
     .timestamp { font-size: 10px; color: var(--text-very-faint); text-align: right; margin-top: 4px; font-family: 'IBM Plex Mono', monospace; }
+    .auth-avatar { width: 24px; height: 24px; border-radius: 50%; vertical-align: middle; }
+    .sync-badge { font-size: 10px; padding: 2px 6px; border-radius: 4px; background: #3BA55D22; color: #3BA55D; border: 1px solid #3BA55D44; white-space: nowrap; }
+    .sync-badge.saving { background: #D4A72C22; color: #D4A72C; border-color: #D4A72C44; }
+    .sync-badge.error { background: #E8443A22; color: #E8443A; border-color: #E8443A44; }
+    .login-btn-google { display: flex; align-items: center; justify-content: center; gap: 8px; padding: 8px 14px; border-radius: 6px; font-size: 12px; cursor: pointer; font-family: 'Noto Sans JP', sans-serif; border: 1px solid #4285f444; background: #4285f418; color: #4285f4; transition: background 0.2s; }
+    .login-btn-google:hover { background: #4285f430; }
+    [data-theme="light"] .login-btn-google { background: #4285f410; }
+    .auth-loading { display: flex; align-items: center; justify-content: center; height: 100vh; background: var(--bg-primary); }
+    .auth-loading-inner { text-align: center; color: var(--text-muted); }
   </style>
 </head>
 <body>
@@ -231,9 +240,51 @@
   <script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
   <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
   <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.14.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.14.0/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.14.0/firebase-firestore-compat.js"></script>
 
   <script type="text/babel">
-    const { useState, useEffect } = React;
+    const { useState, useEffect, useRef } = React;
+
+    // ===== Firebase Configuration =====
+    // Firebase の設定方法は SETUP.md を参照してください
+    let FIREBASE_READY = false;
+    let fbAuth = null;
+    let fbDb = null;
+    try {
+      const firebaseConfig = {
+        apiKey: "YOUR_API_KEY",
+        authDomain: "YOUR_PROJECT.firebaseapp.com",
+        projectId: "YOUR_PROJECT_ID",
+        storageBucket: "YOUR_PROJECT.firebasestorage.app",
+        messagingSenderId: "YOUR_SENDER_ID",
+        appId: "YOUR_APP_ID"
+      };
+      if (firebaseConfig.apiKey !== "YOUR_API_KEY" && typeof firebase !== "undefined") {
+        firebase.initializeApp(firebaseConfig);
+        fbAuth = firebase.auth();
+        fbDb = firebase.firestore();
+        FIREBASE_READY = true;
+      }
+    } catch (e) { console.warn("Firebase init skipped:", e); }
+
+    const firestoreSave = async (uid, projects, currentId) => {
+      if (!FIREBASE_READY || !uid) return;
+      try {
+        await fbDb.collection("users").doc(uid).set({
+          projects, currentProjectId: currentId || null,
+          updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+        }, { merge: true });
+      } catch (e) { console.error("Firestore save:", e); throw e; }
+    };
+    const firestoreLoad = async (uid) => {
+      if (!FIREBASE_READY || !uid) return null;
+      try {
+        const doc = await fbDb.collection("users").doc(uid).get();
+        return doc.exists ? doc.data() : null;
+      } catch (e) { console.error("Firestore load:", e); return null; }
+    };
 
     // Step colors & metadata
     const C = {
@@ -375,6 +426,10 @@
       const [showExportMenu, setShowExportMenu] = useState(false);
       const [showTemplateModal, setShowTemplateModal] = useState(false);
       const [copiedStep, setCopiedStep] = useState(null);
+      const [user, setUser] = useState(null);
+      const [authLoading, setAuthLoading] = useState(FIREBASE_READY);
+      const [syncStatus, setSyncStatus] = useState(null);
+      const firestoreLoadedRef = useRef(false);
 
       useEffect(() => { try { localStorage.setItem("rosatsusakua-projects", JSON.stringify(projects)); } catch {} }, [projects]);
       useEffect(() => { try { if (currentProjectId) localStorage.setItem("rosatsusakua-current", currentProjectId); else localStorage.removeItem("rosatsusakua-current"); } catch {} }, [currentProjectId]);
@@ -388,6 +443,53 @@
           setCurrentProjectId(Object.keys(projects)[0]);
         }
       }, []);
+
+      // Auth state listener
+      useEffect(() => {
+        if (!FIREBASE_READY) { setAuthLoading(false); return; }
+        const unsub = fbAuth.onAuthStateChanged(async (u) => {
+          setUser(u);
+          if (u) {
+            const data = await firestoreLoad(u.uid);
+            if (data?.projects && Object.keys(data.projects).length > 0) {
+              const ps = { ...data.projects };
+              Object.values(ps).forEach(migrateProject);
+              firestoreLoadedRef.current = true;
+              setProjects(ps);
+              if (data.currentProjectId && ps[data.currentProjectId]) {
+                setCurrentProjectId(data.currentProjectId);
+              }
+            } else {
+              // First login: upload localStorage data to Firestore
+              try {
+                const s = localStorage.getItem("rosatsusakua-projects");
+                if (s) {
+                  const lp = JSON.parse(s);
+                  if (Object.keys(lp).length > 0) {
+                    const cid = localStorage.getItem("rosatsusakua-current");
+                    firestoreSave(u.uid, lp, cid);
+                  }
+                }
+              } catch {}
+            }
+          }
+          setAuthLoading(false);
+        });
+        return () => unsub();
+      }, []);
+
+      // Sync to Firestore (debounced)
+      useEffect(() => {
+        if (!user || !FIREBASE_READY || Object.keys(projects).length === 0) return;
+        if (firestoreLoadedRef.current) { firestoreLoadedRef.current = false; return; }
+        setSyncStatus("saving");
+        const timer = setTimeout(() => {
+          firestoreSave(user.uid, projects, currentProjectId)
+            .then(() => { setSyncStatus("saved"); setTimeout(() => setSyncStatus(null), 2000); })
+            .catch(() => setSyncStatus("error"));
+        }, 1500);
+        return () => clearTimeout(timer);
+      }, [projects, currentProjectId]);
 
       const cur = currentProjectId ? projects[currentProjectId] : null;
       const notes = cur?.notes || {};
@@ -535,6 +637,17 @@
         if (!currentProjectId || !confirm("このプロジェクトのメモを全てクリアしますか？")) return;
         setProjects(prev => ({ ...prev, [currentProjectId]: touch({ ...prev[currentProjectId], notes: {}, subPoints: [], checklist: {} }) }));
         setActiveStep(null);
+      };
+
+      const handleLogin = async () => {
+        if (!FIREBASE_READY) return;
+        try { await fbAuth.signInWithPopup(new firebase.auth.GoogleAuthProvider()); }
+        catch (e) { if (e.code !== "auth/popup-closed-by-user") console.error("Login:", e); }
+      };
+      const handleLogout = async () => {
+        if (!FIREBASE_READY) return;
+        if (!confirm("ログアウトしますか？\nログアウト後はローカル保存のみになります。")) return;
+        try { await fbAuth.signOut(); } catch (e) { console.error("Logout:", e); }
       };
 
       // AI prompt
@@ -700,6 +813,19 @@
         );
       };
 
+      if (authLoading) {
+        return (
+          <div className="auth-loading">
+            <div className="auth-loading-inner">
+              <div style={{ fontSize: "28px", fontWeight: 900, letterSpacing: "6px", marginBottom: "16px" }}>
+                {FLOW_KEYS.map(k => <span key={k} style={{ color: C[k].color }}>{k}</span>)}
+              </div>
+              <div>読み込み中...</div>
+            </div>
+          </div>
+        );
+      }
+
       return (
         <div>
           {/* Header */}
@@ -712,6 +838,18 @@
                 </div>
               </div>
               <div style={{ display: "flex", gap: "6px", flexWrap: "wrap", alignItems: "center" }}>
+                {FIREBASE_READY && !user && (
+                  <button className="login-btn-google" onClick={handleLogin}>🔑 ログイン</button>
+                )}
+                {user && (
+                  <div style={{ display: "flex", alignItems: "center", gap: "5px" }}>
+                    {user.photoURL && <img className="auth-avatar" src={user.photoURL} alt="" referrerPolicy="no-referrer" />}
+                    {syncStatus === "saving" && <span className="sync-badge saving">☁️ 保存中</span>}
+                    {syncStatus === "saved" && <span className="sync-badge">☁️ 同期済</span>}
+                    {syncStatus === "error" && <span className="sync-badge error">⚠ エラー</span>}
+                    <button className="btn btn-muted" onClick={handleLogout} style={{ fontSize: "10px", padding: "4px 8px" }}>ログアウト</button>
+                  </div>
+                )}
                 <button className="btn-theme" onClick={toggleTheme} title={theme === "dark" ? "ライトモードに切替" : "ダークモードに切替"}>{theme === "dark" ? "☀️" : "🌙"}</button>
                 <button className="btn" onClick={handleImport}>📥 Import</button>
                 <div className="export-menu-wrapper">
