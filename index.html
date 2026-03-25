@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ロサTス作ア メモ</title>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;500;700;900&family=IBM+Plex+Mono:wght@400;600&display=swap" rel="stylesheet" />
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { background: #1a1a1e; color: #e8e6e3; font-family: 'Noto Sans JP', 'Helvetica Neue', sans-serif; }
+    .mono { font-family: 'IBM Plex Mono', monospace; }
+
+    /* Header */
+    .header {
+      background: linear-gradient(135deg, #1a1a1e 0%, #2a2a30 100%);
+      border-bottom: 1px solid #333;
+      padding: 20px 24px 16px;
+      position: sticky; top: 0; z-index: 10;
+    }
+    .header-top { display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; }
+    .header-subtitle { font-size: 13px; font-weight: 400; color: #888; letter-spacing: 2px; text-transform: uppercase; }
+    .header-title { font-size: 28px; font-weight: 900; margin-top: 4px; letter-spacing: 6px; display: flex; gap: 2px; }
+    .btn { background: #333; border: 1px solid #555; color: #ccc; padding: 6px 12px; border-radius: 6px; font-size: 11px; cursor: pointer; }
+    .btn-muted { color: #888; }
+    .project-input {
+      width: 100%; background: #222; border: 1px solid #3a3a3a; border-radius: 6px;
+      padding: 8px 12px; color: #e8e6e3; font-size: 14px; font-family: 'Noto Sans JP', sans-serif;
+      outline: none; box-sizing: border-box; margin-bottom: 10px;
+    }
+    .progress-bar { flex: 1; height: 3px; background: #333; border-radius: 2px; overflow: hidden; }
+    .progress-fill { height: 100%; border-radius: 2px; transition: width 0.4s ease;
+      background: linear-gradient(90deg, #E8443A, #E07B2E, #D4A72C, #3BA55D, #4A90D9, #7B68EE);
+    }
+
+    /* Tip */
+    .tip-banner {
+      margin: 16px 16px 0; padding: 12px 16px; background: #2a2520; border: 1px solid #4a3a20;
+      border-radius: 8px; font-size: 12px; color: #c8a860; display: flex;
+      justify-content: space-between; align-items: flex-start; line-height: 1.6;
+    }
+    .tip-close { background: none; border: none; color: #886830; cursor: pointer; font-size: 16px; padding: 0 0 0 12px; line-height: 1; }
+
+    /* Flow */
+    .flow-row { display: flex; justify-content: center; align-items: center; padding: 20px 16px 8px; gap: 4px; flex-wrap: wrap; }
+    .flow-circle {
+      width: 40px; height: 40px; border-radius: 50%; font-size: 16px; font-weight: 700;
+      display: flex; align-items: center; justify-content: center; cursor: pointer;
+      transition: all 0.2s ease; position: relative; border: 2px solid #444; background: #222; color: #666;
+      font-family: 'Noto Sans JP', sans-serif;
+    }
+    .flow-circle.active { box-shadow: 0 0 16px rgba(255,255,255,0.1); }
+    .flow-circle .dot {
+      position: absolute; top: -2px; right: -2px; width: 10px; height: 10px; border-radius: 50%;
+    }
+    .flow-d {
+      width: 40px; height: 40px; border-radius: 50%; border: 2px dashed #555; background: #222;
+      color: #666; font-size: 16px; font-weight: 700; display: flex; align-items: center;
+      justify-content: center; font-family: 'Noto Sans JP', sans-serif;
+    }
+    .flow-hint { text-align: center; font-size: 10px; color: #555; margin-bottom: 8px; }
+
+    /* Cards */
+    .cards { padding: 8px 16px 100px; }
+    .card { margin-bottom: 8px; border-radius: 10px; border: 1px solid #333; background: #1e1e22; overflow: hidden; transition: all 0.3s ease; }
+    .card.active { background: #222228; }
+    .card-header {
+      width: 100%; display: flex; align-items: center; gap: 12px; padding: 14px 16px;
+      background: none; border: none; cursor: pointer; text-align: left;
+    }
+    .card-key { font-size: 20px; font-weight: 900; min-width: 28px; font-family: 'Noto Sans JP', sans-serif; }
+    .card-label { font-size: 14px; font-weight: 500; color: #e8e6e3; }
+    .card-question { font-size: 11px; color: #777; margin-top: 2px; }
+    .card-chevron { color: #555; font-size: 16px; transition: transform 0.2s ease; }
+    .card-chevron.open { transform: rotate(180deg); }
+    .card-body { padding: 0 16px 16px; }
+    .card-hint { padding: 10px 12px; border-radius: 6px; margin-bottom: 10px; }
+    .card-hint-text { font-size: 12px; color: #999; white-space: pre-line; line-height: 1.6; }
+    .card-hint-example { font-size: 11px; margin-top: 6px; opacity: 0.7; }
+    .card-textarea {
+      width: 100%; min-height: 100px; background: #1a1a1e; border-radius: 6px;
+      padding: 12px; color: #e8e6e3; font-size: 13px; font-family: 'Noto Sans JP', sans-serif;
+      line-height: 1.8; outline: none; resize: vertical; box-sizing: border-box;
+    }
+    .card-nav { display: flex; justify-content: space-between; margin-top: 8px; }
+    .nav-btn {
+      background: none; padding: 6px 14px; border-radius: 6px; font-size: 11px; cursor: pointer;
+    }
+    .nav-btn-prev { border: 1px solid #444; color: #888; }
+    .nav-btn-next { }
+    .filled-dot { width: 6px; height: 6px; border-radius: 50%; }
+
+    /* Warning */
+    .warning-card { margin-top: 16px; padding: 16px; background: #1c1416; border: 1px solid #3a2028; border-radius: 10px; }
+    .warning-title { font-size: 13px; font-weight: 700; color: #E8443A; margin-bottom: 8px; }
+    .warning-body { font-size: 12px; color: #999; line-height: 1.8; }
+
+    /* Checklist */
+    .checklist-card { margin-top: 12px; padding: 16px; background: #161820; border: 1px solid #252840; border-radius: 10px; }
+    .checklist-title { font-size: 13px; font-weight: 700; color: #7B68EE; margin-bottom: 10px; }
+    .checklist-item { font-size: 12px; color: #888; padding: 6px 0; line-height: 1.6; }
+    .checklist-item:not(:last-child) { border-bottom: 1px solid #252840; }
+    .checklist-box { color: #555; margin-right: 8px; }
+  </style>
+</head>
+<body>
+  <div id="root"></div>
+
+  <script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+  <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+
+  <script type="text/babel">
+    const { useState } = React;
+
+    const STEPS = [
+      { key: "ロ", label: "論点", color: "#E8443A",
+        hint: "そもそも何を答えるべき？\n「〜すべきか？」の形で書く",
+        example: "例：新規事業Xに参入すべきか？",
+        question: "この仕事のBIG QUESTIONは？" },
+      { key: "サ", label: "サブ論点", color: "#E07B2E",
+        hint: "論点を解くための「問い」に分解\n3〜5個がベスト",
+        example: "例：市場規模は？/勝てるか？/儲かるか？",
+        question: "論点の答えを出すには、何を検討すべき？" },
+      { key: "T", label: "TASK", color: "#D4A72C",
+        hint: "各サブ論点に答えるための\n具体的な作業を設計",
+        example: "例：市場規模→業界レポート分析＋ヒアリング3件",
+        question: "サブ論点に答えるために、何をやる？" },
+      { key: "ス", label: "スケジュール", color: "#3BA55D",
+        hint: "TASKの優先度・順番・期限を\n決めてWBSに落とす",
+        example: "例：Day1-3 リサーチ → Day4-5 分析 → Day6 資料化",
+        question: "いつまでに、誰が、どの順で？" },
+      { key: "作", label: "作業", color: "#4A90D9",
+        hint: "手を動かすフェーズ\nでも常に論点に立ち返る",
+        example: "例：Excelで数値分析 → Wordで示唆まとめ",
+        question: "ちゃんと論点に答える作業してる？" },
+      { key: "ア", label: "アウトプット", color: "#7B68EE",
+        hint: "最終成果物\n→ そのあと必ずD（議論）へ",
+        example: "例：提案スライド10枚 → 上司とディスカッション",
+        question: "論点にストレートに答えてる？" },
+    ];
+
+    const CHECKLIST = [
+      "論点は「〜すべきか？」の形になってる？",
+      "サブ論点は論点の「答え」を作れる問いになってる？",
+      "TASKはサブ論点に紐づいてる？宙ぶらりんのTASKない？",
+      "アウトプットは論点にストレートに答えてる？",
+      "最後にD（ディスカッション）ちゃんとやった？",
+    ];
+
+    function App() {
+      const [activeStep, setActiveStep] = useState(null);
+      const [notes, setNotes] = useState({});
+      const [projectName, setProjectName] = useState("");
+      const [showTip, setShowTip] = useState(true);
+
+      const filledCount = Object.values(notes).filter(v => v && v.trim()).length;
+      const progress = (filledCount / 6) * 100;
+
+      const handleExport = () => {
+        let text = `# ${projectName || "無題のプロジェクト"}\n`;
+        text += `# ロ→サ→T→ス→作→ア メモ\n---\n\n`;
+        STEPS.forEach(s => {
+          text += `## [${s.key}] ${s.label}\n${notes[s.key] || "（未記入）"}\n\n`;
+        });
+        const blob = new Blob([text], { type: "text/plain;charset=utf-8" });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement("a");
+        a.href = url;
+        a.download = `${projectName || "rosatsusakua"}-memo.txt`;
+        a.click();
+        URL.revokeObjectURL(url);
+      };
+
+      const handleReset = () => { setNotes({}); setProjectName(""); setActiveStep(null); };
+
+      return (
+        <div>
+          {/* Header */}
+          <div className="header">
+            <div className="header-top">
+              <div>
+                <div className="header-subtitle mono">高松智史式</div>
+                <div className="header-title">
+                  {STEPS.map(s => (
+                    <span key={s.key} style={{ color: s.color, textShadow: `0 0 20px ${s.color}33` }}>{s.key}</span>
+                  ))}
+                </div>
+              </div>
+              <div style={{ display: "flex", gap: "8px" }}>
+                <button className="btn mono" onClick={handleExport}>📋 Export</button>
+                <button className="btn btn-muted mono" onClick={handleReset}>↺ Reset</button>
+              </div>
+            </div>
+
+            <input className="project-input" value={projectName}
+              onChange={e => setProjectName(e.target.value)} placeholder="プロジェクト名をメモ..." />
+
+            <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
+              <div className="progress-bar">
+                <div className="progress-fill" style={{ width: `${progress}%` }} />
+              </div>
+              <span className="mono" style={{ fontSize: "11px", color: "#666", whiteSpace: "nowrap" }}>{filledCount}/6</span>
+            </div>
+          </div>
+
+          {/* Tip */}
+          {showTip && (
+            <div className="tip-banner">
+              <div>
+                <strong>💡 核心：</strong>いきなりTASKに飛ばない。
+                <br />「ロ→サ」= 論点とサブ論点を先に立てるだけで、仕事の質が激変する。
+                <br />最後は必ず<strong> →D（ディスカッション）</strong>で上司と議論してプロセスを閉じる。
+              </div>
+              <button className="tip-close" onClick={() => setShowTip(false)}>✕</button>
+            </div>
+          )}
+
+          {/* Flow */}
+          <div className="flow-row">
+            {STEPS.map((s, i) => (
+              <div key={s.key} style={{ display: "flex", alignItems: "center", gap: "4px" }}>
+                <button className={`flow-circle${activeStep === s.key ? " active" : ""}`}
+                  onClick={() => setActiveStep(activeStep === s.key ? null : s.key)}
+                  style={{
+                    borderColor: activeStep === s.key ? s.color : (notes[s.key]?.trim() ? s.color + "88" : "#444"),
+                    background: activeStep === s.key ? `${s.color}22` : (notes[s.key]?.trim() ? "#2a2a30" : "#222"),
+                    color: notes[s.key]?.trim() ? s.color : (activeStep === s.key ? s.color : "#666"),
+                    boxShadow: activeStep === s.key ? `0 0 16px ${s.color}33` : "none",
+                  }}>
+                  {s.key}
+                  {notes[s.key]?.trim() && <span className="dot" style={{ background: s.color }} />}
+                </button>
+                {i < STEPS.length - 1 && <span className="mono" style={{ color: "#444", fontSize: "14px" }}>→</span>}
+              </div>
+            ))}
+            <span className="mono" style={{ color: "#444", fontSize: "14px", marginLeft: "4px" }}>→</span>
+            <div className="flow-d">D</div>
+          </div>
+          <div className="flow-hint mono">タップして展開 → メモを記入</div>
+
+          {/* Cards */}
+          <div className="cards">
+            {STEPS.map((s, i) => {
+              const isActive = activeStep === s.key;
+              const hasContent = notes[s.key]?.trim();
+              return (
+                <div key={s.key} className={`card${isActive ? " active" : ""}`}
+                  style={{ borderColor: isActive ? s.color + "66" : "#333",
+                    boxShadow: isActive ? `0 4px 24px ${s.color}11` : "none" }}>
+                  <button className="card-header" onClick={() => setActiveStep(isActive ? null : s.key)}>
+                    <div className="card-key" style={{ color: s.color,
+                      textShadow: isActive ? `0 0 12px ${s.color}44` : "none" }}>{s.key}</div>
+                    <div style={{ flex: 1 }}>
+                      <div className="card-label">{s.label}</div>
+                      <div className="card-question">{s.question}</div>
+                    </div>
+                    <div style={{ display: "flex", alignItems: "center", gap: "6px" }}>
+                      {hasContent && <div className="filled-dot" style={{ background: s.color }} />}
+                      <span className={`card-chevron${isActive ? " open" : ""}`}>▾</span>
+                    </div>
+                  </button>
+
+                  {isActive && (
+                    <div className="card-body">
+                      <div className="card-hint" style={{ background: `${s.color}0a`, border: `1px solid ${s.color}22` }}>
+                        <div className="card-hint-text">{s.hint}</div>
+                        <div className="card-hint-example mono" style={{ color: s.color }}>{s.example}</div>
+                      </div>
+                      <textarea className="card-textarea" style={{ border: `1px solid ${s.color}33` }}
+                        value={notes[s.key] || ""} onChange={e => setNotes(prev => ({ ...prev, [s.key]: e.target.value }))}
+                        placeholder={`${s.label}をメモ...`} autoFocus />
+                      <div className="card-nav">
+                        {i > 0 ? (
+                          <button className="nav-btn nav-btn-prev mono" onClick={() => setActiveStep(STEPS[i-1].key)}>
+                            ← {STEPS[i-1].key}
+                          </button>
+                        ) : <div />}
+                        {i < STEPS.length - 1 && (
+                          <button className="nav-btn nav-btn-next mono" onClick={() => setActiveStep(STEPS[i+1].key)}
+                            style={{ background: `${STEPS[i+1].color}22`, border: `1px solid ${STEPS[i+1].color}44`, color: STEPS[i+1].color }}>
+                            {STEPS[i+1].key} →
+                          </button>
+                        )}
+                      </div>
+                    </div>
+                  )}
+                </div>
+              );
+            })}
+
+            {/* Warning */}
+            <div className="warning-card">
+              <div className="warning-title">⚠ TASKバカ注意報</div>
+              <div className="warning-body">
+                いきなり「T（TASK）」から始めていないか？
+                <br /><span style={{ color: "#E8443A" }}>ロ→サ</span> を飛ばすと、
+                論点がズレた作業を大量にこなす「TASKバカ」になる。
+                <br /><strong style={{ color: "#c8a860" }}>まず論点。常に論点に立ち返る。</strong>
+              </div>
+            </div>
+
+            {/* Checklist */}
+            <div className="checklist-card">
+              <div className="checklist-title">🔍 セルフチェック</div>
+              {CHECKLIST.map((q, i) => (
+                <div key={i} className="checklist-item">
+                  <span className="checklist-box">□</span>{q}
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      );
+    }
+
+    ReactDOM.createRoot(document.getElementById("root")).render(<App />);
+  </script>
+</body>
+</html>
