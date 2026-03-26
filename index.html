@@ -543,7 +543,7 @@
       // Progress: ロ filled, any サ filled, any T filled, any ス filled, 作 filled, ア filled → /6
       const hasSub = subPoints.some(sp => sp.content?.trim());
       const hasTask = subPoints.some(sp => sp.tasks?.some(tk => tk.content?.trim()));
-      const hasSched = subPoints.some(sp => sp.tasks?.some(tk => tk.schedule?.trim()));
+      const hasSched = subPoints.some(sp => sp.tasks?.some(tk => tk.calendarDate?.trim() || tk.schedule?.trim()));
       const filledCount = [notes["ロ"]?.trim(), hasSub, hasTask, hasSched, notes["作"]?.trim(), notes["ア"]?.trim()].filter(Boolean).length;
       const progress = (filledCount / 6) * 100;
       const projectList = Object.values(projects).sort((a, b) => (b.updatedAt || "").localeCompare(a.updatedAt || ""));
@@ -626,7 +626,8 @@
             if (!sp.tasks || sp.tasks.length === 0) { text += `- TASK: （未記入）\n\n`; }
             else { sp.tasks.forEach((tk, j) => {
               text += `- **TASK${sp.tasks.length > 1 ? ` ${j + 1}` : ""}**: ${tk.content || "（未記入）"}`;
-              if (tk.schedule?.trim()) text += ` [${tk.schedule}]`;
+              if (tk.calendarDate) text += ` [${tk.calendarDate}]`;
+              else if (tk.schedule?.trim()) text += ` [${tk.schedule}]`;
               text += `\n`;
             }); text += `\n`; }
           }); }
@@ -647,7 +648,7 @@
           else { subPoints.forEach((sp, i) => {
             text += `--- サブ論点${i + 1}: ${sp.content || "（未記入）"} ---\n`;
             if (!sp.tasks || sp.tasks.length === 0) { text += `  T: （未記入）\n`; }
-            else { sp.tasks.forEach((tk, j) => { text += `  T${sp.tasks.length > 1 ? j + 1 : ""}: ${tk.content || "（未記入）"} / ス: ${tk.schedule || "（未記入）"}\n`; }); }
+            else { sp.tasks.forEach((tk, j) => { text += `  T${sp.tasks.length > 1 ? j + 1 : ""}: ${tk.content || "（未記入）"} / ス: ${tk.calendarDate || tk.schedule || "（未記入）"}\n`; }); }
           }); text += `\n`; }
           text += `## [作] 作業\n${notes["作"] || "（未記入）"}\n\n`;
           text += `## [ア] アウトプット\n${notes["ア"] || "（未記入）"}\n\n`;
@@ -745,7 +746,8 @@
             if (sp.tasks && sp.tasks.length > 0) {
               sp.tasks.forEach((tk, j) => {
                 prompt += `  [TASK${sp.tasks.length > 1 ? ` ${j + 1}` : ""}] ${tk.content || "（未記入）"}`;
-                if (tk.schedule?.trim()) prompt += ` [スケジュール: ${tk.schedule}]`;
+                if (tk.calendarDate) prompt += ` [期限: ${tk.calendarDate}]`;
+                else if (tk.schedule?.trim()) prompt += ` [スケジュール: ${tk.schedule}]`;
                 prompt += `\n`;
               });
             } else { prompt += `  [TASK] （未記入）\n`; }
@@ -859,20 +861,15 @@
                     {(sp.tasks || []).map((tk, j) => (
                       <div key={tk.id} style={{ marginBottom: "6px" }}>
                         <div style={{ display: "flex", gap: "6px", alignItems: "flex-start" }}>
-                          <div style={{ flex: 2 }}>
+                          <div style={{ flex: 1 }}>
                             <input className="sp-input" style={{ border: "1px solid var(--border-input)" }}
                               value={tk.content} onChange={e => updateTask(sp.id, tk.id, "content", e.target.value)}
                               placeholder={`TASK${(sp.tasks || []).length > 1 ? ` ${j + 1}` : ""}...`} />
                           </div>
-                          <div style={{ flex: 1 }}>
-                            <input className="sp-input" style={{ border: "1px solid var(--border-input)", fontSize: "12px" }}
-                              value={tk.schedule} onChange={e => updateTask(sp.id, tk.id, "schedule", e.target.value)}
-                              placeholder="期限メモ..." />
-                          </div>
                           <div>
                             <input type="date" className="sp-input cal-date-input"
                               value={tk.calendarDate || ""} onChange={e => updateTask(sp.id, tk.id, "calendarDate", e.target.value)}
-                              title="Googleカレンダー同期用の日付" />
+                              title="期限日" />
                           </div>
                           {(sp.tasks || []).length > 1 && (
                             <button className="sp-remove" style={{ marginTop: "6px", fontSize: "13px" }}
@@ -1054,13 +1051,13 @@
                           value={sp.content} onChange={e => updateSubPoint(sp.id, "content", e.target.value)} placeholder="サブ論点..." />
                       </div>
                       <div className="overview-sp-cell" style={{ borderLeft: `3px solid ${C["T"].color}`, background: `${C["T"].color}08` }}>
-                        <div className="overview-sp-label" style={{ color: C["T"].color }}>TASK → スケジュール</div>
+                        <div className="overview-sp-label" style={{ color: C["T"].color }}>TASK → 期限</div>
                         {(sp.tasks || []).map((tk, j) => (
                           <div key={tk.id} style={{ display: "flex", gap: 4, marginBottom: 4, alignItems: "center" }}>
-                            <input className="sp-input" style={{ border: "1px solid var(--border-input)", flex: 2 }}
+                            <input className="sp-input" style={{ border: "1px solid var(--border-input)", flex: 1 }}
                               value={tk.content} onChange={e => updateTask(sp.id, tk.id, "content", e.target.value)} placeholder="TASK..." />
-                            <input className="sp-input" style={{ border: "1px solid var(--border-input)", flex: 1, fontSize: 12 }}
-                              value={tk.schedule} onChange={e => updateTask(sp.id, tk.id, "schedule", e.target.value)} placeholder="期限..." />
+                            <input type="date" className="sp-input cal-date-input"
+                              value={tk.calendarDate || ""} onChange={e => updateTask(sp.id, tk.id, "calendarDate", e.target.value)} />
                           </div>
                         ))}
                         <button onClick={() => addTask(sp.id)} style={{ background: "none", border: "none", color: "var(--text-muted)", fontSize: 11, cursor: "pointer", padding: "2px 0" }}>+ TASK追加</button>
@@ -1104,13 +1101,13 @@
                               onClick={() => { setViewMode("single"); setActiveStep("サ"); }}>
                               {sp.content || `（サブ論点 ${i + 1}）`}
                             </div>
-                            {sp.tasks && sp.tasks.some(tk => tk.content?.trim() || tk.schedule?.trim()) && (
+                            {sp.tasks && sp.tasks.some(tk => tk.content?.trim() || tk.calendarDate || tk.schedule?.trim()) && (
                               <div className="tree-sub-branch">
-                                {sp.tasks.filter(tk => tk.content?.trim() || tk.schedule?.trim()).map(tk => (
+                                {sp.tasks.filter(tk => tk.content?.trim() || tk.calendarDate || tk.schedule?.trim()).map(tk => (
                                   <div key={tk.id} className="tree-node">
                                     <div className="tree-node-label" style={{ background: `${C["T"].color}0c`, color: "var(--text-secondary)", border: `1px solid ${C["T"].color}30`, borderLeft: `3px solid ${C["T"].color}`, fontSize: "13px" }}>
                                       {tk.content || "（TASK未記入）"}
-                                      {tk.schedule?.trim() && <span style={{ color: "var(--text-muted)", marginLeft: 10, fontSize: "12px" }}>{tk.schedule}</span>}
+                                      {(tk.calendarDate || tk.schedule?.trim()) && <span style={{ color: "var(--text-muted)", marginLeft: 10, fontSize: "12px" }}>{tk.calendarDate || tk.schedule}</span>}
                                     </div>
                                   </div>
                                 ))}
