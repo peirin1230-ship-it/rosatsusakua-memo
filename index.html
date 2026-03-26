@@ -8,120 +8,120 @@
   <style>
     /* ===== Theme Variables ===== */
     :root {
-      --bg-primary: #1a1a1e;
-      --bg-secondary: #222;
-      --bg-card: #1e1e22;
-      --bg-card-active: #222228;
-      --bg-header: linear-gradient(135deg, #1a1a1e 0%, #2a2a30 100%);
-      --bg-input: #222;
-      --bg-btn: #333;
-      --bg-btn-hover: #444;
-      --bg-overlay: rgba(0,0,0,0.6);
-      --bg-modal: #222228;
-      --bg-tip: #2a2520;
-      --bg-warning: #1c1416;
-      --bg-checklist: #161820;
-      --bg-export-menu: #2a2a30;
-      --text-primary: #e8e6e3;
-      --text-secondary: #ccc;
-      --text-muted: #888;
-      --text-faint: #666;
-      --text-very-faint: #555;
-      --text-hint: #999;
-      --border-primary: #333;
-      --border-secondary: #444;
-      --border-tertiary: #555;
-      --border-input: #3a3a3a;
-      --border-tip: #4a3a20;
-      --border-warning: #3a2028;
-      --border-checklist: #252840;
-      --progress-bg: #333;
-      --flow-arrow: #444;
-      --flow-circle-bg: #222;
-      --flow-circle-filled: #2a2a30;
-      --tree-line: #444;
-      --tree-sub-line: #333;
-      --tip-color: #c8a860;
-      --tip-close: #886830;
-      --ai-bg: #1a2030;
-      --ai-border: #2a3a5a;
-      --ai-color: #7B9ED9;
-      --ai-bg-hover: #2a3040;
-      --ai-copied-bg: #1a3020;
-      --ai-copied-border: #2a5a3a;
-      --btn-new-bg: #2a3a2a;
-      --btn-new-border: #3a5a3a;
-      --btn-new-color: #6c6;
-      --btn-new-hover: #3a4a3a;
-      --btn-del-bg: #3a2a2a;
-      --btn-del-border: #5a3a3a;
-      --btn-del-color: #c66;
-      --btn-del-hover: #4a3a3a;
-      --sp-card-bg: #1a1a1e;
-      --sp-card-border: #333;
+      --bg-primary: #111113;
+      --bg-secondary: #18181b;
+      --bg-card: #18181b;
+      --bg-card-active: #1e1e21;
+      --bg-header: #111113;
+      --bg-input: #1e1e21;
+      --bg-btn: #27272a;
+      --bg-btn-hover: #303033;
+      --bg-overlay: rgba(0,0,0,0.7);
+      --bg-modal: #1e1e21;
+      --bg-tip: #1a1a1d;
+      --bg-warning: #1a1a1d;
+      --bg-checklist: #1a1a1d;
+      --bg-export-menu: #1e1e21;
+      --text-primary: #d4d4d8;
+      --text-secondary: #a1a1aa;
+      --text-muted: #71717a;
+      --text-faint: #52525b;
+      --text-very-faint: #3f3f46;
+      --text-hint: #71717a;
+      --border-primary: #27272a;
+      --border-secondary: #2e2e32;
+      --border-tertiary: #3f3f46;
+      --border-input: #27272a;
+      --border-tip: #27272a;
+      --border-warning: #27272a;
+      --border-checklist: #27272a;
+      --progress-bg: #27272a;
+      --flow-arrow: #3f3f46;
+      --flow-circle-bg: transparent;
+      --flow-circle-filled: transparent;
+      --tree-line: #3f3f46;
+      --tree-sub-line: #27272a;
+      --tip-color: #a1a1aa;
+      --tip-close: #71717a;
+      --ai-bg: transparent;
+      --ai-border: #27272a;
+      --ai-color: #71717a;
+      --ai-bg-hover: #1e1e21;
+      --ai-copied-bg: transparent;
+      --ai-copied-border: #3f3f46;
+      --btn-new-bg: transparent;
+      --btn-new-border: #27272a;
+      --btn-new-color: #a1a1aa;
+      --btn-new-hover: #1e1e21;
+      --btn-del-bg: transparent;
+      --btn-del-border: #27272a;
+      --btn-del-color: #71717a;
+      --btn-del-hover: #1e1e21;
+      --sp-card-bg: #141416;
+      --sp-card-border: #27272a;
     }
     [data-theme="light"] {
-      --bg-primary: #F2F2F2;
-      --bg-secondary: #FFFFFF;
-      --bg-card: #FFFFFF;
-      --bg-card-active: #FAFAFA;
-      --bg-header: linear-gradient(135deg, #FFFFFF 0%, #F5F5F5 100%);
-      --bg-input: #FFFFFF;
-      --bg-btn: #F5F5F5;
-      --bg-btn-hover: #E5E5E5;
-      --bg-overlay: rgba(0,0,0,0.3);
-      --bg-modal: #FFFFFF;
-      --bg-tip: #FFFBEB;
-      --bg-warning: #FEF2F2;
-      --bg-checklist: #F5F5FF;
-      --bg-export-menu: #FFFFFF;
-      --text-primary: #262626;
-      --text-secondary: #404040;
-      --text-muted: #737373;
-      --text-faint: #8B8B8B;
-      --text-very-faint: #A3A3A3;
-      --text-hint: #737373;
-      --border-primary: #E0E0E0;
-      --border-secondary: #D4D4D4;
-      --border-tertiary: #C0C0C0;
-      --border-input: #E0E0E0;
-      --border-tip: #F59E0B;
-      --border-warning: #FECACA;
-      --border-checklist: #D0D0E8;
-      --progress-bg: #E0E0E0;
-      --flow-arrow: #A3A3A3;
-      --flow-circle-bg: #FFFFFF;
-      --flow-circle-filled: #F5F5F5;
-      --tree-line: #D4D4D4;
-      --tree-sub-line: #E0E0E0;
-      --tip-color: #92400E;
-      --tip-close: #B45309;
-      --ai-bg: #EFF6FF;
-      --ai-border: #BFDBFE;
-      --ai-color: #3B82F6;
-      --ai-bg-hover: #DBEAFE;
-      --ai-copied-bg: #F0FDF4;
-      --ai-copied-border: #86EFAC;
-      --btn-new-bg: #F0FDF4;
-      --btn-new-border: #86EFAC;
-      --btn-new-color: #16A34A;
-      --btn-new-hover: #DCFCE7;
-      --btn-del-bg: #FEF2F2;
-      --btn-del-border: #FECACA;
-      --btn-del-color: #EF4444;
-      --btn-del-hover: #FEE2E2;
-      --sp-card-bg: #F8F8FA;
-      --sp-card-border: #E0E0E0;
+      --bg-primary: #fafafa;
+      --bg-secondary: #ffffff;
+      --bg-card: #ffffff;
+      --bg-card-active: #ffffff;
+      --bg-header: #fafafa;
+      --bg-input: #ffffff;
+      --bg-btn: #f4f4f5;
+      --bg-btn-hover: #e4e4e7;
+      --bg-overlay: rgba(0,0,0,0.25);
+      --bg-modal: #ffffff;
+      --bg-tip: #fafafa;
+      --bg-warning: #fafafa;
+      --bg-checklist: #fafafa;
+      --bg-export-menu: #ffffff;
+      --text-primary: #27272a;
+      --text-secondary: #52525b;
+      --text-muted: #71717a;
+      --text-faint: #a1a1aa;
+      --text-very-faint: #d4d4d8;
+      --text-hint: #71717a;
+      --border-primary: #e4e4e7;
+      --border-secondary: #e4e4e7;
+      --border-tertiary: #d4d4d8;
+      --border-input: #e4e4e7;
+      --border-tip: #e4e4e7;
+      --border-warning: #e4e4e7;
+      --border-checklist: #e4e4e7;
+      --progress-bg: #e4e4e7;
+      --flow-arrow: #a1a1aa;
+      --flow-circle-bg: transparent;
+      --flow-circle-filled: transparent;
+      --tree-line: #d4d4d8;
+      --tree-sub-line: #e4e4e7;
+      --tip-color: #52525b;
+      --tip-close: #71717a;
+      --ai-bg: transparent;
+      --ai-border: #e4e4e7;
+      --ai-color: #71717a;
+      --ai-bg-hover: #f4f4f5;
+      --ai-copied-bg: transparent;
+      --ai-copied-border: #d4d4d8;
+      --btn-new-bg: transparent;
+      --btn-new-border: #e4e4e7;
+      --btn-new-color: #52525b;
+      --btn-new-hover: #f4f4f5;
+      --btn-del-bg: transparent;
+      --btn-del-border: #e4e4e7;
+      --btn-del-color: #a1a1aa;
+      --btn-del-hover: #f4f4f5;
+      --sp-card-bg: #fafafa;
+      --sp-card-border: #e4e4e7;
     }
 
     * { margin: 0; padding: 0; box-sizing: border-box; }
     body { background: var(--bg-primary); color: var(--text-primary); font-family: 'Noto Sans JP', 'Helvetica Neue', sans-serif; transition: background 0.3s, color 0.3s; }
     .mono { font-family: 'IBM Plex Mono', monospace; }
 
-    .header { background: var(--bg-header); border-bottom: 1px solid var(--border-primary); padding: 20px 24px 16px; position: sticky; top: 0; z-index: 10; }
-    .header-top { display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; }
-    .header-subtitle { font-size: 13px; font-weight: 400; color: var(--text-muted); letter-spacing: 2px; text-transform: uppercase; }
-    .header-title { font-size: 28px; font-weight: 900; margin-top: 4px; letter-spacing: 6px; display: flex; gap: 2px; }
+    .header { background: var(--bg-header); border-bottom: 1px solid var(--border-primary); padding: 16px 20px 12px; position: sticky; top: 0; z-index: 10; }
+    .header-top { display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px; }
+    .header-subtitle { font-size: 10px; font-weight: 400; color: var(--text-faint); letter-spacing: 2px; text-transform: uppercase; }
+    .header-title { font-size: 20px; font-weight: 700; margin-top: 2px; letter-spacing: 4px; display: flex; gap: 1px; }
     .btn { background: var(--bg-btn); border: 1px solid var(--border-tertiary); color: var(--text-secondary); padding: 6px 12px; border-radius: 6px; font-size: 11px; cursor: pointer; font-family: 'IBM Plex Mono', monospace; transition: background 0.2s; }
     .btn:hover { background: var(--bg-btn-hover); }
     .btn-muted { color: var(--text-muted); }
@@ -133,15 +133,15 @@
     .btn-theme:hover { background: var(--bg-btn-hover); }
     .project-input { width: 100%; background: var(--bg-input); border: 1px solid var(--border-input); border-radius: 6px; padding: 8px 12px; color: var(--text-primary); font-size: 14px; font-family: 'Noto Sans JP', sans-serif; outline: none; box-sizing: border-box; margin-bottom: 10px; transition: background 0.3s, color 0.3s; }
     .progress-bar { flex: 1; height: 3px; background: var(--progress-bg); border-radius: 2px; overflow: hidden; }
-    .progress-fill { height: 100%; border-radius: 2px; transition: width 0.4s ease; background: linear-gradient(90deg, #E8443A, #E07B2E, #D4A72C, #3BA55D, #4A90D9, #7B68EE); }
+    .progress-fill { height: 100%; border-radius: 2px; transition: width 0.4s ease; background: var(--text-muted); }
     .project-bar { display: flex; align-items: center; gap: 8px; margin-bottom: 8px; }
     .project-select { flex: 1; background: var(--bg-input); border: 1px solid var(--border-input); border-radius: 6px; padding: 6px 10px; color: var(--text-primary); font-size: 13px; font-family: 'Noto Sans JP', sans-serif; outline: none; transition: background 0.3s, color 0.3s; }
     .tip-banner { margin: 16px 16px 0; padding: 12px 16px; background: var(--bg-tip); border: 1px solid var(--border-tip); border-radius: 8px; font-size: 12px; color: var(--tip-color); display: flex; justify-content: space-between; align-items: flex-start; line-height: 1.6; }
     .tip-close { background: none; border: none; color: var(--tip-close); cursor: pointer; font-size: 16px; padding: 0 0 0 12px; line-height: 1; }
     .flow-row { display: flex; justify-content: center; align-items: center; padding: 20px 16px 8px; gap: 4px; flex-wrap: wrap; }
-    .flow-circle { width: 40px; height: 40px; border-radius: 50%; font-size: 16px; font-weight: 700; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: all 0.2s ease; position: relative; border: 2px solid var(--border-secondary); background: var(--flow-circle-bg); color: var(--text-faint); font-family: 'Noto Sans JP', sans-serif; }
-    .flow-circle .dot { position: absolute; top: -2px; right: -2px; width: 10px; height: 10px; border-radius: 50%; }
-    .flow-d { width: 40px; height: 40px; border-radius: 50%; border: 2px dashed var(--border-tertiary); background: var(--flow-circle-bg); color: var(--text-faint); font-size: 16px; font-weight: 700; display: flex; align-items: center; justify-content: center; font-family: 'Noto Sans JP', sans-serif; }
+    .flow-circle { width: 32px; height: 32px; border-radius: 50%; font-size: 13px; font-weight: 600; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: all 0.2s ease; position: relative; border: 1.5px solid var(--border-secondary); background: var(--flow-circle-bg); color: var(--text-faint); font-family: 'Noto Sans JP', sans-serif; }
+    .flow-circle .dot { position: absolute; top: -1px; right: -1px; width: 7px; height: 7px; border-radius: 50%; }
+    .flow-d { width: 32px; height: 32px; border-radius: 50%; border: 1.5px dashed var(--border-tertiary); background: var(--flow-circle-bg); color: var(--text-faint); font-size: 13px; font-weight: 600; display: flex; align-items: center; justify-content: center; font-family: 'Noto Sans JP', sans-serif; }
     .flow-hint { text-align: center; font-size: 10px; color: var(--text-very-faint); margin-bottom: 8px; }
     .view-toggle-bar { display: flex; justify-content: center; gap: 4px; margin-bottom: 12px; }
     .view-btn { background: var(--bg-secondary); border: 1px solid var(--border-secondary); color: var(--text-muted); padding: 4px 12px; border-radius: 6px; font-size: 11px; cursor: pointer; font-family: 'IBM Plex Mono', monospace; transition: background 0.2s; }
@@ -150,7 +150,7 @@
     .card { margin-bottom: 8px; border-radius: 10px; border: 1px solid var(--border-primary); background: var(--bg-card); overflow: hidden; transition: all 0.3s ease; }
     .card.active { background: var(--bg-card-active); }
     .card-header { width: 100%; display: flex; align-items: center; gap: 12px; padding: 14px 16px; background: none; border: none; cursor: pointer; text-align: left; color: var(--text-primary); }
-    .card-key { font-size: 20px; font-weight: 900; min-width: 28px; font-family: 'Noto Sans JP', sans-serif; }
+    .card-key { font-size: 15px; font-weight: 700; min-width: 22px; font-family: 'Noto Sans JP', sans-serif; }
     .card-label { font-size: 14px; font-weight: 500; color: var(--text-primary); }
     .card-question { font-size: 11px; color: var(--text-hint); margin-top: 2px; }
     .card-chevron { color: var(--text-very-faint); font-size: 16px; transition: transform 0.2s ease; }
@@ -175,7 +175,7 @@
     .sp-field-dot { width: 8px; height: 8px; border-radius: 50%; display: inline-block; }
     .sp-input { width: 100%; background: var(--bg-primary); border-radius: 6px; padding: 8px 10px; color: var(--text-primary); font-size: 13px; font-family: 'Noto Sans JP', sans-serif; line-height: 1.6; outline: none; resize: vertical; box-sizing: border-box; transition: background 0.3s, color 0.3s; }
     .sp-add-btn { width: 100%; padding: 10px; background: var(--bg-card); border: 2px dashed var(--border-secondary); border-radius: 8px; color: var(--text-muted); font-size: 13px; cursor: pointer; font-family: 'Noto Sans JP', sans-serif; transition: border-color 0.2s, color 0.2s; }
-    .sp-add-btn:hover { border-color: #E07B2E; color: #E07B2E; }
+    .sp-add-btn:hover { border-color: var(--text-muted); color: var(--text-secondary); }
 
     .ai-btn { background: var(--ai-bg); border: 1px solid var(--ai-border); color: var(--ai-color); padding: 8px 14px; border-radius: 6px; font-size: 12px; cursor: pointer; margin-top: 8px; width: 100%; font-family: 'Noto Sans JP', sans-serif; transition: all 0.2s; }
     .ai-btn:hover { background: var(--ai-bg-hover); }
@@ -204,10 +204,10 @@
     .tree-empty { color: var(--text-very-faint); font-size: 12px; font-style: italic; padding: 8px 0 8px 24px; }
 
     .warning-card { margin-top: 16px; padding: 16px; background: var(--bg-warning); border: 1px solid var(--border-warning); border-radius: 10px; }
-    .warning-title { font-size: 13px; font-weight: 700; color: #E8443A; margin-bottom: 8px; }
+    .warning-title { font-size: 13px; font-weight: 700; color: var(--text-secondary); margin-bottom: 8px; }
     .warning-body { font-size: 12px; color: var(--text-hint); line-height: 1.8; }
     .checklist-card { margin-top: 12px; padding: 16px; background: var(--bg-checklist); border: 1px solid var(--border-checklist); border-radius: 10px; }
-    .checklist-title { font-size: 13px; font-weight: 700; color: #7B68EE; margin-bottom: 10px; }
+    .checklist-title { font-size: 13px; font-weight: 700; color: var(--text-secondary); margin-bottom: 10px; }
     .checklist-item { font-size: 12px; color: var(--text-muted); padding: 6px 0; line-height: 1.6; cursor: pointer; user-select: none; transition: opacity 0.2s; }
     .checklist-item:hover { opacity: 0.8; }
     .checklist-item:not(:last-child) { border-bottom: 1px solid var(--border-checklist); }
@@ -225,12 +225,11 @@
     .template-btn-desc { font-size: 11px; color: var(--text-muted); margin-top: 4px; }
     .timestamp { font-size: 10px; color: var(--text-very-faint); text-align: right; margin-top: 4px; font-family: 'IBM Plex Mono', monospace; }
     .auth-avatar { width: 24px; height: 24px; border-radius: 50%; vertical-align: middle; }
-    .sync-badge { font-size: 10px; padding: 2px 6px; border-radius: 4px; background: #3BA55D22; color: #3BA55D; border: 1px solid #3BA55D44; white-space: nowrap; }
-    .sync-badge.saving { background: #D4A72C22; color: #D4A72C; border-color: #D4A72C44; }
-    .sync-badge.error { background: #E8443A22; color: #E8443A; border-color: #E8443A44; }
-    .login-btn-google { display: flex; align-items: center; justify-content: center; gap: 8px; padding: 8px 14px; border-radius: 6px; font-size: 12px; cursor: pointer; font-family: 'Noto Sans JP', sans-serif; border: 1px solid #4285f444; background: #4285f418; color: #4285f4; transition: background 0.2s; }
-    .login-btn-google:hover { background: #4285f430; }
-    [data-theme="light"] .login-btn-google { background: #4285f410; }
+    .sync-badge { font-size: 10px; padding: 2px 6px; border-radius: 4px; background: transparent; color: var(--text-muted); border: 1px solid var(--border-secondary); white-space: nowrap; }
+    .sync-badge.saving { color: var(--text-faint); }
+    .sync-badge.error { color: var(--text-secondary); }
+    .login-btn-google { display: flex; align-items: center; justify-content: center; gap: 8px; padding: 6px 12px; border-radius: 6px; font-size: 11px; cursor: pointer; font-family: 'IBM Plex Mono', monospace; border: 1px solid var(--border-secondary); background: transparent; color: var(--text-muted); transition: background 0.2s; }
+    .login-btn-google:hover { background: var(--bg-btn); }
     .auth-loading { display: flex; align-items: center; justify-content: center; height: 100vh; background: var(--bg-primary); }
     .auth-loading-inner { text-align: center; color: var(--text-muted); }
   </style>
@@ -288,12 +287,12 @@
 
     // Step colors & metadata
     const C = {
-      "ロ": { label: "論点", color: "#E8443A", hint: "そもそも何を答えるべき？\n「〜すべきか？」の形で書く", example: "例：新規事業Xに参入すべきか？", question: "この仕事のBIG QUESTIONは？" },
-      "サ": { label: "サブ論点", color: "#E07B2E" },
-      "T": { label: "TASK", color: "#D4A72C" },
-      "ス": { label: "スケジュール", color: "#3BA55D" },
-      "作": { label: "作業", color: "#4A90D9", hint: "手を動かすフェーズ\nでも常に論点に立ち返る", example: "例：Excelで数値分析 → Wordで示唆まとめ", question: "ちゃんと論点に答える作業してる？" },
-      "ア": { label: "アウトプット", color: "#7B68EE", hint: "最終成果物\n→ そのあと必ずD（議論）へ", example: "例：提案スライド10枚 → 上司とディスカッション", question: "論点にストレートに答えてる？" },
+      "ロ": { label: "論点", color: "#b0706c", hint: "そもそも何を答えるべき？\n「〜すべきか？」の形で書く", example: "例：新規事業Xに参入すべきか？", question: "この仕事のBIG QUESTIONは？" },
+      "サ": { label: "サブ論点", color: "#b8906e" },
+      "T": { label: "TASK", color: "#a89868" },
+      "ス": { label: "スケジュール", color: "#6e9e7e" },
+      "作": { label: "作業", color: "#7090b0", hint: "手を動かすフェーズ\nでも常に論点に立ち返る", example: "例：Excelで数値分析 → Wordで示唆まとめ", question: "ちゃんと論点に答える作業してる？" },
+      "ア": { label: "アウトプット", color: "#8a80b0", hint: "最終成果物\n→ そのあと必ずD（議論）へ", example: "例：提案スライド10枚 → 上司とディスカッション", question: "論点にストレートに答えてる？" },
     };
     const FLOW_KEYS = ["ロ", "サ", "T", "ス", "作", "ア"];
     // Main navigable steps: サ/T/ス are combined into "サ"
@@ -693,9 +692,9 @@
         const hasContent = notes[step.key]?.trim();
         return (
           <div key={step.key} className={`card${isActive ? " active" : ""}`}
-            style={{ borderColor: isActive ? meta.color + "66" : undefined, boxShadow: isActive ? `0 4px 24px ${meta.color}11` : "none" }}>
+            style={{ borderColor: isActive ? meta.color + "44" : undefined }}>
             <button className="card-header" onClick={() => setActiveStep(isActive ? null : step.key)}>
-              <div className="card-key" style={{ color: meta.color, textShadow: isActive ? `0 0 12px ${meta.color}44` : "none" }}>{step.key}</div>
+              <div className="card-key" style={{ color: meta.color }}>{step.key}</div>
               <div style={{ flex: 1 }}><div className="card-label">{step.label}</div><div className="card-question">{step.question}</div></div>
               <div style={{ display: "flex", alignItems: "center", gap: "6px" }}>
                 {hasContent && <div className="filled-dot" style={{ background: meta.color }} />}
@@ -705,12 +704,12 @@
             {isActive && (
               <div className="card-body">
                 {meta.hint && (
-                  <div className="card-hint" style={{ background: `${meta.color}0a`, border: `1px solid ${meta.color}22` }}>
+                  <div className="card-hint" style={{ background: "var(--bg-primary)", border: "1px solid var(--border-primary)" }}>
                     <div className="card-hint-text">{meta.hint}</div>
-                    <div className="card-hint-example mono" style={{ color: meta.color }}>{meta.example}</div>
+                    <div className="card-hint-example mono" style={{ color: "var(--text-faint)" }}>{meta.example}</div>
                   </div>
                 )}
-                <textarea className="card-textarea" style={{ border: `1px solid ${meta.color}33` }}
+                <textarea className="card-textarea" style={{ border: "1px solid var(--border-input)" }}
                   value={notes[step.key] || ""} onChange={e => updateNote(step.key, e.target.value)}
                   placeholder={`${meta.label}をメモ...`} autoFocus />
                 <button className={`ai-btn${copiedStep === step.key ? " copied" : ""}`} onClick={() => handleAICopy(step.key)}>
@@ -718,7 +717,7 @@
                 </button>
                 <div className="card-nav">
                   {prevKey ? <button className="nav-btn nav-btn-prev" onClick={() => setActiveStep(prevKey)}>← {prevKey}</button> : <div />}
-                  {nextKey && <button className="nav-btn" onClick={() => setActiveStep(nextKey)} style={{ background: `${C[nextKey].color}22`, border: `1px solid ${C[nextKey].color}44`, color: C[nextKey].color }}>{nextKey} →</button>}
+                  {nextKey && <button className="nav-btn" onClick={() => setActiveStep(nextKey)} style={{ background: "var(--bg-btn)", border: "1px solid var(--border-secondary)", color: "var(--text-secondary)" }}>{nextKey} →</button>}
                 </div>
               </div>
             )}
@@ -732,11 +731,11 @@
         const anyFilled = subPoints.some(sp => sp.content?.trim() || sp.tasks?.some(tk => tk.content?.trim()));
         return (
           <div className={`card${isActive ? " active" : ""}`}
-            style={{ borderColor: isActive ? C["サ"].color + "66" : undefined, boxShadow: isActive ? `0 4px 24px ${C["サ"].color}11` : "none" }}>
+            style={{ borderColor: isActive ? C["サ"].color + "44" : undefined }}>
             <button className="card-header" onClick={() => setActiveStep(isActive ? null : "サ")}>
-              <div style={{ display: "flex", gap: "2px" }}>
+              <div style={{ display: "flex", gap: "1px" }}>
                 {["サ", "T", "ス"].map(k => (
-                  <span key={k} className="card-key" style={{ color: C[k].color, fontSize: "18px", minWidth: "auto" }}>{k}</span>
+                  <span key={k} className="card-key" style={{ color: C[k].color, fontSize: "14px", minWidth: "auto" }}>{k}</span>
                 ))}
               </div>
               <div style={{ flex: 1 }}>
@@ -750,9 +749,9 @@
             </button>
             {isActive && (
               <div className="card-body">
-                <div className="card-hint" style={{ background: `${C["サ"].color}0a`, border: `1px solid ${C["サ"].color}22` }}>
+                <div className="card-hint" style={{ background: "var(--bg-primary)", border: "1px solid var(--border-primary)" }}>
                   <div className="card-hint-text">論点を解くための「問い」に分解し、それぞれにTASKとスケジュールを紐づける{"\n"}3〜5個がベスト</div>
-                  <div className="card-hint-example mono" style={{ color: C["サ"].color }}>例：市場規模は？→ 業界レポート分析 → Day1-2</div>
+                  <div className="card-hint-example mono" style={{ color: "var(--text-faint)" }}>例：市場規模は？→ 業界レポート分析 → Day1-2</div>
                 </div>
 
                 {subPoints.map((sp, i) => (
@@ -766,7 +765,7 @@
                     <div className="sp-field-label" style={{ color: C["サ"].color, marginTop: 0 }}>
                       <span className="sp-field-dot" style={{ background: C["サ"].color }} />サブ論点
                     </div>
-                    <textarea className="sp-input" style={{ border: `1px solid ${C["サ"].color}33`, minHeight: "50px" }}
+                    <textarea className="sp-input" style={{ border: "1px solid var(--border-input)", minHeight: "50px" }}
                       value={sp.content} onChange={e => updateSubPoint(sp.id, "content", e.target.value)}
                       placeholder="サブ論点を入力..." />
 
@@ -776,12 +775,12 @@
                     {(sp.tasks || []).map((tk, j) => (
                       <div key={tk.id} style={{ display: "flex", gap: "6px", alignItems: "flex-start", marginBottom: "6px" }}>
                         <div style={{ flex: 2 }}>
-                          <input className="sp-input" style={{ border: `1px solid ${C["T"].color}33` }}
+                          <input className="sp-input" style={{ border: "1px solid var(--border-input)" }}
                             value={tk.content} onChange={e => updateTask(sp.id, tk.id, "content", e.target.value)}
                             placeholder={`TASK${(sp.tasks || []).length > 1 ? ` ${j + 1}` : ""}...`} />
                         </div>
                         <div style={{ flex: 1 }}>
-                          <input className="sp-input" style={{ border: `1px solid ${C["ス"].color}33`, fontSize: "12px" }}
+                          <input className="sp-input" style={{ border: "1px solid var(--border-input)", fontSize: "12px" }}
                             value={tk.schedule} onChange={e => updateTask(sp.id, tk.id, "schedule", e.target.value)}
                             placeholder="📅 期限..." />
                         </div>
@@ -792,7 +791,7 @@
                       </div>
                     ))}
                     <button onClick={() => addTask(sp.id)}
-                      style={{ background: "none", border: `1px dashed ${C["T"].color}44`, color: C["T"].color, padding: "4px 10px", borderRadius: "4px", fontSize: "11px", cursor: "pointer", opacity: 0.7 }}>
+                      style={{ background: "none", border: "1px dashed var(--border-secondary)", color: "var(--text-muted)", padding: "4px 10px", borderRadius: "4px", fontSize: "11px", cursor: "pointer" }}>
                       + TASK追加
                     </button>
                   </div>
@@ -805,7 +804,7 @@
                 </button>
                 <div className="card-nav">
                   <button className="nav-btn nav-btn-prev" onClick={() => setActiveStep("ロ")}>← ロ</button>
-                  <button className="nav-btn" onClick={() => setActiveStep("作")} style={{ background: `${C["作"].color}22`, border: `1px solid ${C["作"].color}44`, color: C["作"].color }}>作 →</button>
+                  <button className="nav-btn" onClick={() => setActiveStep("作")} style={{ background: "var(--bg-btn)", border: "1px solid var(--border-secondary)", color: "var(--text-secondary)" }}>作 →</button>
                 </div>
               </div>
             )}
@@ -834,7 +833,7 @@
               <div>
                 <div className="header-subtitle mono">高松智史式</div>
                 <div className="header-title">
-                  {FLOW_KEYS.map(k => <span key={k} style={{ color: C[k].color, textShadow: `0 0 20px ${C[k].color}33` }}>{k}</span>)}
+                  {FLOW_KEYS.map(k => <span key={k} style={{ color: C[k].color }}>{k}</span>)}
                 </div>
               </div>
               <div style={{ display: "flex", gap: "6px", flexWrap: "wrap", alignItems: "center" }}>
@@ -888,10 +887,8 @@
               <div key={k} style={{ display: "flex", alignItems: "center", gap: "4px" }}>
                 <button className="flow-circle" onClick={() => handleFlowClick(k)}
                   style={{
-                    borderColor: (activeStep === k || (activeStep === "サ" && (k === "サ" || k === "T" || k === "ス"))) ? C[k].color : (flowFilled[k] ? C[k].color + "88" : undefined),
-                    background: (activeStep === k || (activeStep === "サ" && (k === "サ" || k === "T" || k === "ス"))) ? `${C[k].color}22` : (flowFilled[k] ? "var(--flow-circle-filled)" : undefined),
-                    color: flowFilled[k] ? C[k].color : ((activeStep === k || (activeStep === "サ" && (k === "サ" || k === "T" || k === "ス"))) ? C[k].color : undefined),
-                    boxShadow: (activeStep === k || (activeStep === "サ" && (k === "サ" || k === "T" || k === "ス"))) ? `0 0 16px ${C[k].color}33` : "none",
+                    borderColor: (activeStep === k || (activeStep === "サ" && (k === "サ" || k === "T" || k === "ス"))) ? C[k].color + "88" : (flowFilled[k] ? C[k].color + "55" : undefined),
+                    color: flowFilled[k] || (activeStep === k || (activeStep === "サ" && (k === "サ" || k === "T" || k === "ス"))) ? C[k].color : undefined,
                   }}>
                   {k}
                   {flowFilled[k] && <span className="dot" style={{ background: C[k].color }} />}
@@ -921,14 +918,14 @@
               <div className="warning-card">
                 <div className="warning-title">⚠ TASKバカ注意報</div>
                 <div className="warning-body">
-                  いきなり「T（TASK）」から始めていないか？<br /><span style={{ color: "#E8443A" }}>ロ→サ</span> を飛ばすと、論点がズレた作業を大量にこなす「TASKバカ」になる。<br /><strong style={{ color: "#c8a860" }}>まず論点。常に論点に立ち返る。</strong>
+                  いきなり「T（TASK）」から始めていないか？<br />ロ→サ を飛ばすと、論点がズレた作業を大量にこなす「TASKバカ」になる。<br /><strong style={{ color: "var(--text-secondary)" }}>まず論点。常に論点に立ち返る。</strong>
                 </div>
               </div>
               <div className="checklist-card">
                 <div className="checklist-title">🔍 セルフチェック</div>
                 {CHECKLIST.map((q, i) => (
                   <div key={i} className="checklist-item" onClick={() => toggleChecklist(i)}>
-                    <span className="checklist-box" style={{ color: checklist[i] ? "#7B68EE" : "var(--text-very-faint)" }}>{checklist[i] ? "☑" : "☐"}</span>
+                    <span className="checklist-box" style={{ color: checklist[i] ? "var(--text-muted)" : "var(--text-very-faint)" }}>{checklist[i] ? "☑" : "☐"}</span>
                     <span style={{ textDecoration: checklist[i] ? "line-through" : "none", color: checklist[i] ? "var(--text-very-faint)" : "var(--text-muted)" }}>{q}</span>
                   </div>
                 ))}
@@ -940,37 +937,37 @@
           {viewMode === "overview" && (
             <div className="overview-container">
               <div className="overview-section">
-                <div className="overview-section-title"><span style={{ color: C["ロ"].color, fontWeight: 900, fontSize: 18 }}>ロ</span> 論点</div>
-                <textarea className="card-textarea" style={{ border: `1px solid ${C["ロ"].color}33`, minHeight: "60px" }}
+                <div className="overview-section-title"><span style={{ color: C["ロ"].color, fontWeight: 700, fontSize: 15 }}>ロ</span> 論点</div>
+                <textarea className="card-textarea" style={{ border: "1px solid var(--border-input)", minHeight: "60px" }}
                   value={notes["ロ"] || ""} onChange={e => updateNote("ロ", e.target.value)} placeholder="論点をメモ..." />
               </div>
 
               <div className="overview-section">
                 <div className="overview-section-title">
-                  <span style={{ color: C["サ"].color, fontWeight: 900, fontSize: 18 }}>サ</span>
-                  <span style={{ color: C["T"].color, fontWeight: 900, fontSize: 18 }}>T</span>
-                  <span style={{ color: C["ス"].color, fontWeight: 900, fontSize: 18 }}>ス</span>
+                  <span style={{ color: C["サ"].color, fontWeight: 700, fontSize: 15 }}>サ</span>
+                  <span style={{ color: C["T"].color, fontWeight: 700, fontSize: 15 }}>T</span>
+                  <span style={{ color: C["ス"].color, fontWeight: 700, fontSize: 15 }}>ス</span>
                   サブ論点 → TASK → スケジュール
                 </div>
                 {subPoints.map((sp, i) => (
                   <div key={sp.id} style={{ marginBottom: 8 }}>
                     <div className="overview-sp-row" style={{ gridTemplateColumns: "1fr 2fr" }}>
-                      <div className="overview-sp-cell" style={{ borderLeft: `3px solid ${C["サ"].color}` }}>
-                        <div className="overview-sp-label" style={{ color: C["サ"].color }}>サブ論点 {i + 1}</div>
-                        <textarea className="sp-input" style={{ border: `1px solid ${C["サ"].color}22`, minHeight: "50px" }}
+                      <div className="overview-sp-cell" style={{ borderLeft: `2px solid ${C["サ"].color}44` }}>
+                        <div className="overview-sp-label" style={{ color: "var(--text-muted)" }}>サブ論点 {i + 1}</div>
+                        <textarea className="sp-input" style={{ border: "1px solid var(--border-input)", minHeight: "50px" }}
                           value={sp.content} onChange={e => updateSubPoint(sp.id, "content", e.target.value)} placeholder="サブ論点..." />
                       </div>
-                      <div className="overview-sp-cell" style={{ borderLeft: `3px solid ${C["T"].color}` }}>
-                        <div className="overview-sp-label" style={{ color: C["T"].color }}>TASK → スケジュール</div>
+                      <div className="overview-sp-cell" style={{ borderLeft: `2px solid ${C["T"].color}44` }}>
+                        <div className="overview-sp-label" style={{ color: "var(--text-muted)" }}>TASK → スケジュール</div>
                         {(sp.tasks || []).map((tk, j) => (
                           <div key={tk.id} style={{ display: "flex", gap: 4, marginBottom: 4, alignItems: "center" }}>
-                            <input className="sp-input" style={{ border: `1px solid ${C["T"].color}22`, flex: 2 }}
+                            <input className="sp-input" style={{ border: "1px solid var(--border-input)", flex: 2 }}
                               value={tk.content} onChange={e => updateTask(sp.id, tk.id, "content", e.target.value)} placeholder="TASK..." />
-                            <input className="sp-input" style={{ border: `1px solid ${C["ス"].color}22`, flex: 1, fontSize: 12 }}
+                            <input className="sp-input" style={{ border: "1px solid var(--border-input)", flex: 1, fontSize: 12 }}
                               value={tk.schedule} onChange={e => updateTask(sp.id, tk.id, "schedule", e.target.value)} placeholder="期限..." />
                           </div>
                         ))}
-                        <button onClick={() => addTask(sp.id)} style={{ background: "none", border: "none", color: C["T"].color, fontSize: 11, cursor: "pointer", padding: "2px 0", opacity: 0.7 }}>+ TASK追加</button>
+                        <button onClick={() => addTask(sp.id)} style={{ background: "none", border: "none", color: "var(--text-muted)", fontSize: 11, cursor: "pointer", padding: "2px 0" }}>+ TASK追加</button>
                       </div>
                     </div>
                   </div>
@@ -980,8 +977,8 @@
 
               {["作", "ア"].map(k => (
                 <div key={k} className="overview-section">
-                  <div className="overview-section-title"><span style={{ color: C[k].color, fontWeight: 900, fontSize: 18 }}>{k}</span> {C[k].label}</div>
-                  <textarea className="card-textarea" style={{ border: `1px solid ${C[k].color}33`, minHeight: "60px" }}
+                  <div className="overview-section-title"><span style={{ color: C[k].color, fontWeight: 700, fontSize: 15 }}>{k}</span> {C[k].label}</div>
+                  <textarea className="card-textarea" style={{ border: "1px solid var(--border-input)", minHeight: "60px" }}
                     value={notes[k] || ""} onChange={e => updateNote(k, e.target.value)} placeholder={`${C[k].label}をメモ...`} />
                 </div>
               ))}
@@ -998,16 +995,16 @@
                 {hasData && (
                   <div>
                     <div className="tree-root-label"
-                      style={{ background: `${C["ロ"].color}18`, color: C["ロ"].color, border: `1px solid ${C["ロ"].color}33` }}
+                      style={{ background: "var(--bg-card)", color: "var(--text-primary)", border: "1px solid var(--border-primary)", borderLeft: `2px solid ${C["ロ"].color}` }}
                       onClick={() => { setViewMode("single"); setActiveStep("ロ"); }}>
-                      🎯 {ronten || "（論点を入力してください）"}
+                      {ronten || "（論点を入力してください）"}
                     </div>
                     {subPoints.length > 0 ? (
                       <div className="tree-branch">
                         {subPoints.map((sp, i) => (
                           <div key={sp.id} className="tree-node">
                             <div className="tree-node-label"
-                              style={{ background: `${C["サ"].color}15`, color: C["サ"].color, border: `1px solid ${C["サ"].color}22` }}
+                              style={{ background: "var(--bg-card)", color: "var(--text-secondary)", border: "1px solid var(--border-primary)", borderLeft: `2px solid ${C["サ"].color}` }}
                               onClick={() => { setViewMode("single"); setActiveStep("サ"); }}>
                               {sp.content || `（サブ論点 ${i + 1}）`}
                             </div>
@@ -1015,8 +1012,8 @@
                               <div className="tree-sub-branch">
                                 {sp.tasks.filter(tk => tk.content?.trim() || tk.schedule?.trim()).map(tk => (
                                   <div key={tk.id} className="tree-node">
-                                    <div className="tree-node-label" style={{ background: `${C["T"].color}12`, color: C["T"].color, border: `1px solid ${C["T"].color}22`, fontSize: "12px" }}>
-                                      📋 {tk.content || "（TASK未記入）"}
+                                    <div className="tree-node-label" style={{ background: "var(--bg-card)", color: "var(--text-muted)", border: "1px solid var(--border-primary)", borderLeft: `2px solid ${C["T"].color}`, fontSize: "12px" }}>
+                                      {tk.content || "（TASK未記入）"}
                                       {tk.schedule?.trim() && <span style={{ color: C["ス"].color, marginLeft: 8, fontSize: "11px" }}>📅 {tk.schedule}</span>}
                                     </div>
                                   </div>
@@ -1031,7 +1028,7 @@
                 )}
                 <div className="warning-card" style={{ marginTop: 24 }}>
                   <div className="warning-title">⚠ TASKバカ注意報</div>
-                  <div className="warning-body">いきなり「T（TASK）」から始めていないか？<br /><span style={{ color: "#E8443A" }}>ロ→サ</span> を飛ばすと、TASKバカになる。<br /><strong style={{ color: "#c8a860" }}>まず論点。常に論点に立ち返る。</strong></div>
+                  <div className="warning-body">いきなり「T（TASK）」から始めていないか？<br />ロ→サ を飛ばすと、TASKバカになる。<br /><strong style={{ color: "var(--text-secondary)" }}>まず論点。常に論点に立ち返る。</strong></div>
                 </div>
               </div>
             );
