@@ -231,7 +231,25 @@
     .login-btn-google { display: flex; align-items: center; justify-content: center; gap: 8px; padding: 6px 12px; border-radius: 6px; font-size: 11px; cursor: pointer; font-family: 'IBM Plex Mono', monospace; border: 1px solid var(--border-secondary); background: transparent; color: var(--text-muted); transition: background 0.2s; }
     .login-btn-google:hover { background: var(--bg-btn); }
     .cal-date-input { width: 130px; font-size: 12px !important; padding: 7px 6px !important; border: 1px solid var(--border-input) !important; color-scheme: dark; }
+
+    /* Gantt */
+    .gantt-container { padding: 16px 16px 100px; overflow-x: auto; }
+    .gantt-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px; }
+    .gantt-title { font-size: 14px; font-weight: 600; color: var(--text-primary); }
+    .gantt-nav { display: flex; gap: 4px; }
+    .gantt-nav button { background: var(--bg-btn); border: 1px solid var(--border-secondary); color: var(--text-muted); padding: 4px 10px; border-radius: 4px; font-size: 11px; cursor: pointer; font-family: 'IBM Plex Mono', monospace; }
+    .gantt-nav button:hover { background: var(--bg-btn-hover); }
+    .gantt-table { width: 100%; border-collapse: collapse; min-width: 600px; }
+    .gantt-table th { font-size: 10px; font-weight: 500; color: var(--text-faint); padding: 4px 0; text-align: center; border-bottom: 1px solid var(--border-primary); white-space: nowrap; }
+    .gantt-table th.today { color: var(--text-primary); font-weight: 700; }
+    .gantt-label { font-size: 12px; color: var(--text-secondary); padding: 8px 8px 8px 0; white-space: nowrap; max-width: 200px; overflow: hidden; text-overflow: ellipsis; border-bottom: 1px solid var(--border-primary); vertical-align: middle; }
+    .gantt-label-sub { font-size: 10px; color: var(--text-faint); display: block; margin-top: 2px; }
+    .gantt-cell { padding: 8px 1px; border-bottom: 1px solid var(--border-primary); position: relative; }
+    .gantt-bar { height: 18px; border-radius: 3px; min-width: 8px; }
+    .gantt-today-line { position: absolute; top: 0; bottom: 0; width: 1px; background: var(--text-muted); opacity: 0.5; }
     [data-theme="light"] .cal-date-input { color-scheme: light; }
+    [data-theme="light"] .gantt-table th.today { background: #e4e4e7; }
+    [data-theme="light"] .gantt-cell[style*="background"] { background: #e4e4e7 !important; }
     .auth-loading { display: flex; align-items: center; justify-content: center; height: 100vh; background: var(--bg-primary); }
     .auth-loading-inner { text-align: center; color: var(--text-muted); }
   </style>
@@ -313,6 +331,7 @@
         description: `${projectName} / ${subPointContent || "サブ論点"}`,
         start: { date: task.calendarDate },
         end: { date: task.calendarDate },
+        colorId: "6",
       };
       const base = "https://www.googleapis.com/calendar/v3/calendars/primary/events";
       const url = task.calendarEventId ? `${base}/${task.calendarEventId}` : base;
@@ -995,7 +1014,7 @@
           <div className="flow-hint mono">タップして展開 → メモを記入</div>
 
           <div className="view-toggle-bar">
-            {[["single", "個別"], ["overview", "一覧"], ["tree", "ツリー"]].map(([m, l]) => (
+            {[["single", "個別"], ["overview", "一覧"], ["tree", "ツリー"], ["gantt", "ガント"]].map(([m, l]) => (
               <button key={m} className={`view-btn${viewMode === m ? " active" : ""}`} onClick={() => setViewMode(m)}>{l}</button>
             ))}
           </div>
@@ -1123,6 +1142,106 @@
                   <div className="warning-title">⚠ TASKバカ注意報</div>
                   <div className="warning-body">いきなり「T（TASK）」から始めていないか？<br />ロ→サ を飛ばすと、TASKバカになる。<br /><strong style={{ color: "var(--text-secondary)" }}>まず論点。常に論点に立ち返る。</strong></div>
                 </div>
+              </div>
+            );
+          })()}
+
+          {/* ===== GANTT MODE ===== */}
+          {viewMode === "gantt" && (() => {
+            // Collect tasks with dates
+            const ganttTasks = [];
+            subPoints.forEach(sp => {
+              (sp.tasks || []).forEach(tk => {
+                if (tk.calendarDate) {
+                  ganttTasks.push({ id: tk.id, content: tk.content || "TASK", date: tk.calendarDate, sub: sp.content || "サブ論点", spId: sp.id });
+                }
+              });
+            });
+            ganttTasks.sort((a, b) => a.date.localeCompare(b.date));
+
+            if (ganttTasks.length === 0) {
+              return (
+                <div className="gantt-container">
+                  <div style={{ textAlign: "center", color: "var(--text-faint)", padding: "40px 0" }}>
+                    TASKに日付を設定するとガントチャートが表示されます。
+                  </div>
+                </div>
+              );
+            }
+
+            // Date range: earliest - 2 days to latest + 5 days, minimum 14 days
+            const dates = ganttTasks.map(t => t.date);
+            const minDate = new Date(dates[0]);
+            const maxDate = new Date(dates[dates.length - 1]);
+            const startDate = new Date(minDate); startDate.setDate(startDate.getDate() - 2);
+            const endDate = new Date(maxDate); endDate.setDate(endDate.getDate() + 5);
+            const diffDays = Math.round((endDate - startDate) / 86400000);
+            if (diffDays < 14) endDate.setDate(startDate.getDate() + 14);
+            const totalDays = Math.round((endDate - startDate) / 86400000) + 1;
+
+            const dayColumns = [];
+            for (let i = 0; i < totalDays; i++) {
+              const d = new Date(startDate); d.setDate(d.getDate() + i);
+              dayColumns.push(d);
+            }
+
+            const todayStr = new Date().toISOString().slice(0, 10);
+            const dayNames = ["日", "月", "火", "水", "木", "金", "土"];
+            const barColors = [C["サ"].color, C["T"].color, C["作"].color, C["ロ"].color, C["ス"].color, C["ア"].color];
+
+            return (
+              <div className="gantt-container">
+                <div className="gantt-header">
+                  <div className="gantt-title">ガントチャート</div>
+                </div>
+                <table className="gantt-table">
+                  <thead>
+                    <tr>
+                      <th style={{ textAlign: "left", minWidth: "160px", padding: "4px 8px 4px 0" }}>TASK</th>
+                      {dayColumns.map((d, i) => {
+                        const ds = d.toISOString().slice(0, 10);
+                        const isToday = ds === todayStr;
+                        const isSun = d.getDay() === 0;
+                        const isSat = d.getDay() === 6;
+                        return (
+                          <th key={i} className={isToday ? "today" : ""} style={{
+                            minWidth: "28px",
+                            color: isToday ? "var(--text-primary)" : isSun ? "#b07070" : isSat ? "#7080b0" : undefined,
+                            background: isToday ? "var(--border-primary)" : undefined,
+                            borderRadius: isToday ? "3px 3px 0 0" : undefined,
+                          }}>
+                            <div>{d.getDate()}</div>
+                            <div style={{ fontSize: "9px", opacity: 0.7 }}>{dayNames[d.getDay()]}</div>
+                          </th>
+                        );
+                      })}
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {ganttTasks.map((tk, ti) => (
+                      <tr key={tk.id}>
+                        <td className="gantt-label">
+                          {tk.content}
+                          <span className="gantt-label-sub">{tk.sub}</span>
+                        </td>
+                        {dayColumns.map((d, i) => {
+                          const ds = d.toISOString().slice(0, 10);
+                          const isToday = ds === todayStr;
+                          const isTaskDay = ds === tk.date;
+                          return (
+                            <td key={i} className="gantt-cell" style={{
+                              background: isToday ? "var(--border-primary)" : undefined,
+                            }}>
+                              {isTaskDay && (
+                                <div className="gantt-bar" style={{ background: barColors[ti % barColors.length] }} title={`${tk.content} (${tk.date})`} />
+                              )}
+                            </td>
+                          );
+                        })}
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
               </div>
             );
           })()}
