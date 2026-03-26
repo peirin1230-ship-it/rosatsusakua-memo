@@ -579,7 +579,7 @@
 
       const createProjectFromTemplate = (t) => {
         const id = generateId(); const n = now();
-        const sps = (t.subPoints || []).map(sp => ({ ...sp, id: generateId(), tasks: (sp.tasks || []).map(tk => ({ ...tk, id: generateId() })) }));
+        const sps = (t.subPoints || []).map(sp => ({ ...sp, id: generateId(), tasks: (sp.tasks || []).map(tk => ({ ...tk, id: generateId() })), subSubPoints: (sp.subSubPoints || []).map(ssp => ({ ...ssp, id: generateId(), tasks: (ssp.tasks || []).map(tk => ({ ...tk, id: generateId() })) })) }));
         setProjects(prev => ({ ...prev, [id]: { id, name: t.name === "白紙（空のプロジェクト）" ? "" : t.name, notes: { ...(t.notes || {}) }, subPoints: sps, checklist: {}, createdAt: n, updatedAt: n } }));
         setCurrentProjectId(id); setActiveStep(null); setShowTemplateModal(false);
       };
@@ -629,6 +629,31 @@
         if (!currentProjectId) return;
         setProjects(prev => ({ ...prev, [currentProjectId]: touch({ ...prev[currentProjectId], subPoints: prev[currentProjectId].subPoints.map(sp => sp.id === spId ? { ...sp, tasks: sp.tasks.map(tk => tk.id === tkId ? { ...tk, [field]: value } : tk) } : sp) }) }));
       };
+      // Sub-sub-point operations
+      const addSubSubPoint = (spId) => {
+        if (!currentProjectId) return;
+        setProjects(prev => ({ ...prev, [currentProjectId]: touch({ ...prev[currentProjectId], subPoints: prev[currentProjectId].subPoints.map(sp => sp.id === spId ? { ...sp, subSubPoints: [...(sp.subSubPoints || []), { id: generateId(), content: "", tasks: [{ id: generateId(), content: "", schedule: "" }] }] } : sp) }) }));
+      };
+      const removeSubSubPoint = (spId, sspId) => {
+        if (!currentProjectId) return;
+        setProjects(prev => ({ ...prev, [currentProjectId]: touch({ ...prev[currentProjectId], subPoints: prev[currentProjectId].subPoints.map(sp => sp.id === spId ? { ...sp, subSubPoints: (sp.subSubPoints || []).filter(ssp => ssp.id !== sspId) } : sp) }) }));
+      };
+      const updateSubSubPoint = (spId, sspId, field, value) => {
+        if (!currentProjectId) return;
+        setProjects(prev => ({ ...prev, [currentProjectId]: touch({ ...prev[currentProjectId], subPoints: prev[currentProjectId].subPoints.map(sp => sp.id === spId ? { ...sp, subSubPoints: (sp.subSubPoints || []).map(ssp => ssp.id === sspId ? { ...ssp, [field]: value } : ssp) } : sp) }) }));
+      };
+      const addTaskToSubSubPoint = (spId, sspId) => {
+        if (!currentProjectId) return;
+        setProjects(prev => ({ ...prev, [currentProjectId]: touch({ ...prev[currentProjectId], subPoints: prev[currentProjectId].subPoints.map(sp => sp.id === spId ? { ...sp, subSubPoints: (sp.subSubPoints || []).map(ssp => ssp.id === sspId ? { ...ssp, tasks: [...(ssp.tasks || []), { id: generateId(), content: "", schedule: "" }] } : ssp) } : sp) }) }));
+      };
+      const removeTaskFromSubSubPoint = (spId, sspId, tkId) => {
+        if (!currentProjectId) return;
+        setProjects(prev => ({ ...prev, [currentProjectId]: touch({ ...prev[currentProjectId], subPoints: prev[currentProjectId].subPoints.map(sp => sp.id === spId ? { ...sp, subSubPoints: (sp.subSubPoints || []).map(ssp => ssp.id === sspId ? { ...ssp, tasks: (ssp.tasks || []).filter(tk => tk.id !== tkId) } : ssp) } : sp) }) }));
+      };
+      const updateTaskInSubSubPoint = (spId, sspId, tkId, field, value) => {
+        if (!currentProjectId) return;
+        setProjects(prev => ({ ...prev, [currentProjectId]: touch({ ...prev[currentProjectId], subPoints: prev[currentProjectId].subPoints.map(sp => sp.id === spId ? { ...sp, subSubPoints: (sp.subSubPoints || []).map(ssp => ssp.id === sspId ? { ...ssp, tasks: (ssp.tasks || []).map(tk => tk.id === tkId ? { ...tk, [field]: value } : tk) } : ssp) } : sp) }) }));
+      };
 
       // Export
       const handleExport = (format) => {
@@ -649,6 +674,18 @@
               else if (tk.schedule?.trim()) text += ` [${tk.schedule}]`;
               text += `\n`;
             }); text += `\n`; }
+            if (sp.subSubPoints && sp.subSubPoints.length > 0) {
+              sp.subSubPoints.forEach((ssp, si) => {
+                text += `#### ${i + 1}-${si + 1}. ${ssp.content || "（未記入）"}\n\n`;
+                if (!ssp.tasks || ssp.tasks.length === 0) { text += `  - TASK: （未記入）\n\n`; }
+                else { ssp.tasks.forEach((tk, j) => {
+                  text += `  - **TASK${ssp.tasks.length > 1 ? ` ${j + 1}` : ""}**: ${tk.content || "（未記入）"}`;
+                  if (tk.calendarDate) text += ` [${tk.calendarDate}]`;
+                  else if (tk.schedule?.trim()) text += ` [${tk.schedule}]`;
+                  text += `\n`;
+                }); text += `\n`; }
+              });
+            }
           }); }
           text += `## 作 作業\n\n${notes["作"]?.trim() || "*未記入*"}\n\n`;
           text += `## ア アウトプット\n\n${notes["ア"]?.trim() || "*未記入*"}\n\n`;
@@ -661,13 +698,25 @@
           text += `## [ロ] 論点\n${notes["ロ"] || "（未記入）"}\n\n`;
           text += `## [サ] サブ論点\n`;
           if (subPoints.length === 0) { text += `（未記入）\n\n`; }
-          else { subPoints.forEach((sp, i) => { text += `${i + 1}. ${sp.content || "（未記入）"}\n`; }); text += `\n`; }
+          else { subPoints.forEach((sp, i) => {
+            text += `${i + 1}. ${sp.content || "（未記入）"}\n`;
+            if (sp.subSubPoints && sp.subSubPoints.length > 0) {
+              sp.subSubPoints.forEach((ssp, si) => { text += `  ${i + 1}-${si + 1}. ${ssp.content || "（未記入）"}\n`; });
+            }
+          }); text += `\n`; }
           text += `## [T] TASK / [ス] スケジュール\n`;
           if (subPoints.length === 0) { text += `（未記入）\n\n`; }
           else { subPoints.forEach((sp, i) => {
             text += `--- サブ論点${i + 1}: ${sp.content || "（未記入）"} ---\n`;
             if (!sp.tasks || sp.tasks.length === 0) { text += `  T: （未記入）\n`; }
             else { sp.tasks.forEach((tk, j) => { text += `  T${sp.tasks.length > 1 ? j + 1 : ""}: ${tk.content || "（未記入）"} / ス: ${tk.calendarDate || tk.schedule || "（未記入）"}\n`; }); }
+            if (sp.subSubPoints && sp.subSubPoints.length > 0) {
+              sp.subSubPoints.forEach((ssp, si) => {
+                text += `  --- サブサブ論点${si + 1}: ${ssp.content || "（未記入）"} ---\n`;
+                if (!ssp.tasks || ssp.tasks.length === 0) { text += `    T: （未記入）\n`; }
+                else { ssp.tasks.forEach((tk, j) => { text += `    T${ssp.tasks.length > 1 ? j + 1 : ""}: ${tk.content || "（未記入）"} / ス: ${tk.calendarDate || tk.schedule || "（未記入）"}\n`; }); }
+              });
+            }
           }); text += `\n`; }
           text += `## [作] 作業\n${notes["作"] || "（未記入）"}\n\n`;
           text += `## [ア] アウトプット\n${notes["ア"] || "（未記入）"}\n\n`;
@@ -724,6 +773,11 @@
           for (const tk of (sp.tasks || [])) {
             if (tk.calendarDate) tasksWithDates.push({ ...tk, _spId: sp.id, _spContent: sp.content });
           }
+          for (const ssp of (sp.subSubPoints || [])) {
+            for (const tk of (ssp.tasks || [])) {
+              if (tk.calendarDate) tasksWithDates.push({ ...tk, _spId: sp.id, _sspId: ssp.id, _spContent: (sp.content || "") + " > " + (ssp.content || "") });
+            }
+          }
         }
         if (tasksWithDates.length === 0) {
           alert("日付が設定されたTASKがありません。\nTASKの📅欄に日付を入力してください。");
@@ -737,7 +791,8 @@
           for (const tk of tasksWithDates) {
             try {
               const eventId = await calendarCreateOrUpdate(token, tk, pName, tk._spContent);
-              updateTask(tk._spId, tk.id, "calendarEventId", eventId);
+              if (tk._sspId) updateTaskInSubSubPoint(tk._spId, tk._sspId, tk.id, "calendarEventId", eventId);
+              else updateTask(tk._spId, tk.id, "calendarEventId", eventId);
               synced++;
             } catch (e) {
               if (e.message === "TOKEN_EXPIRED") {
@@ -770,6 +825,19 @@
                 prompt += `\n`;
               });
             } else { prompt += `  [TASK] （未記入）\n`; }
+            if (sp.subSubPoints && sp.subSubPoints.length > 0) {
+              sp.subSubPoints.forEach((ssp, si) => {
+                prompt += `  [サブサブ論点${si + 1}] ${ssp.content || "（未記入）"}\n`;
+                if (ssp.tasks && ssp.tasks.length > 0) {
+                  ssp.tasks.forEach((tk, j) => {
+                    prompt += `    [TASK${ssp.tasks.length > 1 ? ` ${j + 1}` : ""}] ${tk.content || "（未記入）"}`;
+                    if (tk.calendarDate) prompt += ` [期限: ${tk.calendarDate}]`;
+                    else if (tk.schedule?.trim()) prompt += ` [スケジュール: ${tk.schedule}]`;
+                    prompt += `\n`;
+                  });
+                } else { prompt += `    [TASK] （未記入）\n`; }
+              });
+            }
           });
         } else { prompt += `[サブ論点] （未記入）\n`; }
         prompt += `\n[作] 作業: ${notes["作"]?.trim() || "（未記入）"}\n`;
@@ -901,6 +969,56 @@
                     <button onClick={() => addTask(sp.id)}
                       style={{ background: "none", border: "1px dashed var(--border-secondary)", color: "var(--text-muted)", padding: "4px 10px", borderRadius: "4px", fontSize: "11px", cursor: "pointer" }}>
                       + TASK追加
+                    </button>
+
+                    {/* Sub-sub-points */}
+                    {(sp.subSubPoints || []).map((ssp, si) => (
+                      <div key={ssp.id} style={{ marginTop: "10px", marginLeft: "16px", padding: "10px", border: "1px solid var(--border-secondary)", borderRadius: "6px", background: "var(--bg-primary)" }}>
+                        <div className="sp-card-header">
+                          <span className="sp-card-num" style={{ color: C["サ"].color, fontSize: "12px" }}>サブサブ論点 {si + 1}</span>
+                          <button className="sp-remove" onClick={() => removeSubSubPoint(sp.id, ssp.id)} title="削除">✕</button>
+                        </div>
+                        <div className="sp-field-label" style={{ color: C["サ"].color, marginTop: 0, fontSize: "11px" }}>
+                          <span className="sp-field-dot" style={{ background: C["サ"].color, width: "5px", height: "5px" }} />サブサブ論点
+                        </div>
+                        <textarea className="sp-input" style={{ border: "1px solid var(--border-input)", minHeight: "40px", fontSize: "13px" }}
+                          value={ssp.content} onChange={e => updateSubSubPoint(sp.id, ssp.id, "content", e.target.value)}
+                          placeholder="サブサブ論点を入力..." />
+
+                        <div className="sp-field-label" style={{ color: C["T"].color, fontSize: "11px" }}>
+                          <span className="sp-field-dot" style={{ background: C["T"].color, width: "5px", height: "5px" }} />TASK
+                        </div>
+                        {(ssp.tasks || []).map((tk, j) => (
+                          <div key={tk.id} style={{ marginBottom: "6px" }}>
+                            <div style={{ display: "flex", gap: "6px", alignItems: "flex-start" }}>
+                              <div style={{ flex: 1 }}>
+                                <input className="sp-input" style={{ border: "1px solid var(--border-input)", fontSize: "13px" }}
+                                  value={tk.content} onChange={e => updateTaskInSubSubPoint(sp.id, ssp.id, tk.id, "content", e.target.value)}
+                                  placeholder={`TASK${(ssp.tasks || []).length > 1 ? ` ${j + 1}` : ""}...`} />
+                              </div>
+                              <div>
+                                <input type="date" className="sp-input cal-date-input"
+                                  value={tk.calendarDate || ""} onChange={e => updateTaskInSubSubPoint(sp.id, ssp.id, tk.id, "calendarDate", e.target.value)}
+                                  title="期限日" />
+                              </div>
+                              {(ssp.tasks || []).length > 1 && (
+                                <button className="sp-remove" style={{ marginTop: "6px", fontSize: "13px" }}
+                                  onClick={() => removeTaskFromSubSubPoint(sp.id, ssp.id, tk.id)} title="このTASKを削除">✕</button>
+                              )}
+                            </div>
+                            {tk.calendarEventId && <span style={{ fontSize: "10px", color: "var(--text-faint)", marginLeft: "2px" }}>✓ カレンダー登録済</span>}
+                          </div>
+                        ))}
+                        <button onClick={() => addTaskToSubSubPoint(sp.id, ssp.id)}
+                          style={{ background: "none", border: "1px dashed var(--border-secondary)", color: "var(--text-muted)", padding: "3px 8px", borderRadius: "4px", fontSize: "10px", cursor: "pointer" }}>
+                          + TASK追加
+                        </button>
+                      </div>
+                    ))}
+
+                    <button onClick={() => addSubSubPoint(sp.id)}
+                      style={{ background: "none", border: "1px dashed var(--border-secondary)", color: "var(--text-muted)", padding: "4px 10px", borderRadius: "4px", fontSize: "11px", cursor: "pointer", marginTop: "8px", display: "block" }}>
+                      + サブサブ論点を追加
                     </button>
                   </div>
                 ))}
@@ -1082,6 +1200,31 @@
                         <button onClick={() => addTask(sp.id)} style={{ background: "none", border: "none", color: "var(--text-muted)", fontSize: 11, cursor: "pointer", padding: "2px 0" }}>+ TASK追加</button>
                       </div>
                     </div>
+                    {/* Sub-sub-points in overview */}
+                    {(sp.subSubPoints || []).map((ssp, si) => (
+                      <div key={ssp.id} style={{ marginLeft: 20, marginTop: 4 }}>
+                        <div className="overview-sp-row" style={{ gridTemplateColumns: "1fr 2fr" }}>
+                          <div className="overview-sp-cell" style={{ borderLeft: `3px solid ${C["サ"].color}88`, background: `${C["サ"].color}04` }}>
+                            <div className="overview-sp-label" style={{ color: C["サ"].color, fontSize: "11px" }}>サブサブ論点 {si + 1}</div>
+                            <textarea className="sp-input" style={{ border: "1px solid var(--border-input)", minHeight: "40px", fontSize: "13px" }}
+                              value={ssp.content} onChange={e => updateSubSubPoint(sp.id, ssp.id, "content", e.target.value)} placeholder="サブサブ論点..." />
+                          </div>
+                          <div className="overview-sp-cell" style={{ borderLeft: `3px solid ${C["T"].color}88`, background: `${C["T"].color}04` }}>
+                            <div className="overview-sp-label" style={{ color: C["T"].color, fontSize: "11px" }}>TASK → 期限</div>
+                            {(ssp.tasks || []).map((tk, j) => (
+                              <div key={tk.id} style={{ display: "flex", gap: 4, marginBottom: 4, alignItems: "center" }}>
+                                <input className="sp-input" style={{ border: "1px solid var(--border-input)", flex: 1, fontSize: "13px" }}
+                                  value={tk.content} onChange={e => updateTaskInSubSubPoint(sp.id, ssp.id, tk.id, "content", e.target.value)} placeholder="TASK..." />
+                                <input type="date" className="sp-input cal-date-input"
+                                  value={tk.calendarDate || ""} onChange={e => updateTaskInSubSubPoint(sp.id, ssp.id, tk.id, "calendarDate", e.target.value)} />
+                              </div>
+                            ))}
+                            <button onClick={() => addTaskToSubSubPoint(sp.id, ssp.id)} style={{ background: "none", border: "none", color: "var(--text-muted)", fontSize: 10, cursor: "pointer", padding: "2px 0" }}>+ TASK追加</button>
+                          </div>
+                        </div>
+                      </div>
+                    ))}
+                    <button onClick={() => addSubSubPoint(sp.id)} style={{ background: "none", border: "none", color: "var(--text-muted)", fontSize: 10, cursor: "pointer", padding: "2px 0", marginLeft: 20 }}>+ サブサブ論点を追加</button>
                   </div>
                 ))}
                 <button className="sp-add-btn" onClick={addSubPoint} style={{ marginTop: 4 }}>+ サブ論点を追加</button>
@@ -1132,6 +1275,32 @@
                                 ))}
                               </div>
                             )}
+                            {/* Sub-sub-points in tree */}
+                            {sp.subSubPoints && sp.subSubPoints.length > 0 && (
+                              <div className="tree-sub-branch">
+                                {sp.subSubPoints.map((ssp, si) => (
+                                  <div key={ssp.id} className="tree-node">
+                                    <div className="tree-node-label"
+                                      style={{ background: `${C["サ"].color}08`, color: "var(--text-primary)", border: `1px solid ${C["サ"].color}20`, borderLeft: `3px solid ${C["サ"].color}88`, fontSize: "13px" }}
+                                      onClick={() => { setViewMode("single"); setActiveStep("サ"); }}>
+                                      {ssp.content || `（サブサブ論点 ${si + 1}）`}
+                                    </div>
+                                    {ssp.tasks && ssp.tasks.some(tk => tk.content?.trim() || tk.calendarDate || tk.schedule?.trim()) && (
+                                      <div className="tree-sub-branch">
+                                        {ssp.tasks.filter(tk => tk.content?.trim() || tk.calendarDate || tk.schedule?.trim()).map(tk => (
+                                          <div key={tk.id} className="tree-node">
+                                            <div className="tree-node-label" style={{ background: `${C["T"].color}08`, color: "var(--text-secondary)", border: `1px solid ${C["T"].color}20`, borderLeft: `3px solid ${C["T"].color}88`, fontSize: "12px" }}>
+                                              {tk.content || "（TASK未記入）"}
+                                              {(tk.calendarDate || tk.schedule?.trim()) && <span style={{ color: "var(--text-muted)", marginLeft: 10, fontSize: "11px" }}>{tk.calendarDate || tk.schedule}</span>}
+                                            </div>
+                                          </div>
+                                        ))}
+                                      </div>
+                                    )}
+                                  </div>
+                                ))}
+                              </div>
+                            )}
                           </div>
                         ))}
                       </div>
@@ -1155,6 +1324,13 @@
                 if (tk.calendarDate) {
                   ganttTasks.push({ id: tk.id, content: tk.content || "TASK", date: tk.calendarDate, sub: sp.content || "サブ論点", spId: sp.id });
                 }
+              });
+              (sp.subSubPoints || []).forEach(ssp => {
+                (ssp.tasks || []).forEach(tk => {
+                  if (tk.calendarDate) {
+                    ganttTasks.push({ id: tk.id, content: tk.content || "TASK", date: tk.calendarDate, sub: (sp.content || "サブ論点") + " > " + (ssp.content || "サブサブ論点"), spId: sp.id });
+                  }
+                });
               });
             });
             ganttTasks.sort((a, b) => a.date.localeCompare(b.date));
