@@ -230,6 +230,8 @@
     .sync-badge.error { color: var(--text-secondary); }
     .login-btn-google { display: flex; align-items: center; justify-content: center; gap: 8px; padding: 6px 12px; border-radius: 6px; font-size: 11px; cursor: pointer; font-family: 'IBM Plex Mono', monospace; border: 1px solid var(--border-secondary); background: transparent; color: var(--text-muted); transition: background 0.2s; }
     .login-btn-google:hover { background: var(--bg-btn); }
+    .cal-date-input { width: 130px; font-size: 12px !important; padding: 7px 6px !important; border: 1px solid var(--border-input) !important; color-scheme: dark; }
+    [data-theme="light"] .cal-date-input { color-scheme: light; }
     .auth-loading { display: flex; align-items: center; justify-content: center; height: 100vh; background: var(--bg-primary); }
     .auth-loading-inner { text-align: center; color: var(--text-muted); }
   </style>
@@ -242,6 +244,7 @@
   <script src="https://www.gstatic.com/firebasejs/10.14.0/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.14.0/firebase-auth-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.14.0/firebase-firestore-compat.js"></script>
+  <script src="https://accounts.google.com/gsi/client" async defer></script>
 
   <script type="text/babel">
     const { useState, useEffect, useRef } = React;
@@ -283,6 +286,46 @@
         const doc = await fbDb.collection("users").doc(uid).get();
         return doc.exists ? doc.data() : null;
       } catch (e) { console.error("Firestore load:", e); return null; }
+    };
+
+    // ===== Google Calendar API =====
+    const CALENDAR_CLIENT_ID = "428343709886-bkn72u1jju0ehm26tjpil1or18ed90v8.apps.googleusercontent.com";
+    const CALENDAR_SCOPE = "https://www.googleapis.com/auth/calendar.events";
+
+    const getCalendarToken = () => {
+      return new Promise((resolve, reject) => {
+        if (typeof google === "undefined" || !google.accounts) { reject(new Error("Google Identity Services not loaded")); return; }
+        const client = google.accounts.oauth2.initTokenClient({
+          client_id: CALENDAR_CLIENT_ID,
+          scope: CALENDAR_SCOPE,
+          callback: (resp) => {
+            if (resp.error) reject(new Error(resp.error));
+            else resolve(resp.access_token);
+          },
+        });
+        client.requestAccessToken({ prompt: "" });
+      });
+    };
+
+    const calendarCreateOrUpdate = async (token, task, projectName, subPointContent) => {
+      const event = {
+        summary: task.content || "TASK",
+        description: `${projectName} / ${subPointContent || "サブ論点"}`,
+        start: { date: task.calendarDate },
+        end: { date: task.calendarDate },
+      };
+      const base = "https://www.googleapis.com/calendar/v3/calendars/primary/events";
+      const url = task.calendarEventId ? `${base}/${task.calendarEventId}` : base;
+      const res = await fetch(url, {
+        method: task.calendarEventId ? "PUT" : "POST",
+        headers: { "Authorization": `Bearer ${token}`, "Content-Type": "application/json" },
+        body: JSON.stringify(event),
+      });
+      if (!res.ok) {
+        if (res.status === 401) throw new Error("TOKEN_EXPIRED");
+        throw new Error(`Calendar API error: ${res.status}`);
+      }
+      return (await res.json()).id;
     };
 
     // Step colors & metadata
@@ -428,6 +471,7 @@
       const [user, setUser] = useState(null);
       const [authLoading, setAuthLoading] = useState(FIREBASE_READY);
       const [syncStatus, setSyncStatus] = useState(null);
+      const [calSyncing, setCalSyncing] = useState(false);
       const firestoreLoadedRef = useRef(false);
 
       useEffect(() => { try { localStorage.setItem("rosatsusakua-projects", JSON.stringify(projects)); } catch {} }, [projects]);
@@ -649,6 +693,46 @@
         try { await fbAuth.signOut(); } catch (e) { console.error("Logout:", e); }
       };
 
+      // Calendar sync
+      const handleCalendarSync = async () => {
+        if (CALENDAR_CLIENT_ID.includes("YOUR_CALENDAR_CLIENT_ID")) {
+          alert("カレンダー同期を使うにはOAuthクライアントIDの設定が必要です。\nSETUP.md を参照してください。");
+          return;
+        }
+        const tasksWithDates = [];
+        for (const sp of subPoints) {
+          for (const tk of (sp.tasks || [])) {
+            if (tk.calendarDate) tasksWithDates.push({ ...tk, _spId: sp.id, _spContent: sp.content });
+          }
+        }
+        if (tasksWithDates.length === 0) {
+          alert("日付が設定されたTASKがありません。\nTASKの📅欄に日付を入力してください。");
+          return;
+        }
+        setCalSyncing(true);
+        try {
+          const token = await getCalendarToken();
+          const pName = projectName || "無題のプロジェクト";
+          let synced = 0;
+          for (const tk of tasksWithDates) {
+            try {
+              const eventId = await calendarCreateOrUpdate(token, tk, pName, tk._spContent);
+              updateTask(tk._spId, tk.id, "calendarEventId", eventId);
+              synced++;
+            } catch (e) {
+              if (e.message === "TOKEN_EXPIRED") {
+                alert("認証の有効期限が切れました。もう一度お試しください。");
+                break;
+              }
+              console.error("Calendar event error:", e);
+            }
+          }
+          if (synced > 0) alert(`${synced}件のTASKをGoogleカレンダーに同期しました。`);
+        } catch (e) {
+          if (!e.message?.includes("popup_closed")) console.error("Calendar auth error:", e);
+        } finally { setCalSyncing(false); }
+      };
+
       // AI prompt
       const generateAIPrompt = (stepKey) => {
         const pName = projectName || "無題のプロジェクト";
@@ -773,21 +857,29 @@
                       <span className="sp-field-dot" style={{ background: C["T"].color }} />TASK
                     </div>
                     {(sp.tasks || []).map((tk, j) => (
-                      <div key={tk.id} style={{ display: "flex", gap: "6px", alignItems: "flex-start", marginBottom: "6px" }}>
-                        <div style={{ flex: 2 }}>
-                          <input className="sp-input" style={{ border: "1px solid var(--border-input)" }}
-                            value={tk.content} onChange={e => updateTask(sp.id, tk.id, "content", e.target.value)}
-                            placeholder={`TASK${(sp.tasks || []).length > 1 ? ` ${j + 1}` : ""}...`} />
+                      <div key={tk.id} style={{ marginBottom: "6px" }}>
+                        <div style={{ display: "flex", gap: "6px", alignItems: "flex-start" }}>
+                          <div style={{ flex: 2 }}>
+                            <input className="sp-input" style={{ border: "1px solid var(--border-input)" }}
+                              value={tk.content} onChange={e => updateTask(sp.id, tk.id, "content", e.target.value)}
+                              placeholder={`TASK${(sp.tasks || []).length > 1 ? ` ${j + 1}` : ""}...`} />
+                          </div>
+                          <div style={{ flex: 1 }}>
+                            <input className="sp-input" style={{ border: "1px solid var(--border-input)", fontSize: "12px" }}
+                              value={tk.schedule} onChange={e => updateTask(sp.id, tk.id, "schedule", e.target.value)}
+                              placeholder="期限メモ..." />
+                          </div>
+                          <div>
+                            <input type="date" className="sp-input cal-date-input"
+                              value={tk.calendarDate || ""} onChange={e => updateTask(sp.id, tk.id, "calendarDate", e.target.value)}
+                              title="Googleカレンダー同期用の日付" />
+                          </div>
+                          {(sp.tasks || []).length > 1 && (
+                            <button className="sp-remove" style={{ marginTop: "6px", fontSize: "13px" }}
+                              onClick={() => removeTask(sp.id, tk.id)} title="このTASKを削除">✕</button>
+                          )}
                         </div>
-                        <div style={{ flex: 1 }}>
-                          <input className="sp-input" style={{ border: "1px solid var(--border-input)", fontSize: "12px" }}
-                            value={tk.schedule} onChange={e => updateTask(sp.id, tk.id, "schedule", e.target.value)}
-                            placeholder="📅 期限..." />
-                        </div>
-                        {(sp.tasks || []).length > 1 && (
-                          <button className="sp-remove" style={{ marginTop: "6px", fontSize: "13px" }}
-                            onClick={() => removeTask(sp.id, tk.id)} title="このTASKを削除">✕</button>
-                        )}
+                        {tk.calendarEventId && <span style={{ fontSize: "10px", color: "var(--text-faint)", marginLeft: "2px" }}>✓ カレンダー登録済</span>}
                       </div>
                     ))}
                     <button onClick={() => addTask(sp.id)}
@@ -799,6 +891,10 @@
 
                 <button className="sp-add-btn" onClick={addSubPoint}>+ サブ論点を追加</button>
 
+                <button className="ai-btn" onClick={handleCalendarSync} disabled={calSyncing}
+                  style={{ marginTop: "8px" }}>
+                  {calSyncing ? "同期中..." : "📅 Googleカレンダーに同期"}
+                </button>
                 <button className={`ai-btn${copiedStep === "サ" ? " copied" : ""}`} onClick={() => handleAICopy("サ")}>
                   {copiedStep === "サ" ? "✓ コピーしました！claude.ai に貼り付けてください" : "🤖 AIに相談（プロンプトをコピー）"}
                 </button>
