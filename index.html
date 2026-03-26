@@ -39,8 +39,8 @@
       --flow-arrow: #3f3f46;
       --flow-circle-bg: transparent;
       --flow-circle-filled: transparent;
-      --tree-line: #3f3f46;
-      --tree-sub-line: #27272a;
+      --tree-line: #4a4a52;
+      --tree-sub-line: #3f3f46;
       --tip-color: #a1a1aa;
       --tip-close: #71717a;
       --ai-bg: transparent;
@@ -183,24 +183,24 @@
 
     /* Overview */
     .overview-container { padding: 12px 16px 100px; }
-    .overview-section { margin-bottom: 24px; }
-    .overview-section-title { font-size: 14px; font-weight: 600; margin-bottom: 10px; display: flex; align-items: center; gap: 8px; padding-bottom: 8px; border-bottom: 1px solid var(--border-primary); }
-    .overview-sp-row { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; margin-bottom: 10px; }
+    .overview-section { margin-bottom: 28px; }
+    .overview-section-title { font-size: 14px; font-weight: 600; margin-bottom: 10px; display: flex; align-items: center; gap: 8px; padding-bottom: 8px; border-bottom: 1px solid var(--border-tertiary); }
+    .overview-sp-row { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; margin-bottom: 12px; }
     @media (max-width: 640px) { .overview-sp-row { grid-template-columns: 1fr; } }
-    .overview-sp-cell { background: var(--bg-card); border: 1px solid var(--border-primary); border-radius: 6px; padding: 12px; }
-    .overview-sp-label { font-size: 11px; font-weight: 600; margin-bottom: 6px; color: var(--text-muted); }
+    .overview-sp-cell { background: var(--bg-card); border: 1px solid var(--border-tertiary); border-radius: 6px; padding: 12px; }
+    .overview-sp-label { font-size: 11px; font-weight: 600; margin-bottom: 6px; }
 
     /* Tree */
     .tree-container { padding: 20px 24px 100px; }
     .tree-root-label { font-size: 16px; font-weight: 700; padding: 12px 16px; border-radius: 6px; margin-bottom: 16px; cursor: pointer; line-height: 1.5; }
     .tree-branch { padding-left: 28px; position: relative; }
-    .tree-branch::before { content: ""; position: absolute; left: 12px; top: 0; bottom: 12px; border-left: 1px solid var(--tree-line); }
+    .tree-branch::before { content: ""; position: absolute; left: 12px; top: 0; bottom: 12px; border-left: 2px solid var(--tree-line); }
     .tree-node { position: relative; padding: 8px 0 8px 22px; }
-    .tree-node::before { content: ""; position: absolute; left: -16px; top: 20px; width: 16px; border-top: 1px solid var(--tree-line); }
+    .tree-node::before { content: ""; position: absolute; left: -16px; top: 22px; width: 16px; border-top: 2px solid var(--tree-line); }
     .tree-node-label { font-size: 14px; padding: 8px 14px; border-radius: 5px; cursor: pointer; display: inline-block; transition: background 0.2s; line-height: 1.5; }
     .tree-node-label:hover { filter: brightness(1.15); }
     .tree-sub-branch { padding-left: 28px; position: relative; }
-    .tree-sub-branch::before { content: ""; position: absolute; left: 12px; top: 0; bottom: 12px; border-left: 1px solid var(--tree-sub-line); }
+    .tree-sub-branch::before { content: ""; position: absolute; left: 12px; top: 0; bottom: 12px; border-left: 2px solid var(--tree-sub-line); }
     .tree-empty { color: var(--text-faint); font-size: 13px; font-style: italic; padding: 12px 0 12px 28px; }
 
     .warning-card { margin-top: 16px; padding: 16px; background: var(--bg-warning); border: 1px solid var(--border-warning); border-radius: 10px; }
@@ -938,7 +938,7 @@
             <div className="overview-container">
               <div className="overview-section">
                 <div className="overview-section-title"><span style={{ color: C["ロ"].color, fontWeight: 700, fontSize: 15 }}>ロ</span> 論点</div>
-                <textarea className="card-textarea" style={{ border: "1px solid var(--border-input)", minHeight: "60px" }}
+                <textarea className="card-textarea" style={{ border: `1px solid var(--border-tertiary)`, borderLeft: `3px solid ${C["ロ"].color}`, minHeight: "60px" }}
                   value={notes["ロ"] || ""} onChange={e => updateNote("ロ", e.target.value)} placeholder="論点をメモ..." />
               </div>
 
@@ -952,13 +952,13 @@
                 {subPoints.map((sp, i) => (
                   <div key={sp.id} style={{ marginBottom: 8 }}>
                     <div className="overview-sp-row" style={{ gridTemplateColumns: "1fr 2fr" }}>
-                      <div className="overview-sp-cell" style={{ borderLeft: `3px solid ${C["サ"].color}88` }}>
-                        <div className="overview-sp-label">サブ論点 {i + 1}</div>
+                      <div className="overview-sp-cell" style={{ borderLeft: `3px solid ${C["サ"].color}`, background: `${C["サ"].color}08` }}>
+                        <div className="overview-sp-label" style={{ color: C["サ"].color }}>サブ論点 {i + 1}</div>
                         <textarea className="sp-input" style={{ border: "1px solid var(--border-input)", minHeight: "50px" }}
                           value={sp.content} onChange={e => updateSubPoint(sp.id, "content", e.target.value)} placeholder="サブ論点..." />
                       </div>
-                      <div className="overview-sp-cell" style={{ borderLeft: `3px solid ${C["T"].color}88` }}>
-                        <div className="overview-sp-label">TASK → スケジュール</div>
+                      <div className="overview-sp-cell" style={{ borderLeft: `3px solid ${C["T"].color}`, background: `${C["T"].color}08` }}>
+                        <div className="overview-sp-label" style={{ color: C["T"].color }}>TASK → スケジュール</div>
                         {(sp.tasks || []).map((tk, j) => (
                           <div key={tk.id} style={{ display: "flex", gap: 4, marginBottom: 4, alignItems: "center" }}>
                             <input className="sp-input" style={{ border: "1px solid var(--border-input)", flex: 2 }}
@@ -978,7 +978,7 @@
               {["作", "ア"].map(k => (
                 <div key={k} className="overview-section">
                   <div className="overview-section-title"><span style={{ color: C[k].color, fontWeight: 700, fontSize: 15 }}>{k}</span> {C[k].label}</div>
-                  <textarea className="card-textarea" style={{ border: "1px solid var(--border-input)", minHeight: "60px" }}
+                  <textarea className="card-textarea" style={{ border: "1px solid var(--border-tertiary)", borderLeft: `3px solid ${C[k].color}`, minHeight: "60px" }}
                     value={notes[k] || ""} onChange={e => updateNote(k, e.target.value)} placeholder={`${C[k].label}をメモ...`} />
                 </div>
               ))}
@@ -995,7 +995,7 @@
                 {hasData && (
                   <div>
                     <div className="tree-root-label"
-                      style={{ background: "var(--bg-card)", color: "var(--text-primary)", border: "1px solid var(--border-primary)", borderLeft: `3px solid ${C["ロ"].color}` }}
+                      style={{ background: `${C["ロ"].color}0c`, color: "var(--text-primary)", border: `1px solid ${C["ロ"].color}30`, borderLeft: `3px solid ${C["ロ"].color}` }}
                       onClick={() => { setViewMode("single"); setActiveStep("ロ"); }}>
                       {ronten || "（論点を入力してください）"}
                     </div>
@@ -1004,7 +1004,7 @@
                         {subPoints.map((sp, i) => (
                           <div key={sp.id} className="tree-node">
                             <div className="tree-node-label"
-                              style={{ background: "var(--bg-card)", color: "var(--text-primary)", border: "1px solid var(--border-primary)", borderLeft: `3px solid ${C["サ"].color}` }}
+                              style={{ background: `${C["サ"].color}0c`, color: "var(--text-primary)", border: `1px solid ${C["サ"].color}30`, borderLeft: `3px solid ${C["サ"].color}` }}
                               onClick={() => { setViewMode("single"); setActiveStep("サ"); }}>
                               {sp.content || `（サブ論点 ${i + 1}）`}
                             </div>
@@ -1012,7 +1012,7 @@
                               <div className="tree-sub-branch">
                                 {sp.tasks.filter(tk => tk.content?.trim() || tk.schedule?.trim()).map(tk => (
                                   <div key={tk.id} className="tree-node">
-                                    <div className="tree-node-label" style={{ background: "var(--bg-card)", color: "var(--text-secondary)", border: "1px solid var(--border-primary)", borderLeft: `3px solid ${C["T"].color}`, fontSize: "13px" }}>
+                                    <div className="tree-node-label" style={{ background: `${C["T"].color}0c`, color: "var(--text-secondary)", border: `1px solid ${C["T"].color}30`, borderLeft: `3px solid ${C["T"].color}`, fontSize: "13px" }}>
                                       {tk.content || "（TASK未記入）"}
                                       {tk.schedule?.trim() && <span style={{ color: "var(--text-muted)", marginLeft: 10, fontSize: "12px" }}>{tk.schedule}</span>}
                                     </div>
