@@ -263,6 +263,7 @@
   <script src="https://www.gstatic.com/firebasejs/10.14.0/firebase-auth-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.14.0/firebase-firestore-compat.js"></script>
   <script src="https://accounts.google.com/gsi/client" async defer></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.2/html2pdf.bundle.min.js"></script>
 
   <script type="text/babel">
     const { useState, useEffect, useRef } = React;
@@ -726,6 +727,144 @@
         const url = URL.createObjectURL(blob); const a = document.createElement("a"); a.href = url; a.download = filename; a.click(); URL.revokeObjectURL(url);
       };
 
+      // PDF Export with friendly labels
+      const handleExportPDF = () => {
+        setShowExportMenu(false);
+        const pName = projectName || "無題のプロジェクト";
+        const date = new Date().toLocaleDateString("ja-JP", { year: "numeric", month: "long", day: "numeric" });
+
+        // Build sections only for filled steps
+        let sections = "";
+
+        // ゴール（論点）
+        if (notes["ロ"]?.trim()) {
+          sections += `
+            <div class="pdf-section">
+              <div class="pdf-section-title"><span class="pdf-badge" style="background:#b0706c">STEP 1</span> ゴール（解決したい問い）</div>
+              <div class="pdf-section-body">${notes["ロ"].trim().replace(/\n/g, "<br/>")}</div>
+            </div>`;
+        }
+
+        // 考えるポイント（サブ論点）+ やること（TASK）+ 期限
+        const hasSubs = subPoints.some(sp => sp.content?.trim() || sp.tasks?.some(tk => tk.content?.trim()));
+        if (hasSubs) {
+          let subsHtml = "";
+          subPoints.forEach((sp, i) => {
+            if (!sp.content?.trim() && !(sp.tasks || []).some(tk => tk.content?.trim())) return;
+            subsHtml += `<div class="pdf-point">`;
+            subsHtml += `<div class="pdf-point-title">考えるポイント ${i + 1}：${sp.content?.trim() || "（未記入）"}</div>`;
+
+            // Tasks
+            const filledTasks = (sp.tasks || []).filter(tk => tk.content?.trim() || tk.calendarDate);
+            if (filledTasks.length > 0) {
+              subsHtml += `<table class="pdf-task-table"><thead><tr><th>やること</th><th style="width:120px">期限</th></tr></thead><tbody>`;
+              filledTasks.forEach(tk => {
+                const deadline = tk.calendarDate || tk.schedule?.trim() || "—";
+                subsHtml += `<tr><td>${tk.content?.trim() || "（未記入）"}</td><td>${deadline}</td></tr>`;
+              });
+              subsHtml += `</tbody></table>`;
+            }
+
+            // Sub-sub-points (深掘りポイント)
+            if (sp.subSubPoints && sp.subSubPoints.length > 0) {
+              sp.subSubPoints.forEach((ssp, si) => {
+                if (!ssp.content?.trim() && !(ssp.tasks || []).some(tk => tk.content?.trim())) return;
+                subsHtml += `<div class="pdf-subpoint">`;
+                subsHtml += `<div class="pdf-subpoint-title">深掘りポイント ${i + 1}-${si + 1}：${ssp.content?.trim() || "（未記入）"}</div>`;
+                const sspTasks = (ssp.tasks || []).filter(tk => tk.content?.trim() || tk.calendarDate);
+                if (sspTasks.length > 0) {
+                  subsHtml += `<table class="pdf-task-table"><thead><tr><th>やること</th><th style="width:120px">期限</th></tr></thead><tbody>`;
+                  sspTasks.forEach(tk => {
+                    const deadline = tk.calendarDate || tk.schedule?.trim() || "—";
+                    subsHtml += `<tr><td>${tk.content?.trim() || "（未記入）"}</td><td>${deadline}</td></tr>`;
+                  });
+                  subsHtml += `</tbody></table>`;
+                }
+                subsHtml += `</div>`;
+              });
+            }
+            subsHtml += `</div>`;
+          });
+
+          sections += `
+            <div class="pdf-section">
+              <div class="pdf-section-title"><span class="pdf-badge" style="background:#b8906e">STEP 2</span> 考えるポイント &amp; やること</div>
+              ${subsHtml}
+            </div>`;
+        }
+
+        // 進め方・作業メモ（作業）
+        if (notes["作"]?.trim()) {
+          sections += `
+            <div class="pdf-section">
+              <div class="pdf-section-title"><span class="pdf-badge" style="background:#7090b0">STEP 3</span> 進め方・作業メモ</div>
+              <div class="pdf-section-body">${notes["作"].trim().replace(/\n/g, "<br/>")}</div>
+            </div>`;
+        }
+
+        // 成果物（アウトプット）
+        if (notes["ア"]?.trim()) {
+          sections += `
+            <div class="pdf-section">
+              <div class="pdf-section-title"><span class="pdf-badge" style="background:#8a80b0">STEP 4</span> 成果物</div>
+              <div class="pdf-section-body">${notes["ア"].trim().replace(/\n/g, "<br/>")}</div>
+            </div>`;
+        }
+
+        if (!sections) {
+          alert("出力できる内容がありません。\nいずれかのステップにメモを入力してください。");
+          return;
+        }
+
+        const html = `
+          <div id="pdf-root" style="font-family: 'Noto Sans JP', 'Helvetica Neue', Arial, sans-serif; color: #1a1a1a; padding: 0; line-height: 1.7;">
+            <style>
+              .pdf-header { margin-bottom: 24px; padding-bottom: 16px; border-bottom: 2px solid #333; }
+              .pdf-header h1 { font-size: 20px; font-weight: 700; margin: 0 0 4px; color: #111; }
+              .pdf-header .pdf-date { font-size: 11px; color: #888; }
+              .pdf-header .pdf-flow { font-size: 11px; color: #999; margin-top: 6px; }
+              .pdf-section { margin-bottom: 22px; }
+              .pdf-section-title { font-size: 15px; font-weight: 700; color: #222; margin-bottom: 10px; display: flex; align-items: center; gap: 8px; }
+              .pdf-badge { display: inline-block; color: #fff; font-size: 10px; font-weight: 600; padding: 2px 8px; border-radius: 4px; letter-spacing: 0.5px; }
+              .pdf-section-body { font-size: 13px; color: #333; padding: 10px 14px; background: #f8f8f8; border-radius: 6px; border-left: 3px solid #ddd; }
+              .pdf-point { margin-bottom: 14px; padding: 10px 14px; background: #fafafa; border-radius: 6px; border: 1px solid #eee; }
+              .pdf-point-title { font-size: 13px; font-weight: 600; color: #b8906e; margin-bottom: 8px; }
+              .pdf-subpoint { margin: 8px 0 8px 16px; padding: 8px 12px; background: #fff; border-radius: 4px; border: 1px solid #f0f0f0; }
+              .pdf-subpoint-title { font-size: 12px; font-weight: 600; color: #999; margin-bottom: 6px; }
+              .pdf-task-table { width: 100%; border-collapse: collapse; font-size: 12px; margin-top: 4px; }
+              .pdf-task-table th { text-align: left; font-weight: 600; color: #666; padding: 4px 8px; border-bottom: 1px solid #ddd; font-size: 11px; }
+              .pdf-task-table td { padding: 4px 8px; border-bottom: 1px solid #f0f0f0; color: #333; }
+              .pdf-footer { margin-top: 24px; padding-top: 12px; border-top: 1px solid #ddd; font-size: 10px; color: #aaa; text-align: right; }
+            </style>
+
+            <div class="pdf-header">
+              <h1>${pName}</h1>
+              <div class="pdf-date">${date} 時点</div>
+              <div class="pdf-flow">ゴール → 考えるポイント → やること → 進め方 → 成果物</div>
+            </div>
+
+            ${sections}
+
+            <div class="pdf-footer">ロサTス作ア メモより出力</div>
+          </div>
+        `;
+
+        const container = document.createElement("div");
+        container.innerHTML = html;
+        document.body.appendChild(container);
+
+        html2pdf().set({
+          margin: [12, 12, 12, 12],
+          filename: `${pName}-共有用.pdf`,
+          image: { type: "jpeg", quality: 0.98 },
+          html2canvas: { scale: 2, useCORS: true },
+          jsPDF: { unit: "mm", format: "a4", orientation: "portrait" },
+          pagebreak: { mode: ["avoid-all", "css", "legacy"] },
+        }).from(container.firstElementChild).save().then(() => {
+          document.body.removeChild(container);
+        });
+      };
+
       const handleImport = () => {
         const input = document.createElement("input"); input.type = "file"; input.accept = ".txt,.md";
         input.onchange = (e) => {
@@ -1083,7 +1222,7 @@
                 <button className="btn" onClick={handleImport}>📥 Import</button>
                 <div className="export-menu-wrapper">
                   <button className="btn" onClick={() => setShowExportMenu(!showExportMenu)}>📋 Export ▾</button>
-                  {showExportMenu && <div className="export-menu"><button onClick={() => handleExport("txt")}>📄 テキスト (.txt)</button><button onClick={() => handleExport("md")}>📝 Markdown (.md)</button></div>}
+                  {showExportMenu && <div className="export-menu"><button onClick={handleExportPDF}>📎 共有用PDF (.pdf)</button><button onClick={() => handleExport("txt")}>📄 テキスト (.txt)</button><button onClick={() => handleExport("md")}>📝 Markdown (.md)</button></div>}
                 </div>
                 <button className="btn btn-muted" onClick={handleReset}>↺ Reset</button>
               </div>
