@@ -252,6 +252,50 @@
     [data-theme="light"] .gantt-cell[style*="background"] { background: #e4e4e7 !important; }
     .auth-loading { display: flex; align-items: center; justify-content: center; height: 100vh; background: var(--bg-primary); }
     .auth-loading-inner { text-align: center; color: var(--text-muted); }
+
+    /* 論点ワード */
+    .rw-container { padding: 16px 16px 100px; }
+    .rw-root { font-size: 16px; font-weight: 700; padding: 10px 14px; border-radius: 6px; margin-bottom: 12px; line-height: 1.5; }
+    .rw-branch { padding-left: 24px; position: relative; }
+    .rw-branch::before { content: ""; position: absolute; left: 10px; top: 0; bottom: 12px; border-left: 2px solid var(--tree-line); }
+    .rw-node { position: relative; padding: 6px 0 6px 20px; }
+    .rw-node::before { content: ""; position: absolute; left: -14px; top: 18px; width: 14px; border-top: 2px solid var(--tree-line); }
+    .rw-node-label { font-size: 14px; padding: 6px 12px; border-radius: 5px; display: inline-block; line-height: 1.5; }
+    .rw-sub-branch { padding-left: 24px; position: relative; }
+    .rw-sub-branch::before { content: ""; position: absolute; left: 10px; top: 0; bottom: 12px; border-left: 2px solid var(--tree-sub-line); }
+    .rw-empty { color: var(--text-faint); font-size: 13px; font-style: italic; padding: 12px 0 12px 24px; }
+
+    /* ワークプラン */
+    .wp-container { padding: 16px 16px 100px; }
+    .wp-title { font-size: 14px; font-weight: 600; margin-bottom: 12px; }
+    .wp-table { width: 100%; border-collapse: collapse; font-size: 13px; }
+    .wp-table th { text-align: left; font-weight: 600; padding: 8px 10px; border-bottom: 2px solid var(--border-tertiary); color: var(--text-secondary); font-size: 12px; }
+    .wp-table td { padding: 7px 10px; border-bottom: 1px solid var(--border-primary); color: var(--text-primary); vertical-align: top; }
+    .wp-table tr:hover td { background: var(--bg-card-active); }
+    .wp-sp-row td { font-weight: 600; color: var(--text-secondary); background: var(--bg-card); }
+    .wp-ssp-label { padding-left: 16px !important; font-size: 12px; color: var(--text-muted) !important; font-weight: 500 !important; }
+    .wp-task-label { padding-left: 8px !important; }
+    .wp-empty { color: var(--text-faint); font-size: 13px; font-style: italic; padding: 20px 0; text-align: center; }
+
+    /* WBS */
+    .wbs-container { padding: 16px 16px 100px; overflow-x: auto; }
+    .wbs-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; }
+    .wbs-title { font-size: 14px; font-weight: 600; color: var(--text-primary); }
+    .wbs-table { width: 100%; border-collapse: collapse; min-width: 700px; }
+    .wbs-table th { font-size: 10px; font-weight: 500; color: var(--text-faint); padding: 4px 0; text-align: center; border-bottom: 1px solid var(--border-primary); white-space: nowrap; }
+    .wbs-table th.today { color: var(--text-primary); font-weight: 700; }
+    .wbs-label { font-size: 12px; color: var(--text-secondary); padding: 6px 6px 6px 0; white-space: nowrap; max-width: 220px; overflow: hidden; text-overflow: ellipsis; border-bottom: 1px solid var(--border-primary); vertical-align: middle; }
+    .wbs-label-root { font-weight: 700; font-size: 13px; }
+    .wbs-label-sp { padding-left: 12px !important; font-weight: 600; }
+    .wbs-label-ssp { padding-left: 24px !important; font-size: 11px; color: var(--text-muted); }
+    .wbs-label-task { padding-left: 36px !important; font-size: 11px; color: var(--text-muted); }
+    .wbs-label-task::before { content: "▸ "; color: var(--text-faint); font-size: 9px; }
+    .wbs-cell { padding: 6px 1px; border-bottom: 1px solid var(--border-primary); position: relative; }
+    .wbs-bar { height: 14px; border-radius: 3px; min-width: 6px; }
+    [data-theme="light"] .wbs-table th.today { background: #e4e4e7; }
+
+    /* ビュー切替バー拡張 */
+    .view-toggle-bar { flex-wrap: wrap; }
   </style>
 </head>
 <body>
@@ -802,9 +846,9 @@
               .s-body{font-size:11px;color:#333;padding:4px 0 4px 12px;border-left:2.5px solid #ccc}
               .pt{margin:0 0 6px 8px;padding:4px 0 4px 10px;border-left:2.5px solid #b8906e}
               .pt-h{font-size:11px;font-weight:600;color:#6b5030;margin-bottom:2px}
-              .tk{margin:1px 0 1px 14px;display:flex;justify-content:space-between;align-items:baseline;font-size:10.5px;color:#444}
+              .tk{margin:1px 0 1px 14px;font-size:10.5px;color:#444}
               .tk-c::before{content:"▸ ";color:#aaa;font-size:8px}
-              .tk-d{color:#888;font-size:10px;white-space:nowrap;margin-left:8px}
+              .tk-d{color:#888;font-size:10px;margin-left:6px}
               .ssp{margin:3px 0 3px 14px;padding:3px 0 3px 9px;border-left:2px solid #ddd}
               .ssp-h{font-size:10.5px;font-weight:600;color:#888;margin-bottom:1px}
               .ftr{margin-top:12px;padding-top:6px;border-top:1px solid #e0e0e0;font-size:8px;color:#bbb;text-align:right}
@@ -830,6 +874,192 @@
         }).from(container.firstElementChild).save().then(() => {
           document.body.removeChild(container);
         });
+      };
+
+      // === PDF: 論点ワード ===
+      const handleExportRontenWord = () => {
+        setShowExportMenu(false);
+        const pName = projectName || "無題のプロジェクト";
+        const date = new Date().toLocaleDateString("ja-JP", { year: "numeric", month: "long", day: "numeric" });
+        const ronten = notes["ロ"]?.trim();
+        const filledSubs = subPoints.filter(sp => sp.content?.trim());
+        if (!ronten && filledSubs.length === 0) { alert("論点またはサブ論点を入力してください。"); return; }
+
+        let tree = "";
+        if (ronten) tree += `<div class="rw-root">${ronten}</div>`;
+        filledSubs.forEach((sp, i) => {
+          tree += `<div class="rw-sp">${i + 1}. ${sp.content.trim()}</div>`;
+          if (sp.subSubPoints) {
+            sp.subSubPoints.filter(ssp => ssp.content?.trim()).forEach((ssp, si) => {
+              tree += `<div class="rw-ssp">${i + 1}-${si + 1}. ${ssp.content.trim()}</div>`;
+            });
+          }
+        });
+
+        const html = `
+          <div style="font-family:'Noto Sans JP','Helvetica Neue',Arial,sans-serif;color:#1a1a1a;padding:0;line-height:1.6;font-size:11px;">
+            <style>
+              .hdr{margin-bottom:12px;padding-bottom:8px;border-bottom:1.5px solid #333}
+              .hdr h1{font-size:15px;font-weight:700;margin:0 0 2px;color:#111}
+              .hdr .sub{font-size:10px;color:#999;margin-top:2px}
+              .rw-root{font-size:14px;font-weight:700;color:#b0706c;padding:8px 12px;background:#fdf6f5;border-left:4px solid #b0706c;border-radius:4px;margin-bottom:10px}
+              .rw-sp{font-size:12px;font-weight:600;color:#6b5030;padding:5px 10px 5px 20px;margin:4px 0;border-left:3px solid #b8906e;background:#fdfaf6;border-radius:3px}
+              .rw-ssp{font-size:11px;color:#777;padding:3px 10px 3px 40px;margin:2px 0;border-left:2px solid #ddd}
+              .ftr{margin-top:16px;padding-top:6px;border-top:1px solid #e0e0e0;font-size:8px;color:#bbb;text-align:right}
+            </style>
+            <div class="hdr"><h1>${pName}</h1><div class="sub">論点ワード — ${date}</div></div>
+            ${tree}
+            <div class="ftr">${date} 作成</div>
+          </div>`;
+
+        const container = document.createElement("div");
+        container.innerHTML = html;
+        document.body.appendChild(container);
+        html2pdf().set({ margin: [10, 10, 10, 10], filename: `${pName}-論点ワード.pdf`, image: { type: "jpeg", quality: 0.95 }, html2canvas: { scale: 2, useCORS: true }, jsPDF: { unit: "mm", format: "a4", orientation: "portrait" } }).from(container.firstElementChild).save().then(() => document.body.removeChild(container));
+      };
+
+      // === PDF: ワークプラン ===
+      const handleExportWorkplan = () => {
+        setShowExportMenu(false);
+        const pName = projectName || "無題のプロジェクト";
+        const date = new Date().toLocaleDateString("ja-JP", { year: "numeric", month: "long", day: "numeric" });
+
+        let rows = "";
+        let no = 0;
+        let hasRows = false;
+        subPoints.forEach((sp, i) => {
+          const spContent = sp.content?.trim();
+          if (!spContent && !(sp.tasks || []).some(tk => tk.content?.trim())) return;
+          hasRows = true;
+          rows += `<tr class="wp-sp"><td></td><td colspan="2">${i + 1}. ${spContent || "（未記入）"}</td></tr>`;
+          (sp.tasks || []).forEach(tk => {
+            if (tk.content?.trim() || tk.calendarDate) {
+              no++;
+              rows += `<tr><td class="wp-no">${no}</td><td class="wp-tk">${tk.content?.trim() || "（未記入）"}</td><td class="wp-dt">${tk.calendarDate || tk.schedule?.trim() || "—"}</td></tr>`;
+            }
+          });
+          if (sp.subSubPoints) {
+            sp.subSubPoints.forEach((ssp, si) => {
+              if (!ssp.content?.trim() && !(ssp.tasks || []).some(tk => tk.content?.trim())) return;
+              rows += `<tr class="wp-ssp"><td></td><td colspan="2">${i + 1}-${si + 1}. ${ssp.content?.trim() || "（未記入）"}</td></tr>`;
+              (ssp.tasks || []).forEach(tk => {
+                if (tk.content?.trim() || tk.calendarDate) {
+                  no++;
+                  rows += `<tr><td class="wp-no">${no}</td><td class="wp-tk wp-indent">${tk.content?.trim() || "（未記入）"}</td><td class="wp-dt">${tk.calendarDate || tk.schedule?.trim() || "—"}</td></tr>`;
+                }
+              });
+            });
+          }
+        });
+        if (!hasRows) { alert("サブ論点とTASKを入力してください。"); return; }
+
+        const html = `
+          <div style="font-family:'Noto Sans JP','Helvetica Neue',Arial,sans-serif;color:#1a1a1a;padding:0;line-height:1.5;font-size:11px;">
+            <style>
+              .hdr{margin-bottom:12px;padding-bottom:8px;border-bottom:1.5px solid #333}
+              .hdr h1{font-size:15px;font-weight:700;margin:0 0 2px;color:#111}
+              .hdr .sub{font-size:10px;color:#999;margin-top:2px}
+              .goal{font-size:11px;color:#b0706c;font-weight:600;margin-bottom:10px}
+              table{width:100%;border-collapse:collapse;font-size:11px}
+              th{text-align:left;font-weight:600;padding:5px 8px;border-bottom:2px solid #ccc;color:#555;font-size:10px}
+              td{padding:4px 8px;border-bottom:1px solid #eee}
+              .wp-sp td{font-weight:600;color:#6b5030;background:#fdfaf6;padding-top:7px}
+              .wp-ssp td{font-size:10px;color:#888;padding-left:20px;font-weight:500}
+              .wp-no{color:#aaa;font-size:10px;width:30px}
+              .wp-tk{padding-left:12px}
+              .wp-indent{padding-left:24px}
+              .wp-dt{color:#777;font-size:10px;width:90px;white-space:nowrap}
+              .ftr{margin-top:16px;padding-top:6px;border-top:1px solid #e0e0e0;font-size:8px;color:#bbb;text-align:right}
+            </style>
+            <div class="hdr"><h1>${pName}</h1><div class="sub">ワークプラン — ${date}</div></div>
+            ${notes["ロ"]?.trim() ? `<div class="goal">ゴール：${notes["ロ"].trim()}</div>` : ""}
+            <table><thead><tr><th style="width:30px">No.</th><th>考えるポイント / やること</th><th style="width:90px">期限</th></tr></thead><tbody>${rows}</tbody></table>
+            <div class="ftr">${date} 作成</div>
+          </div>`;
+
+        const container = document.createElement("div");
+        container.innerHTML = html;
+        document.body.appendChild(container);
+        html2pdf().set({ margin: [10, 10, 10, 10], filename: `${pName}-ワークプラン.pdf`, image: { type: "jpeg", quality: 0.95 }, html2canvas: { scale: 2, useCORS: true }, jsPDF: { unit: "mm", format: "a4", orientation: "portrait" } }).from(container.firstElementChild).save().then(() => document.body.removeChild(container));
+      };
+
+      // === PDF: WBS ===
+      const handleExportWBS = () => {
+        setShowExportMenu(false);
+        const pName = projectName || "無題のプロジェクト";
+        const date = new Date().toLocaleDateString("ja-JP", { year: "numeric", month: "long", day: "numeric" });
+
+        // Build rows
+        const wbsRows = [];
+        const ronten = notes["ロ"]?.trim();
+        if (ronten) wbsRows.push({ type: "root", label: ronten, date: null });
+        subPoints.forEach((sp, i) => {
+          if (!sp.content?.trim() && !(sp.tasks || []).some(tk => tk.content?.trim() || tk.calendarDate)) return;
+          wbsRows.push({ type: "sp", label: `${i + 1}. ${sp.content?.trim() || "（未記入）"}`, date: null });
+          (sp.tasks || []).forEach(tk => {
+            if (tk.content?.trim() || tk.calendarDate) wbsRows.push({ type: "task", label: tk.content?.trim() || "（未記入）", date: tk.calendarDate || null });
+          });
+          if (sp.subSubPoints) {
+            sp.subSubPoints.forEach((ssp, si) => {
+              if (!ssp.content?.trim() && !(ssp.tasks || []).some(tk => tk.content?.trim() || tk.calendarDate)) return;
+              wbsRows.push({ type: "ssp", label: `${i + 1}-${si + 1}. ${ssp.content?.trim() || "（未記入）"}`, date: null });
+              (ssp.tasks || []).forEach(tk => {
+                if (tk.content?.trim() || tk.calendarDate) wbsRows.push({ type: "task", label: tk.content?.trim() || "（未記入）", date: tk.calendarDate || null });
+              });
+            });
+          }
+        });
+        const dates = wbsRows.filter(r => r.date).map(r => r.date).sort();
+        if (dates.length === 0) { alert("TASKに日付を設定してください。"); return; }
+
+        const minD = new Date(dates[0]); const maxD = new Date(dates[dates.length - 1]);
+        const startD = new Date(minD); startD.setDate(startD.getDate() - 2);
+        const endD = new Date(maxD); endD.setDate(endD.getDate() + 5);
+        if ((endD - startD) / 86400000 < 14) endD.setDate(startD.getDate() + 14);
+        const dayCols = [];
+        for (let d = new Date(startD); d <= endD; d.setDate(d.getDate() + 1)) dayCols.push(new Date(d));
+        const todayStr = new Date().toISOString().slice(0, 10);
+
+        let headerCells = `<th style="text-align:left;min-width:140px;font-size:9px;padding:3px 4px;border-bottom:1.5px solid #bbb;color:#555">項目</th>`;
+        dayCols.forEach(d => {
+          const ds = d.toISOString().slice(0, 10);
+          const dow = d.getDay();
+          const isToday = ds === todayStr;
+          headerCells += `<th style="font-size:8px;padding:2px 0;border-bottom:1.5px solid #bbb;min-width:20px;text-align:center;${isToday ? "font-weight:700;color:#111;" : "color:#999;"}${dow === 0 ? "color:#c06060;" : dow === 6 ? "color:#6080c0;" : ""}">${d.getDate()}<br/><span style="font-size:7px">${["日","月","火","水","木","金","土"][dow]}</span></th>`;
+        });
+
+        let bodyRows = "";
+        wbsRows.forEach((row, ri) => {
+          const labelStyle = row.type === "root" ? "font-weight:700;font-size:10px;color:#b0706c;" : row.type === "sp" ? "font-weight:600;font-size:9px;padding-left:8px;color:#6b5030;" : row.type === "ssp" ? "font-size:9px;padding-left:16px;color:#888;" : "font-size:9px;padding-left:24px;color:#888;";
+          const prefix = row.type === "task" ? "▸ " : "";
+          bodyRows += `<tr><td style="${labelStyle}padding-top:3px;padding-bottom:3px;border-bottom:1px solid #f0f0f0;white-space:nowrap;max-width:160px;overflow:hidden;text-overflow:ellipsis">${prefix}${row.label}</td>`;
+          dayCols.forEach(d => {
+            const ds = d.toISOString().slice(0, 10);
+            const isToday = ds === todayStr;
+            const hasBar = row.date && ds === row.date;
+            bodyRows += `<td style="padding:3px 1px;border-bottom:1px solid #f0f0f0;${isToday ? "background:#f0f0f0;" : ""}">${hasBar ? `<div style="height:10px;border-radius:2px;background:${row.type === "task" ? "#a89868cc" : "#b8906ecc"};min-width:4px"></div>` : ""}</td>`;
+          });
+          bodyRows += `</tr>`;
+        });
+
+        const html = `
+          <div style="font-family:'Noto Sans JP','Helvetica Neue',Arial,sans-serif;color:#1a1a1a;padding:0;line-height:1.4;font-size:9px;">
+            <style>
+              .hdr{margin-bottom:8px;padding-bottom:6px;border-bottom:1.5px solid #333}
+              .hdr h1{font-size:13px;font-weight:700;margin:0 0 2px;color:#111}
+              .hdr .sub{font-size:9px;color:#999}
+              table{width:100%;border-collapse:collapse}
+              .ftr{margin-top:10px;padding-top:4px;border-top:1px solid #e0e0e0;font-size:7px;color:#bbb;text-align:right}
+            </style>
+            <div class="hdr"><h1>${pName}</h1><div class="sub">WBS — ${date}</div></div>
+            <table><thead><tr>${headerCells}</tr></thead><tbody>${bodyRows}</tbody></table>
+            <div class="ftr">${date} 作成</div>
+          </div>`;
+
+        const container = document.createElement("div");
+        container.innerHTML = html;
+        document.body.appendChild(container);
+        html2pdf().set({ margin: [8, 8, 8, 8], filename: `${pName}-WBS.pdf`, image: { type: "jpeg", quality: 0.95 }, html2canvas: { scale: 2, useCORS: true }, jsPDF: { unit: "mm", format: "a4", orientation: "landscape" } }).from(container.firstElementChild).save().then(() => document.body.removeChild(container));
       };
 
       const handleImport = () => {
@@ -1189,7 +1419,7 @@
                 <button className="btn" onClick={handleImport}>📥 Import</button>
                 <div className="export-menu-wrapper">
                   <button className="btn" onClick={() => setShowExportMenu(!showExportMenu)}>📋 Export ▾</button>
-                  {showExportMenu && <div className="export-menu"><button onClick={handleExportPDF}>📎 共有用PDF (.pdf)</button><button onClick={() => handleExport("txt")}>📄 テキスト (.txt)</button><button onClick={() => handleExport("md")}>📝 Markdown (.md)</button></div>}
+                  {showExportMenu && <div className="export-menu"><button onClick={handleExportPDF}>📎 共有用PDF</button><button onClick={handleExportRontenWord}>🌳 論点ワード PDF</button><button onClick={handleExportWorkplan}>📋 ワークプラン PDF</button><button onClick={handleExportWBS}>📊 WBS PDF</button><button onClick={() => handleExport("txt")}>📄 テキスト (.txt)</button><button onClick={() => handleExport("md")}>📝 Markdown (.md)</button></div>}
                 </div>
                 <button className="btn btn-muted" onClick={handleReset}>↺ Reset</button>
               </div>
@@ -1238,7 +1468,7 @@
           <div className="flow-hint mono">タップして展開 → メモを記入</div>
 
           <div className="view-toggle-bar">
-            {[["single", "個別"], ["overview", "一覧"], ["tree", "ツリー"], ["gantt", "ガント"]].map(([m, l]) => (
+            {[["single", "個別"], ["overview", "一覧"], ["tree", "ツリー"], ["gantt", "ガント"], ["ronten-word", "論点ワード"], ["workplan", "ワークプラン"], ["wbs", "WBS"]].map(([m, l]) => (
               <button key={m} className={`view-btn${viewMode === m ? " active" : ""}`} onClick={() => setViewMode(m)}>{l}</button>
             ))}
           </div>
@@ -1517,6 +1747,164 @@
                               {isTaskDay && (
                                 <div className="gantt-bar" style={{ background: barColors[ti % barColors.length] }} title={`${tk.content} (${tk.date})`} />
                               )}
+                            </td>
+                          );
+                        })}
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            );
+          })()}
+
+          {/* ===== RONTEN WORD MODE ===== */}
+          {viewMode === "ronten-word" && (() => {
+            const ronten = notes["ロ"]?.trim();
+            const filledSubs = subPoints.filter(sp => sp.content?.trim());
+            if (!ronten && filledSubs.length === 0) return <div className="rw-container"><div className="rw-empty">論点またはサブ論点を入力すると、論点ワードが表示されます</div></div>;
+            return (
+              <div className="rw-container">
+                {ronten && (
+                  <div className="rw-root" style={{ background: `${C["ロ"].color}0c`, border: `1px solid ${C["ロ"].color}30`, color: C["ロ"].color }}>
+                    {ronten}
+                  </div>
+                )}
+                {filledSubs.length > 0 && (
+                  <div className="rw-branch">
+                    {filledSubs.map((sp, i) => (
+                      <div key={sp.id} className="rw-node">
+                        <div className="rw-node-label" style={{ background: `${C["サ"].color}0c`, border: `1px solid ${C["サ"].color}30`, color: C["サ"].color }}>
+                          {i + 1}. {sp.content}
+                        </div>
+                        {sp.subSubPoints && sp.subSubPoints.filter(ssp => ssp.content?.trim()).length > 0 && (
+                          <div className="rw-sub-branch">
+                            {sp.subSubPoints.filter(ssp => ssp.content?.trim()).map((ssp, si) => (
+                              <div key={ssp.id} className="rw-node">
+                                <div className="rw-node-label" style={{ background: `${C["サ"].color}08`, border: `1px solid ${C["サ"].color}20`, color: "var(--text-muted)", fontSize: "13px" }}>
+                                  {i + 1}-{si + 1}. {ssp.content}
+                                </div>
+                              </div>
+                            ))}
+                          </div>
+                        )}
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </div>
+            );
+          })()}
+
+          {/* ===== WORKPLAN MODE ===== */}
+          {viewMode === "workplan" && (() => {
+            const rows = [];
+            let no = 0;
+            subPoints.forEach((sp, i) => {
+              const spContent = sp.content?.trim();
+              if (!spContent && !(sp.tasks || []).some(tk => tk.content?.trim())) return;
+              rows.push({ type: "sp", label: `${i + 1}. ${spContent || "（未記入）"}`, spIdx: i });
+              (sp.tasks || []).forEach(tk => {
+                if (tk.content?.trim() || tk.calendarDate) {
+                  no++;
+                  rows.push({ type: "task", no, content: tk.content?.trim() || "（未記入）", date: tk.calendarDate || tk.schedule?.trim() || "—", indent: 0 });
+                }
+              });
+              if (sp.subSubPoints) {
+                sp.subSubPoints.forEach((ssp, si) => {
+                  if (!ssp.content?.trim() && !(ssp.tasks || []).some(tk => tk.content?.trim())) return;
+                  rows.push({ type: "ssp", label: `${i + 1}-${si + 1}. ${ssp.content?.trim() || "（未記入）"}` });
+                  (ssp.tasks || []).forEach(tk => {
+                    if (tk.content?.trim() || tk.calendarDate) {
+                      no++;
+                      rows.push({ type: "task", no, content: tk.content?.trim() || "（未記入）", date: tk.calendarDate || tk.schedule?.trim() || "—", indent: 1 });
+                    }
+                  });
+                });
+              }
+            });
+            if (rows.length === 0) return <div className="wp-container"><div className="wp-empty">サブ論点とTASKを入力すると、ワークプランが表示されます</div></div>;
+            return (
+              <div className="wp-container">
+                {notes["ロ"]?.trim() && <div className="wp-title" style={{ color: C["ロ"].color }}>ゴール：{notes["ロ"].trim()}</div>}
+                <table className="wp-table">
+                  <thead><tr><th style={{ width: "40px" }}>No.</th><th>考えるポイント / やること</th><th style={{ width: "110px" }}>期限</th></tr></thead>
+                  <tbody>
+                    {rows.map((r, idx) => {
+                      if (r.type === "sp") return <tr key={idx} className="wp-sp-row"><td></td><td style={{ color: C["サ"].color }}>{r.label}</td><td></td></tr>;
+                      if (r.type === "ssp") return <tr key={idx}><td></td><td className="wp-ssp-label">{r.label}</td><td></td></tr>;
+                      return <tr key={idx}><td style={{ color: "var(--text-faint)", fontSize: "11px" }}>{r.no}</td><td className={r.indent ? "wp-ssp-label" : "wp-task-label"}>{r.content}</td><td style={{ fontSize: "12px", color: "var(--text-muted)" }}>{r.date}</td></tr>;
+                    })}
+                  </tbody>
+                </table>
+              </div>
+            );
+          })()}
+
+          {/* ===== WBS MODE ===== */}
+          {viewMode === "wbs" && (() => {
+            // Build hierarchical rows: 論点 → サブ論点 → サブサブ論点 → TASK
+            const wbsRows = [];
+            const ronten = notes["ロ"]?.trim();
+            if (ronten) wbsRows.push({ type: "root", label: ronten, date: null, color: C["ロ"].color });
+            subPoints.forEach((sp, i) => {
+              if (!sp.content?.trim() && !(sp.tasks || []).some(tk => tk.content?.trim() || tk.calendarDate)) return;
+              wbsRows.push({ type: "sp", label: `${i + 1}. ${sp.content?.trim() || "（未記入）"}`, date: null, color: C["サ"].color });
+              (sp.tasks || []).forEach(tk => {
+                if (tk.content?.trim() || tk.calendarDate) {
+                  wbsRows.push({ type: "task", label: tk.content?.trim() || "（未記入）", date: tk.calendarDate || null, color: C["T"].color });
+                }
+              });
+              if (sp.subSubPoints) {
+                sp.subSubPoints.forEach((ssp, si) => {
+                  if (!ssp.content?.trim() && !(ssp.tasks || []).some(tk => tk.content?.trim() || tk.calendarDate)) return;
+                  wbsRows.push({ type: "ssp", label: `${i + 1}-${si + 1}. ${ssp.content?.trim() || "（未記入）"}`, date: null, color: C["サ"].color });
+                  (ssp.tasks || []).forEach(tk => {
+                    if (tk.content?.trim() || tk.calendarDate) {
+                      wbsRows.push({ type: "task", label: tk.content?.trim() || "（未記入）", date: tk.calendarDate || null, color: C["T"].color });
+                    }
+                  });
+                });
+              }
+            });
+            const dates = wbsRows.filter(r => r.date).map(r => r.date).sort();
+            if (dates.length === 0) return <div className="wbs-container"><div className="wp-empty">TASKに日付を設定すると、WBSが表示されます</div></div>;
+            const minD = new Date(dates[0]); const maxD = new Date(dates[dates.length - 1]);
+            const startD = new Date(minD); startD.setDate(startD.getDate() - 2);
+            const endD = new Date(maxD); endD.setDate(endD.getDate() + 5);
+            if ((endD - startD) / 86400000 < 14) endD.setDate(startD.getDate() + 14);
+            const dayCols = [];
+            for (let d = new Date(startD); d <= endD; d.setDate(d.getDate() + 1)) dayCols.push(new Date(d));
+            const todayStr = new Date().toISOString().slice(0, 10);
+            const barColors = [C["サ"].color, C["T"].color, C["作"].color, C["ロ"].color];
+            return (
+              <div className="wbs-container">
+                <div className="wbs-header"><div className="wbs-title">WBS</div></div>
+                <table className="wbs-table">
+                  <thead>
+                    <tr>
+                      <th style={{ textAlign: "left", minWidth: "180px" }}>項目</th>
+                      {dayCols.map((d, di) => {
+                        const ds = d.toISOString().slice(0, 10);
+                        const dow = d.getDay();
+                        return <th key={di} className={ds === todayStr ? "today" : ""} style={{ color: dow === 0 ? "#c06060" : dow === 6 ? "#6080c0" : undefined, minWidth: "28px" }}>{d.getDate()}<br/><span style={{ fontSize: "8px" }}>{["日","月","火","水","木","金","土"][dow]}</span></th>;
+                      })}
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {wbsRows.map((row, ri) => (
+                      <tr key={ri}>
+                        <td className={`wbs-label ${row.type === "root" ? "wbs-label-root" : row.type === "sp" ? "wbs-label-sp" : row.type === "ssp" ? "wbs-label-ssp" : "wbs-label-task"}`} style={row.type === "root" ? { color: row.color } : undefined}>
+                          {row.label}
+                        </td>
+                        {dayCols.map((d, di) => {
+                          const ds = d.toISOString().slice(0, 10);
+                          const isToday = ds === todayStr;
+                          const hasBar = row.date && ds === row.date;
+                          return (
+                            <td key={di} className="wbs-cell" style={isToday ? { background: "var(--bg-card-active)" } : undefined}>
+                              {hasBar && <div className="wbs-bar" style={{ background: barColors[ri % barColors.length] + "cc" }} />}
+                              {isToday && <div className="gantt-today-line" style={{ left: "50%" }} />}
                             </td>
                           );
                         })}
