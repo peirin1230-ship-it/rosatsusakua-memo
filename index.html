@@ -727,88 +727,63 @@
         const url = URL.createObjectURL(blob); const a = document.createElement("a"); a.href = url; a.download = filename; a.click(); URL.revokeObjectURL(url);
       };
 
-      // PDF Export with friendly labels
+      // PDF Export with friendly labels, compact hierarchy
       const handleExportPDF = () => {
         setShowExportMenu(false);
         const pName = projectName || "無題のプロジェクト";
         const date = new Date().toLocaleDateString("ja-JP", { year: "numeric", month: "long", day: "numeric" });
 
-        // Build sections only for filled steps
         let sections = "";
 
-        // ゴール（論点）
+        // ゴール
         if (notes["ロ"]?.trim()) {
-          sections += `
-            <div class="pdf-section">
-              <div class="pdf-section-title"><span class="pdf-badge" style="background:#b0706c">STEP 1</span> ゴール（解決したい問い）</div>
-              <div class="pdf-section-body">${notes["ロ"].trim().replace(/\n/g, "<br/>")}</div>
-            </div>`;
+          sections += `<div class="s"><div class="s-title">ゴール（解決したい問い）</div><div class="s-body">${notes["ロ"].trim().replace(/\n/g, "<br/>")}</div></div>`;
         }
 
-        // 考えるポイント（サブ論点）+ やること（TASK）+ 期限
+        // 考えるポイント + やること + 期限
         const hasSubs = subPoints.some(sp => sp.content?.trim() || sp.tasks?.some(tk => tk.content?.trim()));
         if (hasSubs) {
-          let subsHtml = "";
+          let rows = "";
           subPoints.forEach((sp, i) => {
             if (!sp.content?.trim() && !(sp.tasks || []).some(tk => tk.content?.trim())) return;
-            subsHtml += `<div class="pdf-point">`;
-            subsHtml += `<div class="pdf-point-title">考えるポイント ${i + 1}：${sp.content?.trim() || "（未記入）"}</div>`;
-
-            // Tasks
-            const filledTasks = (sp.tasks || []).filter(tk => tk.content?.trim() || tk.calendarDate);
-            if (filledTasks.length > 0) {
-              subsHtml += `<table class="pdf-task-table"><thead><tr><th>やること</th><th style="width:120px">期限</th></tr></thead><tbody>`;
-              filledTasks.forEach(tk => {
-                const deadline = tk.calendarDate || tk.schedule?.trim() || "—";
-                subsHtml += `<tr><td>${tk.content?.trim() || "（未記入）"}</td><td>${deadline}</td></tr>`;
+            rows += `<div class="pt">`;
+            rows += `<div class="pt-h">${i + 1}. ${sp.content?.trim() || "（未記入）"}</div>`;
+            const ft = (sp.tasks || []).filter(tk => tk.content?.trim() || tk.calendarDate);
+            if (ft.length > 0) {
+              ft.forEach(tk => {
+                const dl = tk.calendarDate || tk.schedule?.trim() || "";
+                rows += `<div class="tk"><span class="tk-c">${tk.content?.trim() || "（未記入）"}</span>${dl ? `<span class="tk-d">${dl}</span>` : ""}</div>`;
               });
-              subsHtml += `</tbody></table>`;
             }
-
-            // Sub-sub-points (深掘りポイント)
+            // 深掘りポイント
             if (sp.subSubPoints && sp.subSubPoints.length > 0) {
               sp.subSubPoints.forEach((ssp, si) => {
                 if (!ssp.content?.trim() && !(ssp.tasks || []).some(tk => tk.content?.trim())) return;
-                subsHtml += `<div class="pdf-subpoint">`;
-                subsHtml += `<div class="pdf-subpoint-title">深掘りポイント ${i + 1}-${si + 1}：${ssp.content?.trim() || "（未記入）"}</div>`;
-                const sspTasks = (ssp.tasks || []).filter(tk => tk.content?.trim() || tk.calendarDate);
-                if (sspTasks.length > 0) {
-                  subsHtml += `<table class="pdf-task-table"><thead><tr><th>やること</th><th style="width:120px">期限</th></tr></thead><tbody>`;
-                  sspTasks.forEach(tk => {
-                    const deadline = tk.calendarDate || tk.schedule?.trim() || "—";
-                    subsHtml += `<tr><td>${tk.content?.trim() || "（未記入）"}</td><td>${deadline}</td></tr>`;
+                rows += `<div class="ssp">`;
+                rows += `<div class="ssp-h">${i + 1}-${si + 1}. ${ssp.content?.trim() || "（未記入）"}</div>`;
+                const st = (ssp.tasks || []).filter(tk => tk.content?.trim() || tk.calendarDate);
+                if (st.length > 0) {
+                  st.forEach(tk => {
+                    const dl = tk.calendarDate || tk.schedule?.trim() || "";
+                    rows += `<div class="tk"><span class="tk-c">${tk.content?.trim() || "（未記入）"}</span>${dl ? `<span class="tk-d">${dl}</span>` : ""}</div>`;
                   });
-                  subsHtml += `</tbody></table>`;
                 }
-                subsHtml += `</div>`;
+                rows += `</div>`;
               });
             }
-            subsHtml += `</div>`;
+            rows += `</div>`;
           });
-
-          sections += `
-            <div class="pdf-section">
-              <div class="pdf-section-title"><span class="pdf-badge" style="background:#b8906e">STEP 2</span> 考えるポイント &amp; やること</div>
-              ${subsHtml}
-            </div>`;
+          sections += `<div class="s"><div class="s-title">考えるポイント &amp; やること</div>${rows}</div>`;
         }
 
-        // 進め方・作業メモ（作業）
+        // 進め方
         if (notes["作"]?.trim()) {
-          sections += `
-            <div class="pdf-section">
-              <div class="pdf-section-title"><span class="pdf-badge" style="background:#7090b0">STEP 3</span> 進め方・作業メモ</div>
-              <div class="pdf-section-body">${notes["作"].trim().replace(/\n/g, "<br/>")}</div>
-            </div>`;
+          sections += `<div class="s"><div class="s-title">進め方・作業メモ</div><div class="s-body">${notes["作"].trim().replace(/\n/g, "<br/>")}</div></div>`;
         }
 
-        // 成果物（アウトプット）
+        // 成果物
         if (notes["ア"]?.trim()) {
-          sections += `
-            <div class="pdf-section">
-              <div class="pdf-section-title"><span class="pdf-badge" style="background:#8a80b0">STEP 4</span> 成果物</div>
-              <div class="pdf-section-body">${notes["ア"].trim().replace(/\n/g, "<br/>")}</div>
-            </div>`;
+          sections += `<div class="s"><div class="s-title">成果物</div><div class="s-body">${notes["ア"].trim().replace(/\n/g, "<br/>")}</div></div>`;
         }
 
         if (!sections) {
@@ -817,49 +792,41 @@
         }
 
         const html = `
-          <div id="pdf-root" style="font-family: 'Noto Sans JP', 'Helvetica Neue', Arial, sans-serif; color: #1a1a1a; padding: 0; line-height: 1.7;">
+          <div style="font-family:'Noto Sans JP','Helvetica Neue',Arial,sans-serif;color:#1a1a1a;padding:0;line-height:1.55;font-size:11px;">
             <style>
-              .pdf-header { margin-bottom: 24px; padding-bottom: 16px; border-bottom: 2px solid #333; }
-              .pdf-header h1 { font-size: 20px; font-weight: 700; margin: 0 0 4px; color: #111; }
-              .pdf-header .pdf-date { font-size: 11px; color: #888; }
-              .pdf-header .pdf-flow { font-size: 11px; color: #999; margin-top: 6px; }
-              .pdf-section { margin-bottom: 22px; }
-              .pdf-section-title { font-size: 15px; font-weight: 700; color: #222; margin-bottom: 10px; display: flex; align-items: center; gap: 8px; }
-              .pdf-badge { display: inline-block; color: #fff; font-size: 10px; font-weight: 600; padding: 2px 8px; border-radius: 4px; letter-spacing: 0.5px; }
-              .pdf-section-body { font-size: 13px; color: #333; padding: 10px 14px; background: #f8f8f8; border-radius: 6px; border-left: 3px solid #ddd; }
-              .pdf-point { margin-bottom: 14px; padding: 10px 14px; background: #fafafa; border-radius: 6px; border: 1px solid #eee; }
-              .pdf-point-title { font-size: 13px; font-weight: 600; color: #b8906e; margin-bottom: 8px; }
-              .pdf-subpoint { margin: 8px 0 8px 16px; padding: 8px 12px; background: #fff; border-radius: 4px; border: 1px solid #f0f0f0; }
-              .pdf-subpoint-title { font-size: 12px; font-weight: 600; color: #999; margin-bottom: 6px; }
-              .pdf-task-table { width: 100%; border-collapse: collapse; font-size: 12px; margin-top: 4px; }
-              .pdf-task-table th { text-align: left; font-weight: 600; color: #666; padding: 4px 8px; border-bottom: 1px solid #ddd; font-size: 11px; }
-              .pdf-task-table td { padding: 4px 8px; border-bottom: 1px solid #f0f0f0; color: #333; }
-              .pdf-footer { margin-top: 24px; padding-top: 12px; border-top: 1px solid #ddd; font-size: 10px; color: #aaa; text-align: right; }
+              .hdr{margin-bottom:10px;padding-bottom:8px;border-bottom:1.5px solid #333}
+              .hdr h1{font-size:15px;font-weight:700;margin:0 0 2px;color:#111}
+              .hdr .dt{font-size:9px;color:#999}
+              .s{margin-bottom:10px}
+              .s-title{font-size:12px;font-weight:700;color:#333;margin-bottom:5px;padding:3px 0;border-bottom:1px solid #e0e0e0}
+              .s-body{font-size:11px;color:#333;padding:4px 0 4px 12px;border-left:2.5px solid #ccc}
+              .pt{margin:0 0 6px 8px;padding:4px 0 4px 10px;border-left:2.5px solid #b8906e}
+              .pt-h{font-size:11px;font-weight:600;color:#6b5030;margin-bottom:2px}
+              .tk{margin:1px 0 1px 14px;display:flex;justify-content:space-between;align-items:baseline;font-size:10.5px;color:#444}
+              .tk-c::before{content:"▸ ";color:#aaa;font-size:8px}
+              .tk-d{color:#888;font-size:10px;white-space:nowrap;margin-left:8px}
+              .ssp{margin:3px 0 3px 14px;padding:3px 0 3px 9px;border-left:2px solid #ddd}
+              .ssp-h{font-size:10.5px;font-weight:600;color:#888;margin-bottom:1px}
+              .ftr{margin-top:12px;padding-top:6px;border-top:1px solid #e0e0e0;font-size:8px;color:#bbb;text-align:right}
             </style>
-
-            <div class="pdf-header">
+            <div class="hdr">
               <h1>${pName}</h1>
-              <div class="pdf-date">${date} 時点</div>
-              <div class="pdf-flow">ゴール → 考えるポイント → やること → 進め方 → 成果物</div>
+              <div class="dt">${date} 時点</div>
             </div>
-
             ${sections}
-
-            <div class="pdf-footer">ロサTス作ア メモより出力</div>
-          </div>
-        `;
+            <div class="ftr">作成日: ${date}</div>
+          </div>`;
 
         const container = document.createElement("div");
         container.innerHTML = html;
         document.body.appendChild(container);
 
         html2pdf().set({
-          margin: [12, 12, 12, 12],
+          margin: [10, 10, 10, 10],
           filename: `${pName}-共有用.pdf`,
-          image: { type: "jpeg", quality: 0.98 },
+          image: { type: "jpeg", quality: 0.95 },
           html2canvas: { scale: 2, useCORS: true },
           jsPDF: { unit: "mm", format: "a4", orientation: "portrait" },
-          pagebreak: { mode: ["avoid-all", "css", "legacy"] },
         }).from(container.firstElementChild).save().then(() => {
           document.body.removeChild(container);
         });
